@@ -1,0 +1,313 @@
+[18:38:43] [INFO] === MushroomFarm Manager démarré ===
+[18:38:43] [INFO] Dossier: C:\WINDOWS\system32\mushroomfarm
+[18:38:43] [INFO] Interface disponible sur http://localhost:8765
+[18:40:23] [INFO] === MushroomFarm Manager démarré ===
+[18:40:23] [INFO] Dossier: C:\WINDOWS\system32\mushroomfarm
+[18:40:23] [INFO] Interface disponible sur http://localhost:8765
+[21:23:11] [INFO] === MushroomFarm Manager démarré ===
+[21:23:11] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[21:23:11] [INFO] Interface disponible sur http://localhost:8765
+[21:24:48] [INFO] === MushroomFarm Manager démarré ===
+[21:24:48] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[21:24:48] [INFO] Interface disponible sur http://localhost:8765
+[21:35:05] [INFO] === MushroomFarm Manager démarré ===
+[21:35:05] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[21:35:05] [INFO] Interface disponible sur http://localhost:8765
+[11:36:14] [INFO] === MushroomFarm Manager démarré ===
+[11:36:14] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[11:36:14] [INFO] Interface disponible sur http://localhost:8765
+[11:52:05] [INFO] === MushroomFarm Manager démarré ===
+[11:52:05] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[11:52:05] [INFO] Démarrage automatique du backend...
+[11:52:05] [INFO] Interface disponible sur http://localhost:8765
+[11:52:07] [INFO] Backend démarré (PID 1360)
+[11:55:54] [INFO] Backend arrêté (fin du flux)
+[11:55:54] [INFO] Backend arrêté manuellement
+[11:55:59] [INFO] Backend démarré (PID 11552)
+[12:07:54] [INFO] Backend arrêté (fin du flux)
+[12:16:04] [INFO] === MushroomFarm Manager démarré ===
+[12:16:04] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[12:16:04] [INFO] Démarrage automatique du backend...
+[12:16:04] [INFO] Interface disponible sur http://localhost:8765
+[12:16:05] [INFO] Backend démarré (PID 11444)
+[12:16:42] [INFO] Backend arrêté (fin du flux)
+[12:18:02] [INFO] === MushroomFarm Manager démarré ===
+[12:18:02] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[12:18:02] [INFO] Démarrage automatique du backend...
+[12:18:02] [INFO] Interface disponible sur http://localhost:8765
+[12:18:04] [INFO] Backend démarré (PID 11432)
+[12:18:22] [INFO] Backend arrêté (fin du flux)
+[12:20:00] [INFO] === MushroomFarm Manager démarré ===
+[12:20:00] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[12:20:00] [INFO] Démarrage automatique du backend...
+[12:20:00] [INFO] Interface disponible sur http://localhost:8765
+[12:20:01] [INFO] Backend démarré (PID 12180)
+[12:39:32] [INFO] Backend arrêté (fin du flux)
+[12:41:04] [INFO] === MushroomFarm Manager démarré ===
+[12:41:04] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[12:41:04] [INFO] Démarrage automatique du backend...
+[12:41:04] [INFO] Interface disponible sur http://localhost:8765
+[12:41:06] [INFO] Backend démarré (PID 4192)
+[12:45:12] [INFO] Backup créé: backup_20260305_124512_manual.zip (3.4 KB)
+[12:52:00] [INFO] === MushroomFarm Manager démarré ===
+[12:52:00] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[12:52:00] [INFO] Démarrage automatique du backend...
+[12:52:00] [INFO] Interface disponible sur http://localhost:8765
+[12:53:17] [INFO] Backend arrêté (fin du flux)
+[12:53:36] [INFO] === MushroomFarm Manager démarré ===
+[12:53:36] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[12:53:36] [INFO] Démarrage automatique du backend...
+[12:53:36] [INFO] Interface disponible sur http://localhost:8765
+[12:53:38] [INFO] Backend démarré (PID 9196)
+[12:56:04] [INFO] Backend arrêté (fin du flux)
+[13:00:47] [INFO] === MushroomFarm Manager démarré ===
+[13:00:47] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:00:47] [INFO] Démarrage automatique du backend...
+[13:00:47] [INFO] Interface disponible sur http://localhost:8765
+[13:00:49] [INFO] Backend démarré (PID 1368)
+[13:03:27] [INFO] Backend arrêté (fin du flux)
+[13:04:00] [INFO] === MushroomFarm Manager démarré ===
+[13:04:00] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:04:00] [INFO] Démarrage automatique du backend...
+[13:04:00] [INFO] Interface disponible sur http://localhost:8765
+[13:04:02] [INFO] Backend démarré (PID 11884)
+[13:05:16] [INFO] Backend arrêté (fin du flux)
+[13:08:52] [INFO] === MushroomFarm Manager démarré ===
+[13:08:52] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:08:52] [INFO] Démarrage automatique du backend...
+[13:08:52] [INFO] Interface disponible sur http://localhost:8765
+[13:08:54] [INFO] Backend démarré (PID 12424)
+[13:09:53] [INFO] Backend arrêté (fin du flux)
+[13:11:09] [INFO] === MushroomFarm Manager démarré ===
+[13:11:09] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:11:09] [INFO] Démarrage automatique du backend...
+[13:11:09] [INFO] Interface disponible sur http://localhost:8765
+[13:11:10] [INFO] Backend démarré (PID 10348)
+[13:14:04] [INFO] === MushroomFarm Manager démarré ===
+[13:14:04] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:14:04] [INFO] Démarrage automatique du backend...
+[13:14:04] [INFO] Interface disponible sur http://localhost:8765
+[13:14:05] [INFO] Backend démarré (PID 4920)
+[13:15:58] [INFO] Backend arrêté (fin du flux)
+[13:23:58] [INFO] === MushroomFarm Manager démarré ===
+[13:23:58] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:23:58] [INFO] Démarrage automatique du backend...
+[13:23:58] [INFO] Interface disponible sur http://localhost:8765
+[13:24:00] [INFO] Backend démarré (PID 12080)
+[13:26:18] [INFO] Backend arrêté (fin du flux)
+[13:27:04] [INFO] === MushroomFarm Manager démarré ===
+[13:27:04] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:27:04] [INFO] Démarrage automatique du backend...
+[13:27:04] [INFO] Interface disponible sur http://localhost:8765
+[13:27:05] [INFO] Backend démarré (PID 4844)
+[13:28:31] [INFO] Backend arrêté (fin du flux)
+[13:30:04] [INFO] === MushroomFarm Manager démarré ===
+[13:30:04] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:30:04] [INFO] Démarrage automatique du backend...
+[13:30:04] [INFO] Interface disponible sur http://localhost:8765
+[13:30:06] [INFO] Backend démarré (PID 10348)
+[13:44:07] [INFO] Backend arrêté (fin du flux)
+[13:45:35] [INFO] === MushroomFarm Manager démarré ===
+[13:45:35] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:45:35] [INFO] Démarrage automatique du backend...
+[13:45:35] [INFO] Interface disponible sur http://localhost:8765
+[13:45:37] [INFO] Backend démarré (PID 5392)
+[13:54:33] [INFO] Backend arrêté (fin du flux)
+[13:54:42] [INFO] === MushroomFarm Manager démarré ===
+[13:54:42] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[13:54:42] [INFO] Démarrage automatique du backend...
+[13:54:42] [INFO] Interface disponible sur http://localhost:8765
+[13:54:44] [INFO] Backend démarré (PID 2364)
+[14:06:26] [INFO] Backend arrêté (fin du flux)
+[14:06:51] [INFO] === MushroomFarm Manager démarré ===
+[14:06:51] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:06:51] [INFO] Démarrage automatique du backend...
+[14:06:51] [INFO] Interface disponible sur http://localhost:8765
+[14:06:53] [INFO] Backend démarré (PID 12932)
+[14:09:27] [INFO] Backend arrêté (fin du flux)
+[14:10:45] [INFO] === MushroomFarm Manager démarré ===
+[14:10:45] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:10:45] [INFO] Démarrage automatique du backend...
+[14:10:45] [INFO] Interface disponible sur http://localhost:8765
+[14:10:46] [INFO] Backend démarré (PID 3288)
+[14:15:03] [INFO] === MushroomFarm Manager démarré ===
+[14:15:03] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:15:03] [INFO] Interface disponible sur http://localhost:8765
+[14:15:15] [INFO] Sync: loic MYCO=250 TON=5.00
+[14:16:16] [INFO] Sync: loic MYCO=350 TON=5.00
+[14:17:16] [INFO] Sync: loic MYCO=350 TON=5.00
+[14:18:16] [INFO] Sync: loic MYCO=350 TON=5.00
+[14:19:16] [INFO] Sync: loic MYCO=350 TON=5.00
+[14:20:40] [INFO] Sync: loic MYCO=350 TON=5.00
+[14:20:57] [INFO] Sync: loic MYCO=250 TON=3.00
+[14:21:26] [INFO] === MushroomFarm Manager démarré ===
+[14:21:26] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:21:26] [INFO] Interface disponible sur http://localhost:8765
+[14:21:52] [INFO] === MushroomFarm Manager démarré ===
+[14:21:52] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:21:52] [INFO] Interface disponible sur http://localhost:8765
+[14:22:04] [INFO] Sync: loic MYCO=350 TON=5.00
+[14:23:04] [INFO] Sync: loic MYCO=0 TON=5.45
+[14:24:04] [INFO] Sync: loic MYCO=0 TON=5.45
+[14:25:04] [INFO] Sync: loic MYCO=0 TON=5.45
+[14:26:04] [INFO] Sync: loic MYCO=0 TON=5.45
+[14:28:39] [INFO] === MushroomFarm Manager démarré ===
+[14:28:39] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:28:39] [INFO] Interface disponible sur http://localhost:8765
+[14:29:03] [INFO] Sync: loic MYCO=0 TON=5.45
+[14:30:04] [INFO] Sync: loic MYCO=0 TON=5.45
+[14:33:32] [INFO] === MushroomFarm Manager démarré ===
+[14:33:32] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:33:32] [INFO] Interface disponible sur http://localhost:8765
+[14:33:44] [INFO] Sync: loic MYCO=0 TON=5.45
+[14:37:08] [INFO] === MushroomFarm Manager démarré ===
+[14:37:08] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:37:08] [INFO] Démarrage automatique du backend...
+[14:37:08] [INFO] Interface disponible sur http://localhost:8765
+[14:37:09] [INFO] Backend démarré (PID 5568)
+[14:37:56] [ERROR] Erreur sync: table game_state has no column named card_count
+[14:39:02] [ERROR] Erreur sync: database is locked
+[14:39:43] [ERROR] Erreur sync: database is locked
+[14:40:00] [ERROR] Erreur sync: table game_state has no column named card_count
+[14:41:05] [ERROR] Erreur sync: database is locked
+[14:42:05] [ERROR] Erreur sync: database is locked
+[14:42:57] [INFO] Backend arrêté (fin du flux)
+[14:44:23] [INFO] === MushroomFarm Manager démarré ===
+[14:44:23] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:44:23] [INFO] Démarrage automatique du backend...
+[14:44:23] [INFO] Interface disponible sur http://localhost:8765
+[14:44:25] [INFO] Backend démarré (PID 956)
+[14:44:53] [ERROR] Erreur sync: table game_state has no column named card_count
+[14:45:28] [ERROR] Erreur sync: database is locked
+[14:46:27] [INFO] Backend arrêté (fin du flux)
+[14:48:50] [INFO] === MushroomFarm Manager démarré ===
+[14:48:50] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:48:50] [INFO] Démarrage automatique du backend...
+[14:48:50] [INFO] Interface disponible sur http://localhost:8765
+[14:48:51] [INFO] Backend démarré (PID 11956)
+[14:49:05] [ERROR] Erreur sync: table game_state has no column named card_count
+[14:49:53] [INFO] Backend arrêté (fin du flux)
+[14:53:41] [INFO] === MushroomFarm Manager démarré ===
+[14:53:41] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[14:53:41] [INFO] Démarrage automatique du backend...
+[14:53:41] [INFO] Interface disponible sur http://localhost:8765
+[14:53:42] [INFO] Backend démarré (PID 12456)
+[14:53:54] [ERROR] Erreur sync: table game_state has no column named card_count
+[14:54:31] [ERROR] Erreur sync: database is locked
+[14:55:00] [ERROR] Erreur sync: database is locked
+[14:56:00] [ERROR] Erreur sync: database is locked
+[14:56:12] [INFO] Backend arrêté (fin du flux)
+[14:56:12] [INFO] Backend arrêté manuellement
+[14:56:32] [ERROR] Erreur sync: database is locked
+[14:57:00] [ERROR] Erreur sync: database is locked
+[14:58:00] [ERROR] Erreur sync: database is locked
+[14:59:00] [ERROR] Erreur sync: database is locked
+[15:00:08] [ERROR] Erreur sync: database is locked
+[15:01:08] [ERROR] Erreur sync: database is locked
+[15:02:08] [ERROR] Erreur sync: database is locked
+[15:05:16] [INFO] === MushroomFarm Manager démarré ===
+[15:05:16] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[15:05:16] [INFO] Interface disponible sur http://localhost:8765
+[15:05:39] [INFO] Sync: loic MYCO=350 TON=5.00
+[15:06:39] [INFO] Sync: loic MYCO=450 TON=5.00
+[15:07:39] [INFO] Sync: loic MYCO=450 TON=5.00
+[15:11:17] [INFO] === MushroomFarm Manager démarré ===
+[15:11:17] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[15:11:17] [INFO] Démarrage automatique du backend...
+[15:11:17] [INFO] Interface disponible sur http://localhost:8765
+[15:11:19] [INFO] Backend démarré (PID 7164)
+[15:11:42] [ERROR] Erreur sync: table game_state has no column named card_count
+[15:12:48] [ERROR] Erreur sync: database is locked
+[15:13:07] [ERROR] Erreur sync: database is locked
+[15:13:48] [ERROR] Erreur sync: database is locked
+[15:14:48] [ERROR] Erreur sync: database is locked
+[15:15:48] [ERROR] Erreur sync: database is locked
+[15:15:49] [ERROR] Erreur sync: database is locked
+[15:16:48] [ERROR] Erreur sync: database is locked
+[15:17:43] [ERROR] Erreur sync: table game_state has no column named card_count
+[15:18:48] [ERROR] Erreur sync: database is locked
+[15:19:48] [ERROR] Erreur sync: database is locked
+[15:20:48] [ERROR] Erreur sync: database is locked
+[15:21:48] [ERROR] Erreur sync: database is locked
+[15:22:48] [ERROR] Erreur sync: database is locked
+[15:23:48] [ERROR] Erreur sync: database is locked
+[15:24:48] [ERROR] Erreur sync: database is locked
+[15:25:01] [ERROR] Erreur sync: database is locked
+[15:25:48] [ERROR] Erreur sync: database is locked
+[15:26:48] [ERROR] Erreur sync: database is locked
+[15:29:54] [INFO] === MushroomFarm Manager démarré ===
+[15:29:54] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[15:29:54] [INFO] Démarrage automatique du backend...
+[15:29:54] [INFO] Interface disponible sur http://localhost:8765
+[15:29:55] [INFO] Backend démarré (PID 12328)
+[15:30:07] [ERROR] Erreur sync: name 'SYNC_DB_PATH' is not defined
+[15:31:08] [ERROR] Erreur sync: name 'SYNC_DB_PATH' is not defined
+[15:33:33] [INFO] === MushroomFarm Manager démarré ===
+[15:33:33] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[15:33:33] [INFO] Démarrage automatique du backend...
+[15:33:33] [INFO] Interface disponible sur http://localhost:8765
+[15:33:34] [INFO] Backend démarré (PID 11332)
+[15:33:54] [INFO] Sync: loic MYCO=650 TON=5.00
+[15:34:54] [INFO] Sync: loic MYCO=750 TON=5.00
+[15:35:54] [INFO] Sync: loic MYCO=750 TON=5.00
+[15:36:55] [INFO] Backend arrêté (fin du flux)
+[15:39:49] [INFO] === MushroomFarm Manager démarré ===
+[15:39:49] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[15:39:49] [INFO] Démarrage automatique du backend...
+[15:39:49] [INFO] Interface disponible sur http://localhost:8765
+[15:39:50] [INFO] Backend démarré (PID 10644)
+[15:43:09] [INFO] Sync: loic MYCO=750 TON=5.00
+[15:43:44] [INFO] Sync: loic MYCO=250 TON=3.00
+[15:44:40] [INFO] Sync: loic MYCO=750 TON=5.00
+[15:45:40] [INFO] Sync: loic MYCO=0 TON=5.75
+[15:46:41] [INFO] Sync: loic MYCO=0 TON=5.75
+[15:47:41] [INFO] Sync: loic MYCO=0 TON=5.75
+[15:48:01] [INFO] Backend arrêté (fin du flux)
+[15:57:50] [INFO] === MushroomFarm Manager démarré ===
+[15:57:50] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[15:57:50] [INFO] Démarrage automatique du backend...
+[15:57:50] [INFO] Interface disponible sur http://localhost:8765
+[15:57:51] [INFO] Backend démarré (PID 5656)
+[15:58:12] [ERROR] Erreur sync: name 'SYNC_DB_PATH' is not defined
+[15:59:12] [ERROR] Erreur sync: name 'SYNC_DB_PATH' is not defined
+[16:00:12] [ERROR] Erreur sync: name 'SYNC_DB_PATH' is not defined
+[16:00:52] [INFO] Backend arrêté (fin du flux)
+[16:01:51] [INFO] === MushroomFarm Manager démarré ===
+[16:01:51] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[16:01:51] [INFO] Démarrage automatique du backend...
+[16:01:51] [INFO] Interface disponible sur http://localhost:8765
+[16:01:53] [INFO] Backend démarré (PID 2524)
+[16:02:11] [INFO] Backend arrêté (fin du flux)
+[16:07:11] [INFO] === MushroomFarm Manager démarré ===
+[16:07:11] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[16:07:11] [INFO] Démarrage automatique du backend...
+[16:07:11] [INFO] Interface disponible sur http://localhost:8765
+[16:07:13] [INFO] Backend démarré (PID 384)
+[16:07:22] [INFO] Sync: loic MYCO=0 TON=5.75
+[16:08:12] [INFO] Sync: loic MYCO=2000 TON=3.75
+[16:09:12] [INFO] Sync: loic MYCO=2000 TON=3.75
+[16:09:24] [INFO] Backend arrêté (fin du flux)
+[16:13:18] [INFO] === MushroomFarm Manager démarré ===
+[16:13:18] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[16:13:18] [INFO] Démarrage automatique du backend...
+[16:13:18] [INFO] Interface disponible sur http://localhost:8765
+[16:13:20] [INFO] Backend démarré (PID 13300)
+[16:13:35] [INFO] Sync: loic MYCO=2000 TON=3.75
+[16:14:36] [INFO] Sync: loic MYCO=1600 TON=4.25
+[16:14:49] [INFO] Backend arrêté (fin du flux)
+[16:16:53] [INFO] === MushroomFarm Manager démarré ===
+[16:16:53] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[16:16:53] [INFO] Démarrage automatique du backend...
+[16:16:53] [INFO] Interface disponible sur http://localhost:8765
+[16:16:55] [INFO] Backend démarré (PID 8904)
+[16:17:03] [INFO] Sync: loic MYCO=1600 TON=4.25
+[16:17:13] [INFO] Sync: loic MYCO=1700 TON=4.25
+[16:17:24] [INFO] Sync: loic MYCO=1200 TON=4.75
+[16:17:33] [INFO] Sync: loic MYCO=1200 TON=4.75
+[16:17:44] [INFO] Sync: loic MYCO=2200 TON=3.75
+[16:17:54] [INFO] Sync: loic MYCO=2200 TON=3.75
+[16:18:04] [INFO] Sync: loic MYCO=2200 TON=3.75
+[16:18:14] [INFO] Sync: loic MYCO=2200 TON=3.75
+[16:18:24] [INFO] Sync: loic MYCO=2200 TON=3.75
+[16:18:34] [INFO] Sync: loic MYCO=2200 TON=3.75
+[16:19:00] [INFO] Backend arrêté (fin du flux)

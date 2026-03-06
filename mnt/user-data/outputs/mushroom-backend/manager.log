@@ -1,0 +1,21 @@
+[12:08:42] [INFO] === MushroomFarm Manager démarré ===
+[12:08:42] [INFO] Dossier: C:\Users\loic7\mushroomfarm\mnt\user-data\outputs\mushroom-backend
+[12:08:42] [INFO] Interface disponible sur http://localhost:8765
+[12:11:07] [INFO] === MushroomFarm Manager démarré ===
+[12:11:07] [INFO] Dossier: C:\Users\loic7\mushroomfarm\mnt\user-data\outputs\mushroom-backend
+[12:11:07] [INFO] Démarrage automatique du backend...
+[12:11:07] [INFO] Interface disponible sur http://localhost:8765
+[12:11:08] [INFO] Backend démarré (PID 2016)
+[12:11:22] [INFO] Backend arrêté (fin du flux)
+[12:12:20] [INFO] === MushroomFarm Manager démarré ===
+[12:12:20] [INFO] Dossier: C:\Users\loic7\mushroomfarm\mnt\user-data\outputs\mushroom-backend
+[12:12:20] [INFO] Démarrage automatique du backend...
+[12:12:20] [INFO] Interface disponible sur http://localhost:8765
+[12:12:22] [INFO] Backend démarré (PID 12740)
+[12:12:30] [INFO] Backend arrêté (fin du flux)
+[12:13:30] [INFO] === MushroomFarm Manager démarré ===
+[12:13:30] [INFO] Dossier: C:\Users\loic7\mushroomfarm\mnt\user-data\outputs\mushroom-backend
+[12:13:30] [INFO] Démarrage automatique du backend...
+[12:13:30] [INFO] Interface disponible sur http://localhost:8765
+[12:13:31] [INFO] Backend démarré (PID 10136)
+[12:15:01] [INFO] Backend arrêté (fin du flux)

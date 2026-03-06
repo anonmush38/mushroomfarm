@@ -1,0 +1,9 @@
+{
+  "backend_port": 3000,
+  "auto_start_backend": true,
+  "auto_backup": true,
+  "backup_interval_hours": 24,
+  "max_backups": 10,
+  "theme": "dark",
+  "last_backup": "2026-03-05T12:45:12.113333"
+}

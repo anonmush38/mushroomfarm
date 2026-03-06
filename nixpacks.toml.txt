@@ -1,0 +1,16 @@
+[phases.setup]
+nixPkgs = ["python311", "python311Packages.pip"]
+
+[phases.install]
+cmds = ["pip install flask psutil"]
+
+[start]
+cmd = "python3 manager.py"
+```
+
+Ensuite pousse sur GitHub :
+```
+cd C:\Users\loic7\mushroomfarm
+git add .
+git commit -m "force python"
+git push
