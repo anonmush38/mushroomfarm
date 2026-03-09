@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mushroom Farm</title>
@@ -1541,7 +1542,7 @@ function createCard(rarity,level=1){
 
 // === SAUVEGARDE LOCALE & SYNC DASHBOARD ===
 const SAVE_KEY = 'mushroomfarm_save';
-const MANAGER_URL = 'http://localhost:8765';
+const MANAGER_URL = 'https://mushroomfarm-majn.onrender.com';
 
 function saveState() {
   try {
@@ -1566,22 +1567,29 @@ function loadState() {
 
 async function syncToManager() {
   try {
-    await fetch(MANAGER_URL + '/api/sync', {
+    const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+    const payload = {
+      player: state.player,
+      telegram_id: tgUser?.id || null,
+      myco: state.myco,
+      ton: state.ton,
+      total_harvested: state.total_harvested,
+      address: state.address,
+      lang: state.lang,
+      card_count: state.wallet_cards ? state.wallet_cards.length : 0,
+      state: JSON.stringify(state)
+    };
+    await fetch('https://mushroomfarm-majn.onrender.com/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        player: state.player,
-        myco: state.myco,
-        ton: state.ton,
-        total_harvested: state.total_harvested,
-        address: state.address,
-        lang: state.lang,
-        card_count: state.wallet_cards.length + state.slots.filter(s=>s!==null).length
-      })
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
     });
-  } catch(e) {
-    // Manager non disponible, on ignore silencieusement
-  }
+    await fetch('https://mushroomfarm-majn.onrender.com/api/save', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({player: state.player, state: JSON.stringify(state)})
+    });
+  } catch(e) {}
 }
 
 // Sync toutes les 60 secondes si le jeu est actif
@@ -1630,19 +1638,30 @@ function continueSave(){
   },500);
 }
 
-function startGame(){
+async function startGame(){
   const name=document.getElementById('username-input').value.trim()||'Farmer';
-  const savedOk = loadState();
-  if (!savedOk) {
-    // Nouvelle partie
-    state.player=name; state.address=genAddr(); state.lang=currentLang;
-    state.wallet_cards=[createCard('common'),createCard('common'),createCard('uncommon')];
-    addTx('Welcome Bonus',250,'myco',IC.gift);
+  
+  // Essayer de charger depuis le serveur d'abord
+  const serverLoaded = await loadFromServer(name);
+  
+  if (!serverLoaded) {
+    const savedOk = loadState();
+    if (!savedOk) {
+      // Nouvelle partie
+      state.player=name; state.address=genAddr(); state.lang=currentLang;
+      state.wallet_cards=[createCard('common'),createCard('common'),createCard('uncommon')];
+      addTx('Welcome Bonus',250,'myco',IC.gift);
+    } else {
+      // Partie chargée depuis localStorage
+      if (name && name !== 'Farmer') state.player = name;
+      state.lang = currentLang || state.lang;
+    }
   } else {
-    // Partie chargée depuis la sauvegarde
+    // Partie chargée depuis le serveur
     if (name && name !== 'Farmer') state.player = name;
     state.lang = currentLang || state.lang;
   }
+  
   applyTheme();
   applyLang(state.lang);
   document.getElementById('splash').style.opacity='0';
@@ -1654,6 +1673,7 @@ function startGame(){
     startAutoSync();
   },500);
 }
+```
 
 // === FARM ===
 // Track unlocked slots (first 5 free, rest cost 100 TON each)

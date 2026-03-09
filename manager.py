@@ -436,6 +436,7 @@ def api_sync():
         return "", 204
     data = request.json or {}
     player    = str(data.get("player", "Unknown"))[:32]
+    telegram_id = str(data.get("telegram_id", ""))[:32]
     myco      = float(data.get("myco", 0))
     ton       = float(data.get("ton", 0))
     harvested = float(data.get("total_harvested", 0))
@@ -451,6 +452,7 @@ def api_sync():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
                 address TEXT, lang TEXT DEFAULT 'fr',
+                telegram_id TEXT,
                 is_active INTEGER DEFAULT 1,
                 created_at INTEGER, last_login INTEGER
             );
@@ -463,11 +465,11 @@ def api_sync():
         """)
         now = int(time.time())
         cur.execute("""
-            INSERT INTO users (username, address, lang, created_at, last_login)
-            VALUES (?,?,?,?,?)
+            INSERT INTO users (username, address, lang, telegram_id, created_at, last_login)
+            VALUES (?,?,?,?,?,?)
             ON CONFLICT(username) DO UPDATE SET
-                last_login=excluded.last_login, address=excluded.address
-        """, (player, address, lang, now, now))
+                last_login=excluded.last_login, address=excluded.address, telegram_id=excluded.telegram_id
+        """, (player, address, lang, telegram_id, now, now))
         cur.execute("SELECT id FROM users WHERE username=?", (player,))
         row = cur.fetchone()
         if row:
@@ -635,7 +637,54 @@ def telegram_webhook():
             )
             urllib.request.urlopen(req)
     return jsonify({"ok": True})
+@app.route("/api/save", methods=["POST", "OPTIONS"])
+def api_save():
+    if request.method == "OPTIONS":
+        return "", 204
+    data = request.json or {}
+    player = str(data.get("player", ""))[:32]
+    state_json = data.get("state", "{}")
+    if not player:
+        return jsonify({"ok": False})
+    try:
+        SYNC_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+        conn = sqlite3.connect(str(SYNC_DB_PATH))
+        cur = conn.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS saves (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                state TEXT,
+                updated_at INTEGER
+            )
+        """)
+        now = int(time.time())
+        cur.execute("""
+            INSERT INTO saves (username, state, updated_at)
+            VALUES (?,?,?)
+            ON CONFLICT(username) DO UPDATE SET
+                state=excluded.state, updated_at=excluded.updated_at
+        """, (player, state_json, now))
+        conn.commit()
+        conn.close()
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
 
+@app.route("/api/load/<username>", methods=["GET"])
+def api_load(username):
+    try:
+        conn = sqlite3.connect(str(SYNC_DB_PATH))
+        cur = conn.cursor()
+        cur.execute("SELECT state FROM saves WHERE username=?", (username,))
+        row = cur.fetchone()
+        conn.close()
+        if row:
+            return jsonify({"ok": True, "state": row[0]})
+        return jsonify({"ok": False})
+    except:
+        return jsonify({"ok": False})
+    
 if __name__ == "__main__":
     log("=== MushroomFarm Manager démarré ===")
     log(f"Dossier: {BASE_DIR}")
