@@ -33,7 +33,7 @@ if getattr(sys, 'frozen', False):
 else:
     BASE_DIR = Path(__file__).parent
 
-BACKEND_DIR  = Path(r"C:\Users\loic7\mushroomfarm\mnt\user-data\outputs\mushroom-backend")
+BACKEND_DIR  = BASE_DIR / "mnt" / "user-data" / "outputs" / "mushroom-backend"
 DB_PATH      = BACKEND_DIR / "data" / "mushroom_farm.db"
 SYNC_DB_PATH = BASE_DIR / "data" / "players_sync.db"
 BACKUP_DIR   = BASE_DIR / "backups"
