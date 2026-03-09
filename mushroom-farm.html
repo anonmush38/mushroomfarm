@@ -585,7 +585,7 @@
     </button>
     <div style="font-size:0.7rem;color:var(--muted);text-align:center;margin-bottom:4px">— ou continuer sans sauvegarde —</div>
   </div>
-  <button class="btn-start" onclick="startGame()">
+  <button class="btn-start" onclick="startGame().catch(console.error)">
     <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f680.svg" alt="">
     <span id="start-btn-txt" data-i18n="start_btn">Commencer à Farmer</span>
   </button>
