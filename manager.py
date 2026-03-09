@@ -232,6 +232,21 @@ def get_db_stats():
         # Pas de retraits dans SYNC_DB
         stats["pending_withdrawals"] = []
 
+        # Joueurs actifs (7 derniers jours)
+        try:
+            since = int(time.time()) - 7 * 86400
+            cur.execute("SELECT COUNT(*) FROM users WHERE last_login > ?", (since,))
+            stats["users_new7d"] = cur.fetchone()[0]
+        except:
+            stats["users_new7d"] = 0
+
+        # Total MYCO distribué
+        try:
+            cur.execute("SELECT SUM(myco) FROM game_state")
+            stats["total_myco"] = cur.fetchone()[0] or 0
+        except:
+            stats["total_myco"] = 0
+
         # Recent registrations (last 7 days)
         try:
             since = int(time.time()) - 7 * 86400
