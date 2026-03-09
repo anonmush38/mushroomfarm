@@ -354,7 +354,7 @@ def game():
         p = BASE_DIR / name
         if p.exists():
             with open(p, "r", encoding="utf-8") as f:
-                return f.read(), 200, {"Content-Type": "text/html; charset=utf-8"}
+                return f.read(), 200, {"Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache, no-store, must-revalidate"}
     return "Fichier jeu introuvable dans " + str(BASE_DIR), 404
 
 @app.route("/static-files/<path:filename>")
