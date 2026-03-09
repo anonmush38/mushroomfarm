@@ -56,7 +56,7 @@ def log(msg, level="INFO"):
 # ── Config ────────────────────────────────────────────────────────────────────
 DEFAULT_CONFIG = {
     "backend_port": 3000,
-    "auto_start_backend": True,
+    "auto_start_backend": False,  # Désactivé — mode standalone
     "auto_backup": True,
     "backup_interval_hours": 24,
     "max_backups": 10,
@@ -93,7 +93,8 @@ def start_backend():
 
     server_js = BACKEND_DIR / "src" / "server.js"
     if not server_js.exists():
-        return {"ok": False, "msg": f"server.js introuvable: {server_js}"}
+        log(f"[INFO] Backend Node.js non disponible (server.js introuvable) — fonctionnement en mode standalone.")
+        return {"ok": False, "msg": f"Backend Node.js non disponible (mode standalone)"}
 
     env_file = BACKEND_DIR / ".env"
     if not env_file.exists():
