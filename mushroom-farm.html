@@ -1622,6 +1622,18 @@ function newAccount(){
   document.getElementById('username-input').placeholder = 'Ton nom de fermier...';
   showNotif && showNotif('Nouveau compte prêt ! Entre ton nom et commence.', '🆕');
 }
+async function loadFromServer(playerName) {
+  try {
+    const r = await fetch(`https://mushroomfarm-majn.onrender.com/api/load/${encodeURIComponent(playerName)}`);
+    const data = await r.json();
+    if (data.ok && data.state) {
+      const saved = JSON.parse(data.state);
+      Object.assign(state, saved);
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
 
 function continueSave(){
   const savedOk = loadState();
