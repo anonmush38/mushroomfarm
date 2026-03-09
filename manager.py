@@ -34,8 +34,7 @@ else:
     BASE_DIR = Path(__file__).parent
 
 BACKEND_DIR  = Path(r"C:\Users\loic7\mushroomfarm\mnt\user-data\outputs\mushroom-backend")
-DB_PATH      = BASE_DIR / "data" / "mushroom_farm.db"
-SYNC_DB_PATH = BASE_DIR / "data" / "players_sync.db"
+DB_PATH      = BACKEND_DIR / "data" / "mushroom_farm.db"
 BACKUP_DIR   = BASE_DIR / "backups"
 LOG_PATH     = BASE_DIR / "manager.log"
 CONFIG_PATH  = BASE_DIR / "manager_config.json"
@@ -608,6 +607,35 @@ def open_browser():
     time.sleep(1.2)
     webbrowser.open(f"http://localhost:{MANAGER_PORT}")
 
+
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+GAME_URL_PUBLIC = os.environ.get("GAME_URL", "https://mushroomfarm-majn.onrender.com/game")
+
+@app.route("/telegram/webhook", methods=["POST"])
+def telegram_webhook():
+    update = request.json or {}
+    if "message" in update:
+        msg = update["message"]
+        chat_id = msg["chat"]["id"]
+        text = msg.get("text", "")
+        if text == "/start" and BOT_TOKEN:
+            keyboard = {"inline_keyboard": [[{
+                "text": "🍄 Jouer à Mushroom Farm",
+                "web_app": {"url": GAME_URL_PUBLIC}
+            }]]}
+            import urllib.request, json as _json
+            data = _json.dumps({
+                "chat_id": chat_id,
+                "text": "🍄 Bienvenue sur Mushroom Farm!\n\nFarme, cultive et gagne des MYCO tokens!",
+                "reply_markup": keyboard
+            }).encode()
+            req = urllib.request.Request(
+                f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+                data=data, headers={"Content-Type": "application/json"}
+            )
+            urllib.request.urlopen(req)
+    return jsonify({"ok": True})
+
 if __name__ == "__main__":
     log("=== MushroomFarm Manager démarré ===")
     log(f"Dossier: {BASE_DIR}")
@@ -626,4 +654,4 @@ if __name__ == "__main__":
     threading.Thread(target=open_browser, daemon=True).start()
 
     log(f"Interface disponible sur http://localhost:{MANAGER_PORT}")
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8765)), debug=False, use_reloader=False)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", MANAGER_PORT)), debug=False, use_reloader=False)
