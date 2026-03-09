@@ -568,7 +568,7 @@ function updateStatusUI() {
     document.getElementById('be-status-badge').textContent = 'Hors ligne';
   }
 
-  document.getElementById('be-pid').textContent    = be.pid    || '—';
+  document.getElementById('be-pid').textContent    = be.pid || (be.standalone ? 'standalone' : '—');
   document.getElementById('be-uptime').textContent = be.uptime || '—';
   document.getElementById('be-port').textContent   = be.port   || 3000;
   document.getElementById('be-ram').textContent    = sys.backend_ram_mb ? sys.backend_ram_mb + ' MB' : '—';
@@ -781,7 +781,7 @@ async function backendStart() {
   document.getElementById('btn-start').textContent = '…';
   try {
     const r = await fetch('/api/backend/start', {method:'POST'}).then(r=>r.json());
-    if (r.ok) toast(`Backend démarré (PID ${r.pid}) ✅`, 'success');
+    if (r.ok) toast(r.msg || `Backend démarré ✅`, 'success');
     else toast('Erreur: ' + r.msg, 'error');
   } catch(e) { toast(e.message, 'error'); }
   document.getElementById('btn-start').disabled = false;
