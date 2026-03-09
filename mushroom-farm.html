@@ -578,10 +578,10 @@
 
   <div id="continue-btn-wrap" style="display:none">
     <button class="btn-start" onclick="continueSave()" style="background:linear-gradient(135deg,#3ECF6A,#2aa855);margin-bottom:8px">
-      <span>▶️ Continuer ma partie</span>
+      <span data-i18n="continue_btn">▶️ Continuer ma partie</span>
     </button>
     <button class="btn-start" onclick="newAccount()" style="background:linear-gradient(135deg,#ff4d6d,#c0392b);margin-bottom:4px;padding:10px 30px;font-size:0.95rem">
-      <span>🆕 Nouveau compte</span>
+      <span data-i18n="new_account_btn">🆕 Nouveau compte</span>
     </button>
     <div style="font-size:0.7rem;color:var(--muted);text-align:center;margin-bottom:4px">— ou continuer sans sauvegarde —</div>
   </div>
@@ -767,7 +767,7 @@
     <button onclick="toggleTxHistory()" style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--card2);border:1px solid #ffffff0e;border-radius:16px;padding:13px 16px;cursor:pointer;color:var(--muted);font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;transition:all 0.2s;" id="tx-toggle-btn">
       <div style="display:flex;align-items:center;gap:8px">
         <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4ca.svg" style="width:18px;height:18px">
-        <span>Historique des transactions</span>
+        <span data-i18n="tx_history">Historique des transactions</span>
         <span id="tx-count-badge" style="background:#ffffff15;border-radius:8px;padding:1px 8px;font-size:0.7rem;color:var(--muted)">0</span>
       </div>
       <span id="tx-toggle-icon" style="font-size:0.9rem;transition:transform 0.25s">▼</span>
@@ -796,7 +796,7 @@
   <div class="community-section">
     <div class="com-title">
       <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f30d.svg" alt="">
-      <span>Rejoins la Communauté</span>
+      <span data-i18n="community">Rejoins la Communauté</span>
     </div>
     <div class="social-row">
       <a href="https://t.me/mushroomfarmgame" class="social-btn" target="_blank" style="color:#29b6f6">
@@ -862,7 +862,7 @@
   <!-- PRIZES TABLE -->
   <div class="section-title" style="cursor:pointer" onclick="togglePrizesTable()">
     <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3c6.svg" alt="">
-    <span>Récompenses de la Roue</span>
+    <span data-i18n="wheel_rewards">Récompenses de la Roue</span>
     <span id="prizes-toggle-icon" style="margin-left:auto;font-size:1rem">▼</span>
   </div>
   <div id="wheel-prizes-table" style="margin-bottom:18px;display:none;grid-template-columns:1fr 1fr;gap:8px;"></div>
@@ -899,7 +899,7 @@
   <!-- PRIZES TABLE SLOT -->
   <div class="section-title" style="cursor:pointer" onclick="toggleSlotPrizesTable()">
     <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3c6.svg" alt="">
-    <span>Gains de la Machine</span>
+    <span data-i18n="slot_gains">Gains de la Machine</span>
     <span id="slot-prizes-toggle-icon" style="margin-left:auto;font-size:1rem">▼</span>
   </div>
   <div id="slot-prizes-table" style="margin-bottom:18px;display:none;grid-template-columns:1fr 1fr;gap:8px;"></div>
@@ -1603,7 +1603,7 @@ function startAutoSync() {
 
 // === SPLASH ===
 function newAccount(){
-  if (!confirm('⚠️ Créer un nouveau compte effacera ta progression actuelle. Continuer ?')) return;
+  const T_conf = TRANSLATIONS[currentLang||'fr']||TRANSLATIONS['fr']; if (!confirm(T_conf['confirm_new_account']||'⚠️ Créer un nouveau compte effacera ta progression actuelle. Continuer ?')) return;
   try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
   // Réinitialiser le state
   state = {
@@ -2917,10 +2917,10 @@ const TRANSLATIONS = {
   fr: {
     choose_lang: 'Choisis ta langue',
     choose_theme: 'Choisis ton thème',
-    theme_dark: 'Sombre',
-    theme_light: 'Clair',
-    theme_mushroom: 'Champignon',
+    theme_dark: 'Sombre', theme_light: 'Clair', theme_mushroom: 'Champignon',
     start_btn: 'Commencer à Farmer',
+    continue_btn: '▶️ Continuer ma partie',
+    new_account_btn: '🆕 Nouveau compte',
     invite_btn: 'Inviter des amis 🎁',
     invite_sub: 'Gagne des MYCO bonus pour chaque ami invité !',
     placeholder_name: 'Ton nom de fermier...',
@@ -2928,14 +2928,30 @@ const TRANSLATIONS = {
     nav_merchant: 'Marchand', nav_fortune: 'Fortune', nav_about: 'À propos',
     harvest_btn: '🍄 Récolter',
     back_menu: '← Menu',
+    farm_title: '🌾 Ferme',
+    slots_used: 'Slots utilisés',
+    next_harvest: 'Prochain cycle',
+    total_harvested: 'Total récolté',
+    shop_title: '🛒 Shop des Cartes',
+    community: 'Rejoins la Communauté',
+    tx_history: 'Historique des transactions',
+    wheel_title: '🎰 Roue de Fortune',
+    wheel_rewards: 'Récompenses de la Roue',
+    slot_title: '🎰 Slot Machine Mystère',
+    slot_gains: 'Gains de la Machine',
+    merchant_title: 'Le Marchand',
+    merchant_sell: '🤝 Vendre les champignons au Marchand',
+    sales_history: 'Historique des ventes',
+    wallet_dest: 'Adresse Wallet destinataire',
+    confirm_new_account: '⚠️ Créer un nouveau compte effacera ta progression actuelle. Continuer ?',
   },
   en: {
     choose_lang: 'Choose your language',
     choose_theme: 'Choose your theme',
-    theme_dark: 'Dark',
-    theme_light: 'Light',
-    theme_mushroom: 'Mushroom',
+    theme_dark: 'Dark', theme_light: 'Light', theme_mushroom: 'Mushroom',
     start_btn: 'Start Farming',
+    continue_btn: '▶️ Continue my game',
+    new_account_btn: '🆕 New account',
     invite_btn: 'Invite friends 🎁',
     invite_sub: 'Earn bonus MYCO for every friend invited!',
     placeholder_name: 'Your farmer name...',
@@ -2943,14 +2959,30 @@ const TRANSLATIONS = {
     nav_merchant: 'Merchant', nav_fortune: 'Fortune', nav_about: 'About',
     harvest_btn: '🍄 Harvest',
     back_menu: '← Menu',
+    farm_title: '🌾 Farm',
+    slots_used: 'Slots used',
+    next_harvest: 'Next cycle',
+    total_harvested: 'Total harvested',
+    shop_title: '🛒 Card Shop',
+    community: 'Join the Community',
+    tx_history: 'Transaction history',
+    wheel_title: '🎰 Fortune Wheel',
+    wheel_rewards: 'Wheel Rewards',
+    slot_title: '🎰 Mystery Slot Machine',
+    slot_gains: 'Machine Prizes',
+    merchant_title: 'The Merchant',
+    merchant_sell: '🤝 Sell mushrooms to the Merchant',
+    sales_history: 'Sales history',
+    wallet_dest: 'Recipient Wallet Address',
+    confirm_new_account: '⚠️ Creating a new account will erase your current progress. Continue?',
   },
   ru: {
     choose_lang: 'Выбери язык',
     choose_theme: 'Выбери тему',
-    theme_dark: 'Тёмная',
-    theme_light: 'Светлая',
-    theme_mushroom: 'Гриб',
+    theme_dark: 'Тёмная', theme_light: 'Светлая', theme_mushroom: 'Гриб',
     start_btn: 'Начать фермерство',
+    continue_btn: '▶️ Продолжить игру',
+    new_account_btn: '🆕 Новый аккаунт',
     invite_btn: 'Пригласить друзей 🎁',
     invite_sub: 'Получай MYCO за каждого приглашённого друга!',
     placeholder_name: 'Имя фермера...',
@@ -2958,14 +2990,30 @@ const TRANSLATIONS = {
     nav_merchant: 'Торговец', nav_fortune: 'Удача', nav_about: 'О нас',
     harvest_btn: '🍄 Собрать',
     back_menu: '← Меню',
+    farm_title: '🌾 Ферма',
+    slots_used: 'Слоты использованы',
+    next_harvest: 'Следующий цикл',
+    total_harvested: 'Всего собрано',
+    shop_title: '🛒 Магазин карт',
+    community: 'Присоединяйся к сообществу',
+    tx_history: 'История транзакций',
+    wheel_title: '🎰 Колесо Фортуны',
+    wheel_rewards: 'Награды колеса',
+    slot_title: '🎰 Таинственный слот',
+    slot_gains: 'Призы автомата',
+    merchant_title: 'Торговец',
+    merchant_sell: '🤝 Продать грибы Торговцу',
+    sales_history: 'История продаж',
+    wallet_dest: 'Адрес кошелька получателя',
+    confirm_new_account: '⚠️ Создание нового аккаунта сотрёт текущий прогресс. Продолжить?',
   },
   it: {
     choose_lang: 'Scegli la lingua',
     choose_theme: 'Scegli il tema',
-    theme_dark: 'Scuro',
-    theme_light: 'Chiaro',
-    theme_mushroom: 'Fungo',
+    theme_dark: 'Scuro', theme_light: 'Chiaro', theme_mushroom: 'Fungo',
     start_btn: 'Inizia a coltivare',
+    continue_btn: '▶️ Continua la mia partita',
+    new_account_btn: '🆕 Nuovo account',
     invite_btn: 'Invita amici 🎁',
     invite_sub: 'Guadagna MYCO bonus per ogni amico invitato!',
     placeholder_name: 'Il tuo nome da coltivatore...',
@@ -2973,14 +3021,30 @@ const TRANSLATIONS = {
     nav_merchant: 'Mercante', nav_fortune: 'Fortuna', nav_about: 'Info',
     harvest_btn: '🍄 Raccogli',
     back_menu: '← Menu',
+    farm_title: '🌾 Fattoria',
+    slots_used: 'Slot utilizzati',
+    next_harvest: 'Prossimo ciclo',
+    total_harvested: 'Totale raccolto',
+    shop_title: '🛒 Negozio Carte',
+    community: 'Unisciti alla Community',
+    tx_history: 'Storico transazioni',
+    wheel_title: '🎰 Ruota della Fortuna',
+    wheel_rewards: 'Premi della Ruota',
+    slot_title: '🎰 Slot Machine Misteriosa',
+    slot_gains: 'Premi della Macchina',
+    merchant_title: 'Il Mercante',
+    merchant_sell: '🤝 Vendi funghi al Mercante',
+    sales_history: 'Storico vendite',
+    wallet_dest: 'Indirizzo Wallet destinatario',
+    confirm_new_account: '⚠️ Creare un nuovo account cancellerà i progressi attuali. Continuare?',
   },
   es: {
     choose_lang: 'Elige tu idioma',
     choose_theme: 'Elige tu tema',
-    theme_dark: 'Oscuro',
-    theme_light: 'Claro',
-    theme_mushroom: 'Hongo',
+    theme_dark: 'Oscuro', theme_light: 'Claro', theme_mushroom: 'Hongo',
     start_btn: 'Empezar a cultivar',
+    continue_btn: '▶️ Continuar mi partida',
+    new_account_btn: '🆕 Nueva cuenta',
     invite_btn: 'Invitar amigos 🎁',
     invite_sub: '¡Gana MYCO bonus por cada amigo invitado!',
     placeholder_name: 'Tu nombre de granjero...',
@@ -2988,6 +3052,22 @@ const TRANSLATIONS = {
     nav_merchant: 'Mercader', nav_fortune: 'Fortuna', nav_about: 'Acerca',
     harvest_btn: '🍄 Cosechar',
     back_menu: '← Menú',
+    farm_title: '🌾 Granja',
+    slots_used: 'Slots usados',
+    next_harvest: 'Próximo ciclo',
+    total_harvested: 'Total cosechado',
+    shop_title: '🛒 Tienda de Cartas',
+    community: 'Únete a la Comunidad',
+    tx_history: 'Historial de transacciones',
+    wheel_title: '🎰 Rueda de la Fortuna',
+    wheel_rewards: 'Premios de la Rueda',
+    slot_title: '🎰 Máquina Tragaperras',
+    slot_gains: 'Premios de la Máquina',
+    merchant_title: 'El Mercader',
+    merchant_sell: '🤝 Vender setas al Mercader',
+    sales_history: 'Historial de ventas',
+    wallet_dest: 'Dirección Wallet destinatario',
+    confirm_new_account: '⚠️ Crear una nueva cuenta borrará tu progreso actual. ¿Continuar?',
   }
 };
 
@@ -3030,6 +3110,19 @@ function applyLang(lang){
   // Back buttons
   document.querySelectorAll('[data-i18n-back]').forEach(el => {
     if(T['back_menu']) el.textContent = T['back_menu'];
+  });
+  // Boutons splash dynamiques
+  const contBtn = document.querySelector('#continue-btn-wrap span');
+  if(contBtn && T['continue_btn']) contBtn.textContent = T['continue_btn'];
+  const newAccBtn = document.querySelector('#new-account-btn span');
+  if(newAccBtn && T['new_account_btn']) newAccBtn.textContent = T['new_account_btn'];
+  // Farm title topbar
+  const farmTitle = document.querySelector('.farm-section-title, [data-page="farm"] .section-title span');
+  if(farmTitle && T['farm_title']) farmTitle.textContent = T['farm_title'];
+  // Stat labels
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if(T[key] !== undefined) el.textContent = T[key];
   });
   // Store lang in state if game started
   if(typeof state !== 'undefined') state.lang = lang;
