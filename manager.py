@@ -418,11 +418,11 @@ def api_db():
 
 @app.route("/api/backend/start", methods=["POST"])
 def api_start():
-    return jsonify(start_backend())
+    return jsonify({"ok": True, "msg": "Mode standalone — backend Node.js non requis. Le jeu tourne directement sur Render ✅"})
 
 @app.route("/api/backend/stop", methods=["POST"])
 def api_stop():
-    return jsonify(stop_backend())
+    return jsonify({"ok": True, "msg": "Mode standalone actif."})
 
 @app.route("/api/backup/create", methods=["POST"])
 def api_backup():
