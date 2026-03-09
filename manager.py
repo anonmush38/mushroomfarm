@@ -658,29 +658,81 @@ def open_browser():
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 GAME_URL_PUBLIC = os.environ.get("GAME_URL", "https://mushroomfarm-majn.onrender.com/game")
 
+ADMIN_ID = 6846065758
+
+def tg_send(chat_id, text, keyboard=None):
+    import urllib.request as _ureq, json as _json
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
+    if keyboard:
+        payload["reply_markup"] = keyboard
+    try:
+        req = _ureq.Request(
+            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+            data=_json.dumps(payload).encode(),
+            headers={"Content-Type": "application/json"}
+        )
+        _ureq.urlopen(req)
+    except Exception as e:
+        print(f"TG error: {e}")
+
+def admin_text():
+    stats = get_db_stats()
+    if stats.get("error"):
+        return "Erreur DB"
+    lines = [
+        "🍄 <b>MUSHROOM FARM — ADMIN</b>",
+        "",
+        f"👥 Joueurs : <b>{stats.get('users',0)}</b>",
+        f"🟢 Actifs 7j : <b>{stats.get('users_new7d',0)}</b>",
+        f"🃏 Cartes : <b>{stats.get('cards',0)}</b>",
+        f"💾 DB : <b>{stats.get('db_size_mb',0)} MB</b>",
+        "",
+    ]
+    top = stats.get("top_players", [])
+    if top:
+        lines.append("🏆 <b>Top joueurs</b>")
+        medals = ["🥇","🥈","🥉","4️⃣","5️⃣"]
+        for i, p in enumerate(top[:5]):
+            lines.append(f"{medals[i]} <b>{p['username']}</b> — {int(p['myco']):,} MYCO | {p['ton']:.2f} TON")
+        lines.append("")
+    try:
+        conn = sqlite3.connect(str(SYNC_DB_PATH))
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT u.username, u.lang, u.is_active, COALESCE(gs.myco,0), COALESCE(gs.ton,0) "
+            "FROM users u LEFT JOIN game_state gs ON gs.user_id = u.id "
+            "ORDER BY u.last_login DESC LIMIT 20"
+        )
+        rows = cur.fetchall()
+        conn.close()
+        if rows:
+            lines.append("👥 <b>Joueurs récents</b>")
+            for r in rows:
+                st = "✅" if r[2] else "🚫"
+                lines.append(f"{st} <b>{r[0]}</b> [{r[1]}] — {int(r[3]):,} MYCO | {r[4]:.2f} TON")
+    except Exception as e:
+        lines.append(f"⚠️ {e}")
+    return "\n".join(lines)
+
 @app.route("/telegram/webhook", methods=["POST"])
 def telegram_webhook():
     update = request.json or {}
     if "message" in update:
         msg = update["message"]
         chat_id = msg["chat"]["id"]
+        user_id = msg["from"]["id"]
         text = msg.get("text", "")
         if text == "/start" and BOT_TOKEN:
             keyboard = {"inline_keyboard": [[{
                 "text": "🍄 Jouer à Mushroom Farm",
                 "web_app": {"url": GAME_URL_PUBLIC}
             }]]}
-            import urllib.request, json as _json
-            data = _json.dumps({
-                "chat_id": chat_id,
-                "text": "🍄 Bienvenue sur Mushroom Farm!\n\nFarme, cultive et gagne des MYCO tokens!",
-                "reply_markup": keyboard
-            }).encode()
-            req = urllib.request.Request(
-                f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-                data=data, headers={"Content-Type": "application/json"}
-            )
-            urllib.request.urlopen(req)
+            tg_send(chat_id, "🍄 <b>Bienvenue sur Mushroom Farm!</b>\n\nFarme, cultive et gagne des MYCO tokens!", keyboard)
+        elif text in ("/admin", "/stats") and BOT_TOKEN:
+            if user_id != ADMIN_ID:
+                tg_send(chat_id, "🚫 Accès refusé.")
+            else:
+                tg_send(chat_id, admin_text())
     return jsonify({"ok": True})
 @app.route("/api/save", methods=["POST", "OPTIONS"])
 def api_save():

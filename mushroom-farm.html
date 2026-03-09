@@ -1544,13 +1544,17 @@ function createCard(rarity,level=1){
 const SAVE_KEY = 'mushroomfarm_save';
 const MANAGER_URL = 'https://mushroomfarm-majn.onrender.com';
 
+// === CLOUD STORAGE (Telegram) avec fallback localStorage ===
+const tg = window.Telegram?.WebApp;
+
 function saveState() {
-  try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({
-      ...state,
-      _saved_at: Date.now()
-    }));
-  } catch(e) {}
+  const data = JSON.stringify({ ...state, _saved_at: Date.now() });
+  // Toujours sauvegarder en localStorage (backup)
+  try { localStorage.setItem(SAVE_KEY, data); } catch(e) {}
+  // Sauvegarder dans Telegram CloudStorage si disponible
+  if (tg?.CloudStorage) {
+    tg.CloudStorage.setItem(SAVE_KEY, data, () => {});
+  }
 }
 
 function loadState() {
@@ -1558,11 +1562,24 @@ function loadState() {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return false;
     const saved = JSON.parse(raw);
-    // Restaurer l'état complet
     Object.assign(state, saved);
-    // Recalculer les farming_since (timestamps absolus, ils sont déjà bons)
     return true;
   } catch(e) { return false; }
+}
+
+// Charger depuis Telegram CloudStorage (async)
+function loadStateFromCloud() {
+  return new Promise((resolve) => {
+    if (!tg?.CloudStorage) { resolve(false); return; }
+    tg.CloudStorage.getItem(SAVE_KEY, (err, value) => {
+      if (err || !value) { resolve(false); return; }
+      try {
+        const saved = JSON.parse(value);
+        Object.assign(state, saved);
+        resolve(true);
+      } catch(e) { resolve(false); }
+    });
+  });
 }
 
 async function syncToManager() {
@@ -1605,6 +1622,9 @@ function startAutoSync() {
 function newAccount(){
   const T_conf = TRANSLATIONS[currentLang||'fr']||TRANSLATIONS['fr']; if (!confirm(T_conf['confirm_new_account']||'⚠️ Créer un nouveau compte effacera ta progression actuelle. Continuer ?')) return;
   try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
+  if (window.Telegram?.WebApp?.CloudStorage) {
+    window.Telegram.WebApp.CloudStorage.removeItem(SAVE_KEY, () => {});
+  }
   // Réinitialiser le state
   state = {
     player:'Farmer', myco:250, ton:5.0,
@@ -1637,8 +1657,10 @@ async function loadFromServer(playerName) {
   return false;
 }
 
-function continueSave(){
-  const savedOk = loadState();
+async function continueSave(){
+  // Essayer CloudStorage Telegram d'abord, puis localStorage
+  let savedOk = await loadStateFromCloud();
+  if (!savedOk) savedOk = loadState();
   if (!savedOk) { startGame(); return; }
   state.lang = currentLang || state.lang || 'fr';
   applyTheme();
