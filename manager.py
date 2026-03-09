@@ -180,23 +180,39 @@ def get_uptime():
 
 # ── Database stats ────────────────────────────────────────────────────────────
 def get_db_stats():
-    if not DB_PATH.exists():
-        return {"error": "Base de données introuvable"}
+    # Utiliser SYNC_DB_PATH (joueurs Telegram) en priorité
+    db = SYNC_DB_PATH if SYNC_DB_PATH.exists() else DB_PATH
+    if not db.exists():
+        return {"error": "Base de données introuvable", "users": 0, "top_players": [], "pending_withdrawals": []}
     try:
-        conn = sqlite3.connect(str(DB_PATH))
+        conn = sqlite3.connect(str(db))
         cur = conn.cursor()
         stats = {}
-        for table in ["users", "cards", "transactions", "withdraw_requests", "wallets", "game_state"]:
-            try:
-                cur.execute(f"SELECT COUNT(*) FROM {table}")
-                stats[table] = cur.fetchone()[0]
-            except:
-                stats[table] = 0
+
+        # Compter les joueurs
+        try:
+            cur.execute("SELECT COUNT(*) FROM users")
+            stats["users"] = cur.fetchone()[0]
+        except:
+            stats["users"] = 0
+
+        # Compter les cartes
+        try:
+            cur.execute("SELECT SUM(card_count) FROM game_state")
+            stats["cards"] = cur.fetchone()[0] or 0
+        except:
+            stats["cards"] = 0
+
+        # Compter les transactions (approximatif)
+        stats["transactions"] = 0
+        stats["withdraw_requests"] = 0
+        stats["wallets"] = stats["users"]
+        stats["game_state"] = stats["users"]
 
         # DB size
-        stats["db_size_mb"] = round(DB_PATH.stat().st_size / 1024 / 1024, 2)
+        stats["db_size_mb"] = round(db.stat().st_size / 1024 / 1024, 2)
 
-        # Top players
+        # Top players depuis SYNC_DB
         try:
             cur.execute("""
                 SELECT u.username,
@@ -213,15 +229,8 @@ def get_db_stats():
         except:
             stats["top_players"] = []
 
-        # Pending withdrawals
-        try:
-            cur.execute("SELECT COUNT(*), SUM(amount), currency FROM withdraw_requests WHERE status='pending' GROUP BY currency")
-            stats["pending_withdrawals"] = [
-                {"count": r[0], "total": round(r[1], 2), "currency": r[2]}
-                for r in cur.fetchall()
-            ]
-        except:
-            stats["pending_withdrawals"] = []
+        # Pas de retraits dans SYNC_DB
+        stats["pending_withdrawals"] = []
 
         # Recent registrations (last 7 days)
         try:

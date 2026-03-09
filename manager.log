@@ -311,3 +311,9 @@
 [16:18:24] [INFO] Sync: loic MYCO=2200 TON=3.75
 [16:18:34] [INFO] Sync: loic MYCO=2200 TON=3.75
 [16:19:00] [INFO] Backend arrêté (fin du flux)
+[21:07:56] [INFO] === MushroomFarm Manager démarré ===
+[21:07:56] [INFO] Dossier: C:\Users\loic7\mushroomfarm
+[21:07:56] [INFO] Démarrage automatique du backend...
+[21:07:56] [INFO] Interface disponible sur http://localhost:8765
+[21:07:58] [INFO] Backend démarré (PID 4004)
+[21:18:09] [INFO] Backend arrêté (fin du flux)
