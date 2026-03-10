@@ -584,9 +584,9 @@
       <span data-i18n="new_account_btn">🆕 Nouveau compte</span>
     </button>
   </div>
-  <button class="btn-start" onclick="startGame().catch(console.error)">
-    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f680.svg" alt="">
-    <span id="start-btn-txt" data-i18n="start_btn">Commencer à Farmer</span>
+  <button class="btn-start" id="new-account-btn" onclick="startGame().catch(console.error)">
+    <span style="font-size:1.3rem">🆕</span>
+    <span id="start-btn-txt" data-i18n="new_account_btn">Créer un compte</span>
   </button>
   <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px;">
     <button onclick="inviteFriend()" style="display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0088cc,#005fa3);border:none;border-radius:16px;padding:11px 26px;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 18px #0088cc44;transition:transform 0.15s;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform=''" ontouchstart="this.style.transform='scale(0.96)'" ontouchend="this.style.transform=''">
@@ -2951,7 +2951,7 @@ const TRANSLATIONS = {
     choose_lang: 'Choisis ta langue',
     choose_theme: 'Choisis ton thème',
     theme_dark: 'Sombre', theme_light: 'Clair', theme_mushroom: 'Champignon',
-    start_btn: 'Commencer à Farmer',
+    start_btn: 'Créer un compte',
     continue_btn: '▶️ Continuer ma partie',
     new_account_btn: '🆕 Nouveau compte',
     invite_btn: 'Inviter des amis 🎁',
@@ -2982,7 +2982,7 @@ const TRANSLATIONS = {
     choose_lang: 'Choose your language',
     choose_theme: 'Choose your theme',
     theme_dark: 'Dark', theme_light: 'Light', theme_mushroom: 'Mushroom',
-    start_btn: 'Start Farming',
+    start_btn: 'Create account',
     continue_btn: '▶️ Continue my game',
     new_account_btn: '🆕 New account',
     invite_btn: 'Invite friends 🎁',
@@ -3013,7 +3013,7 @@ const TRANSLATIONS = {
     choose_lang: 'Выбери язык',
     choose_theme: 'Выбери тему',
     theme_dark: 'Тёмная', theme_light: 'Светлая', theme_mushroom: 'Гриб',
-    start_btn: 'Начать фермерство',
+    start_btn: 'Создать аккаунт',
     continue_btn: '▶️ Продолжить игру',
     new_account_btn: '🆕 Новый аккаунт',
     invite_btn: 'Пригласить друзей 🎁',
@@ -3044,7 +3044,7 @@ const TRANSLATIONS = {
     choose_lang: 'Scegli la lingua',
     choose_theme: 'Scegli il tema',
     theme_dark: 'Scuro', theme_light: 'Chiaro', theme_mushroom: 'Fungo',
-    start_btn: 'Inizia a coltivare',
+    start_btn: 'Crea account',
     continue_btn: '▶️ Continua la mia partita',
     new_account_btn: '🆕 Nuovo account',
     invite_btn: 'Invita amici 🎁',
@@ -3075,7 +3075,7 @@ const TRANSLATIONS = {
     choose_lang: 'Elige tu idioma',
     choose_theme: 'Elige tu tema',
     theme_dark: 'Oscuro', theme_light: 'Claro', theme_mushroom: 'Hongo',
-    start_btn: 'Empezar a cultivar',
+    start_btn: 'Crear cuenta',
     continue_btn: '▶️ Continuar mi partida',
     new_account_btn: '🆕 Nueva cuenta',
     invite_btn: 'Invitar amigos 🎁',
