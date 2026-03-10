@@ -558,7 +558,17 @@
     </button>
   </div>
 
-  <input type="text" id="username-input" placeholder="Ton nom de fermier..." maxlength="16" data-i18n-placeholder="placeholder_name">
+  <!-- Champ nom caché — rempli automatiquement par Telegram -->
+  <input type="text" id="username-input" placeholder="Ton nom de fermier..." maxlength="16" data-i18n-placeholder="placeholder_name" style="display:none">
+
+  <!-- Bouton connexion Telegram (nouveau joueur) -->
+  <div id="create-account-wrap">
+    <button class="btn-start" id="new-account-btn" onclick="startGame().catch(console.error)" style="background:linear-gradient(135deg,#0088cc,#005fa3);box-shadow:0 6px 30px #0088cc55">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" style="width:26px;height:26px" alt="">
+      <span id="start-btn-txt">S'inscrire avec Telegram</span>
+    </button>
+    <div style="font-size:0.7rem;color:var(--muted);margin-top:6px;text-align:center" id="tg-name-preview"></div>
+  </div>
 
   <div class="theme-label-splash" data-i18n="choose_theme">Choisis ton thème</div>
   <div class="theme-selector">
@@ -576,18 +586,13 @@
     </button>
   </div>
 
+  <!-- Boutons joueur existant -->
   <div id="continue-btn-wrap" style="display:none">
     <button class="btn-start" onclick="continueSave()" style="background:linear-gradient(135deg,#3ECF6A,#2aa855);margin-bottom:8px">
       <span data-i18n="continue_btn">▶️ Continuer ma partie</span>
     </button>
-    <button class="btn-start" onclick="newAccount()" style="background:linear-gradient(135deg,#ff4d6d,#c0392b);margin-bottom:8px;padding:10px 30px;font-size:0.95rem">
+    <button class="btn-start" onclick="newAccount()" style="background:linear-gradient(135deg,#ff4d6d,#c0392b);padding:10px 30px;font-size:0.95rem">
       <span data-i18n="new_account_btn">🆕 Nouveau compte</span>
-    </button>
-  </div>
-  <div id="create-account-wrap">
-    <button class="btn-start" id="new-account-btn" onclick="startGame().catch(console.error)" style="background:linear-gradient(135deg,var(--purple),#6a1fd4)">
-      <span style="font-size:1.3rem">🆕</span>
-      <span id="start-btn-txt" data-i18n="new_account_btn">Créer un compte</span>
     </button>
   </div>
   <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px;">
@@ -2953,7 +2958,7 @@ const TRANSLATIONS = {
     choose_lang: 'Choisis ta langue',
     choose_theme: 'Choisis ton thème',
     theme_dark: 'Sombre', theme_light: 'Clair', theme_mushroom: 'Champignon',
-    start_btn: 'Créer un compte',
+    start_btn: "S'inscrire avec Telegram",
     continue_btn: '▶️ Continuer ma partie',
     new_account_btn: '🆕 Nouveau compte',
     invite_btn: 'Inviter des amis 🎁',
@@ -2984,7 +2989,7 @@ const TRANSLATIONS = {
     choose_lang: 'Choose your language',
     choose_theme: 'Choose your theme',
     theme_dark: 'Dark', theme_light: 'Light', theme_mushroom: 'Mushroom',
-    start_btn: 'Create account',
+    start_btn: 'Sign in with Telegram',
     continue_btn: '▶️ Continue my game',
     new_account_btn: '🆕 New account',
     invite_btn: 'Invite friends 🎁',
@@ -3015,7 +3020,7 @@ const TRANSLATIONS = {
     choose_lang: 'Выбери язык',
     choose_theme: 'Выбери тему',
     theme_dark: 'Тёмная', theme_light: 'Светлая', theme_mushroom: 'Гриб',
-    start_btn: 'Создать аккаунт',
+    start_btn: 'Войти через Telegram',
     continue_btn: '▶️ Продолжить игру',
     new_account_btn: '🆕 Новый аккаунт',
     invite_btn: 'Пригласить друзей 🎁',
@@ -3046,7 +3051,7 @@ const TRANSLATIONS = {
     choose_lang: 'Scegli la lingua',
     choose_theme: 'Scegli il tema',
     theme_dark: 'Scuro', theme_light: 'Chiaro', theme_mushroom: 'Fungo',
-    start_btn: 'Crea account',
+    start_btn: 'Accedi con Telegram',
     continue_btn: '▶️ Continua la mia partita',
     new_account_btn: '🆕 Nuovo account',
     invite_btn: 'Invita amici 🎁',
@@ -3077,7 +3082,7 @@ const TRANSLATIONS = {
     choose_lang: 'Elige tu idioma',
     choose_theme: 'Elige tu tema',
     theme_dark: 'Oscuro', theme_light: 'Claro', theme_mushroom: 'Hongo',
-    start_btn: 'Crear cuenta',
+    start_btn: 'Entrar con Telegram',
     continue_btn: '▶️ Continuar mi partida',
     new_account_btn: '🆕 Nueva cuenta',
     invite_btn: 'Invitar amigos 🎁',
@@ -3806,16 +3811,17 @@ function _updateQStats(){
 
   const tgUser = tg?.initDataUnsafe?.user;
 
-  // Pré-remplir avec le nom Telegram
+  // Afficher le nom Telegram sous le bouton
   if (tgUser) {
     let tgName = '';
-    if (tgUser.username) tgName = tgUser.username;
-    else if (tgUser.first_name) tgName = tgUser.first_name + (tgUser.last_name ? '_' + tgUser.last_name : '');
-    tgName = tgName.replace(/[^a-zA-Z0-9_]/g, '').slice(0, 16);
-    if (tgName) {
-      const inp = document.getElementById('username-input');
-      if (inp) inp.value = tgName;
-    }
+    if (tgUser.username) tgName = '@' + tgUser.username;
+    else if (tgUser.first_name) tgName = tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '');
+    const preview = document.getElementById('tg-name-preview');
+    if (preview && tgName) preview.textContent = '👤 ' + tgName;
+    // Remplir le champ caché
+    const cleanName = tgName.replace('@','').replace(/[^a-zA-Z0-9_]/g,'').slice(0,16);
+    const inp = document.getElementById('username-input');
+    if (inp) inp.value = cleanName;
   }
 
   // Vérifier si sauvegarde existe (CloudStorage ou localStorage)
