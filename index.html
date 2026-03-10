@@ -1646,26 +1646,46 @@ function continueSave(){
 }
 
 async function startGame(){
-  const name=document.getElementById('username-input').value.trim()||'Farmer';
-  
+  // Récupérer le compte Telegram en priorité
+  const tg = window.Telegram?.WebApp;
+  const tgUser = tg?.initDataUnsafe?.user;
+  let tgName = '';
+  if (tgUser) {
+    if (tgUser.username) tgName = tgUser.username;
+    else if (tgUser.first_name) tgName = tgUser.first_name + (tgUser.last_name ? '_' + tgUser.last_name : '');
+    tgName = tgName.replace(/[^a-zA-Z0-9_À-ɏ]/g, '').slice(0, 16);
+  }
+  const inputName = document.getElementById('username-input').value.trim();
+  const name = tgName || inputName || 'Farmer';
+
   // Essayer de charger depuis le serveur d'abord
   const serverLoaded = await loadFromServer(name);
-  
+
   if (!serverLoaded) {
-    const savedOk = loadState();
-    if (!savedOk) {
-      // Nouvelle partie
-      state.player=name; state.address=genAddr(); state.lang=currentLang;
-      state.wallet_cards=[createCard('common'),createCard('common'),createCard('uncommon')];
-      addTx('Welcome Bonus',250,'myco',IC.gift);
+    // Essayer CloudStorage Telegram
+    const cloudLoaded = await loadStateFromCloud();
+    if (!cloudLoaded) {
+      const savedOk = loadState();
+      if (!savedOk) {
+        // Nouvelle partie
+        state.player = name;
+        state.telegram_id = tgUser?.id || null;
+        state.address = genAddr();
+        state.lang = currentLang;
+        state.wallet_cards = [createCard('common'), createCard('common'), createCard('uncommon')];
+        addTx('Welcome Bonus', 250, 'myco', IC.gift);
+      } else {
+        if (name && name !== 'Farmer') state.player = name;
+        state.lang = currentLang || state.lang;
+      }
     } else {
-      // Partie chargée depuis localStorage
       if (name && name !== 'Farmer') state.player = name;
+      state.telegram_id = tgUser?.id || state.telegram_id || null;
       state.lang = currentLang || state.lang;
     }
   } else {
-    // Partie chargée depuis le serveur
     if (name && name !== 'Farmer') state.player = name;
+    state.telegram_id = tgUser?.id || state.telegram_id || null;
     state.lang = currentLang || state.lang;
   }
   
@@ -3787,22 +3807,52 @@ function _updateQStats(){
   const se=document.getElementById('qs-streak');if(se){se.textContent=quiz.streak+'🔥';se.style.color=quiz.streak>=3?'#ff8c00':'var(--green)';}
 }
 
-// Vérifier si une sauvegarde existe au chargement
-(function checkExistingSave(){
-  try {
-    const raw = localStorage.getItem('mushroomfarm_save');
-    if (raw) {
-      const saved = JSON.parse(raw);
-      if (saved && saved.player && saved.player !== 'Farmer') {
-        const wrap = document.getElementById('continue-btn-wrap');
-        if (wrap) {
-          wrap.style.display = 'block';
-          const nameInput = document.getElementById('username-input');
-          if (nameInput) nameInput.placeholder = saved.player + ' (sauvegarde)';
-        }
-      }
+// Vérifier si une sauvegarde existe au chargement + pré-remplir avec Telegram
+(async function checkExistingSave(){
+  const tg = window.Telegram?.WebApp;
+  const tgUser = tg?.initDataUnsafe?.user;
+
+  // Pré-remplir le nom avec le compte Telegram
+  if (tgUser) {
+    let tgName = '';
+    if (tgUser.username) tgName = tgUser.username;
+    else if (tgUser.first_name) tgName = tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '');
+    if (tgName) {
+      const nameInput = document.getElementById('username-input');
+      if (nameInput) nameInput.value = tgName.slice(0, 16);
     }
-  } catch(e) {}
+  }
+
+  // Vérifier CloudStorage Telegram d'abord
+  let hasSave = false;
+  if (tg?.CloudStorage) {
+    await new Promise(resolve => {
+      tg.CloudStorage.getItem('mushroomfarm_save', (err, val) => {
+        if (!err && val) hasSave = true;
+        resolve();
+      });
+    });
+  }
+  // Puis localStorage
+  if (!hasSave) {
+    try {
+      const raw = localStorage.getItem('mushroomfarm_save');
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved && saved.player && saved.player !== 'Farmer') hasSave = true;
+      }
+    } catch(e) {}
+  }
+
+  if (hasSave) {
+    const wrap = document.getElementById('continue-btn-wrap');
+    if (wrap) wrap.style.display = 'block';
+  }
+
+  // Si dans Telegram et pas de sauvegarde → démarrer directement
+  if (tgUser && !hasSave) {
+    await startGame();
+  }
 })();
 
 </script>
