@@ -3804,6 +3804,15 @@ function _updateQStats(){
 
   const tgUser = tg?.initDataUnsafe?.user;
 
+  // Appliquer la langue Telegram de l'utilisateur
+  const tgLang = tgUser?.language_code || tg?.initDataUnsafe?.user?.language_code;
+  const langMap = { fr: 'fr', en: 'en', ru: 'ru', it: 'it', es: 'es' };
+  const detectedLang = langMap[tgLang] || langMap[tgLang?.split('-')[0]] || 'fr';
+  if (detectedLang && typeof selectLang === 'function') {
+    const btn = document.querySelector(`.flag-btn[data-lang="${detectedLang}"]`);
+    if (btn) selectLang(detectedLang, btn);
+  }
+
   // Pré-remplir avec le nom Telegram
   if (tgUser) {
     let tgName = '';
@@ -3839,10 +3848,7 @@ function _updateQStats(){
     if (wrap) wrap.style.display = 'block';
   }
 
-  // Si dans Telegram sans sauvegarde → démarrer directement
-  if (tgUser && !hasSave) {
-    await startGame();
-  }
+  // Ne plus démarrer automatiquement — toujours afficher le splash
 })();
 
 </script>
