@@ -59,11 +59,11 @@
   body.theme-mushroom .back-btn{background:#22401c;}
 
   /* Fonds d'écran par page (thème champignon) */
-  body.theme-mushroom #page-farm{background-image:url('/static-files/bg-farm.jpg');background-size:cover;background-attachment:fixed;}
-  body.theme-mushroom #page-wallet{background-image:url('/static-files/bg-wallet.jpg');background-size:cover;background-attachment:fixed;}
-  body.theme-mushroom #page-shop{background-image:url('/static-files/bg-shop.jpg');background-size:cover;background-attachment:fixed;}
-  body.theme-mushroom #page-fortune{background-image:url('/static-files/bg-fortune.jpg');background-size:cover;background-attachment:fixed;}
-  body.theme-mushroom #page-merchant{background-image:url('/static-files/bg-merchant.jpg');background-size:cover;background-attachment:fixed;}
+  body.theme-mushroom #page-farm{background-image:url('static-files/bg-farm.jpg');background-size:cover;background-attachment:fixed;}
+  body.theme-mushroom #page-wallet{background-image:url('static-files/bg-wallet.jpg');background-size:cover;background-attachment:fixed;}
+  body.theme-mushroom #page-shop{background-image:url('static-files/bg-shop.jpg');background-size:cover;background-attachment:fixed;}
+  body.theme-mushroom #page-fortune{background-image:url('static-files/bg-fortune.jpg');background-size:cover;background-attachment:fixed;}
+  body.theme-mushroom #page-merchant{background-image:url('static-files/bg-merchant.jpg');background-size:cover;background-attachment:fixed;}
 
   /* Sélecteur de thème splash */
   .theme-selector{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
@@ -76,7 +76,7 @@
   .theme-preview-mushroom{background:linear-gradient(135deg,#0d1a0a,#22401c);}
   .theme-label-splash{font-size:0.72rem;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);max-width:420px;margin:0 auto;min-height:100vh;position:relative;overflow-x:hidden;padding-bottom:80px;}
+  body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);max-width:480px;width:100%;margin:0 auto;min-height:100vh;min-height:-webkit-fill-available;position:relative;overflow-x:hidden;padding-bottom:calc(80px + env(safe-area-inset-bottom));}
   h1,h2,.logo{font-family:'Fredoka One',cursive;}
 
   /* SPLASH */
@@ -123,7 +123,7 @@
   .back-btn .arrow{font-size:0.85rem;}
 
   /* NAV */
-  #nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;z-index:100;background:#1e0b3bee;backdrop-filter:blur(16px);display:flex;border-top:1px solid #ffffff18;padding-bottom:env(safe-area-inset-bottom);}
+  #nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:100;background:#1e0b3bee;backdrop-filter:blur(16px);display:flex;border-top:1px solid #ffffff18;padding-bottom:env(safe-area-inset-bottom);}
   .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:9px 4px 7px;gap:3px;cursor:pointer;transition:all 0.2s;border:none;background:none;color:var(--muted);font-family:'Nunito',sans-serif;font-size:0.6rem;font-weight:700;}
   .nav-btn .nav-icon{width:24px;height:24px;object-fit:contain;opacity:0.45;transition:all 0.2s;}
   .nav-btn.active{color:var(--myco);}
@@ -529,13 +529,37 @@
   body.theme-mushroom .quiz-question{color:#e8fce8;}
   @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 
+
+  /* ===== RESPONSIVE ADAPTATIF ===== */
+  @media (max-width: 360px) {
+    .splash-title{font-size:2rem;}
+    .flag-btn{width:42px;height:30px;}
+    #splash input{width:240px;font-size:0.9rem;}
+    .farm-grid{grid-template-columns:repeat(5,1fr);gap:4px;}
+    .badge-myco,.badge-ton,.badge-basket{font-size:0.7rem;padding:4px 8px;}
+    .nav-btn{font-size:0.55rem;}
+  }
+  @media (min-width: 480px) {
+    body{font-size:1.05rem;}
+    .splash-title{font-size:3rem;}
+    .farm-grid{gap:8px;}
+    .slot{border-radius:14px;}
+  }
+  @media (max-height: 650px) {
+    #splash{gap:10px;padding:16px;}
+    .splash-logo-img{width:70px;height:70px;}
+    .splash-title{font-size:2rem;}
+  }
+  html{height:-webkit-fill-available;}
+  body{min-height:-webkit-fill-available;}
+
 </style>
 </head>
 <body>
 
 <!-- SPLASH -->
 <div id="splash">
-  <img class="splash-logo-img" src="/static-files/logo acceuil.jpg" alt="mushroom">
+  <img class="splash-logo-img" src="static-files/logo acceuil.jpg" alt="mushroom">
   <div class="splash-title">Mushroom Farm</div>
   <div class="splash-sub">Farm · Grow · Earn</div>
 
@@ -603,14 +627,14 @@
   <!-- Ligne 1 : Logo + Nom centré -->
   <div class="topbar-row1">
     <div class="topbar-logo" style="display:flex;align-items:center;gap:8px;">
-      <img src="/static-files/logo acceuil.jpg" alt="">
+      <img src="static-files/logo acceuil.jpg" alt="">
       <span class="logo">MushroomFarm</span>
     </div>
   </div>
   <!-- Ligne 2 : Soldes + Panier -->
   <div class="topbar-row2">
     <div class="badge-myco" onclick="goPageByName('wallet')" title="Voir Wallet">
-      <img src="/static-files/logo mico.png" alt="">
+      <img src="static-files/logo mico.png" alt="">
       <span id="myco-bal">0</span>
       <span style="font-size:0.65rem;opacity:0.7">MYCO</span>
     </div>
@@ -692,7 +716,7 @@
     </div>
   </div>
   <div class="wallet-card">
-    <div class="wlabel"><img src="/static-files/logo mico.png" alt=""><span>Solde MYCO</span></div>
+    <div class="wlabel"><img src="static-files/logo mico.png" alt=""><span>Solde MYCO</span></div>
     <div class="wamount"><span id="wallet-myco">0</span> MYCO</div>
     <div style="margin-top:10px">
       <div class="wlabel"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg" alt=""><span>Solde TON</span></div>
@@ -833,7 +857,7 @@
     </div>
   </div>
   <div class="fortune-header">
-    <img class="spin-icon" src="/static-files/logo mico.png" alt="">
+    <img class="spin-icon" src="static-files/logo mico.png" alt="">
     <div class="fortune-title">🎰 Roue de Fortune</div>
     <div class="fortune-sub">Cartes · Champignons · Mystery Boxes !</div>
   </div>
