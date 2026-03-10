@@ -656,7 +656,7 @@ def open_browser():
 
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
-GAME_URL_PUBLIC = os.environ.get("GAME_URL", "https://mushroomfarm-majn.onrender.com/game")
+GAME_URL_PUBLIC = os.environ.get("GAME_URL", "https://anonmush38.github.io/mushroomfarm")
 
 ADMIN_ID = 6846065758
 
