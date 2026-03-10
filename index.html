@@ -580,14 +580,16 @@
     <button class="btn-start" onclick="continueSave()" style="background:linear-gradient(135deg,#3ECF6A,#2aa855);margin-bottom:8px">
       <span data-i18n="continue_btn">▶️ Continuer ma partie</span>
     </button>
-    <button class="btn-start" onclick="newAccount()" style="background:linear-gradient(135deg,#ff4d6d,#c0392b);margin-bottom:4px;padding:10px 30px;font-size:0.95rem">
+    <button class="btn-start" onclick="newAccount()" style="background:linear-gradient(135deg,#ff4d6d,#c0392b);margin-bottom:8px;padding:10px 30px;font-size:0.95rem">
       <span data-i18n="new_account_btn">🆕 Nouveau compte</span>
     </button>
   </div>
-  <button class="btn-start" id="new-account-btn" onclick="startGame().catch(console.error)">
-    <span style="font-size:1.3rem">🆕</span>
-    <span id="start-btn-txt" data-i18n="new_account_btn">Créer un compte</span>
-  </button>
+  <div id="create-account-wrap">
+    <button class="btn-start" id="new-account-btn" onclick="startGame().catch(console.error)" style="background:linear-gradient(135deg,var(--purple),#6a1fd4)">
+      <span style="font-size:1.3rem">🆕</span>
+      <span id="start-btn-txt" data-i18n="new_account_btn">Créer un compte</span>
+    </button>
+  </div>
   <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:4px;">
     <button onclick="inviteFriend()" style="display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0088cc,#005fa3);border:none;border-radius:16px;padding:11px 26px;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 18px #0088cc44;transition:transform 0.15s;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform=''" ontouchstart="this.style.transform='scale(0.96)'" ontouchend="this.style.transform=''">
       <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" style="width:20px;height:20px" alt="">
@@ -3804,15 +3806,6 @@ function _updateQStats(){
 
   const tgUser = tg?.initDataUnsafe?.user;
 
-  // Appliquer la langue Telegram de l'utilisateur
-  const tgLang = tgUser?.language_code || tg?.initDataUnsafe?.user?.language_code;
-  const langMap = { fr: 'fr', en: 'en', ru: 'ru', it: 'it', es: 'es' };
-  const detectedLang = langMap[tgLang] || langMap[tgLang?.split('-')[0]] || 'fr';
-  if (detectedLang && typeof selectLang === 'function') {
-    const btn = document.querySelector(`.flag-btn[data-lang="${detectedLang}"]`);
-    if (btn) selectLang(detectedLang, btn);
-  }
-
   // Pré-remplir avec le nom Telegram
   if (tgUser) {
     let tgName = '';
@@ -3842,13 +3835,14 @@ function _updateQStats(){
     } catch(e) {}
   }
 
-  // Afficher bouton continuer si sauvegarde
+  // Afficher/masquer boutons selon sauvegarde
   if (hasSave) {
     const wrap = document.getElementById('continue-btn-wrap');
     if (wrap) wrap.style.display = 'block';
+    const createWrap = document.getElementById('create-account-wrap');
+    if (createWrap) createWrap.style.display = 'none';
   }
-
-  // Ne plus démarrer automatiquement — toujours afficher le splash
+  // Toujours afficher le splash — pas de démarrage automatique
 })();
 
 </script>
