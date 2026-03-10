@@ -662,7 +662,7 @@
 <!-- PAGE FARM -->
 <div id="page-farm" class="page active" style="display:none">
   <div class="page-topbar">
-    <span style="padding:7px 12px;font-size:0.75rem;font-weight:700;color:var(--myco);white-space:nowrap;border-right:1px solid #ffffff10;flex-shrink:0;">🌾 Ferme</span>
+    <span style="padding:7px 12px;font-size:0.75rem;font-weight:700;color:var(--myco);white-space:nowrap;border-right:1px solid #ffffff10;flex-shrink:0;">🌾 <span id="farm-title-txt" data-i18n="farm_title">Ferme</span></span>
     <div class="theme-switcher-bar">
       <span class="ts-label">🎨 Thème</span>
       <div class="ts-btns">
@@ -674,12 +674,12 @@
   </div>
 
   <div class="farm-stats">
-    <div class="stat-box"><div class="val" id="slots-used">0</div><div class="lbl">Slots utilisés</div></div>
+    <div class="stat-box"><div class="val" id="slots-used">0</div><div class="lbl" id="slots-used-lbl" data-i18n="slots_used">Slots utilisés</div></div>
     <div class="stat-box"><div class="val" id="yield-per-hr">0</div><div class="lbl">🍄/4h</div></div>
-    <div class="stat-box"><div class="val" id="pending-harvest">0</div><div class="lbl">Prêts</div></div>
+    <div class="stat-box"><div class="val" id="pending-harvest">0</div><div class="lbl" id="ready-lbl" data-i18n="ready">Prêts</div></div>
   </div>
   <div class="harvest-info-bar">
-    <span class="label">⏱ Prochain cycle :</span>
+    <span class="label">⏱ <span id="next-cycle-lbl" data-i18n="next_harvest">Prochain cycle</span> :</span>
     <span class="countdown" id="next-harvest-countdown">4:00:00</span>
   </div>
   <button class="harvest-btn" onclick="harvestAll()">
@@ -716,7 +716,7 @@
     </div>
   </div>
   <div class="wallet-card">
-    <div class="wlabel"><img src="static-files/logo mico.png" alt=""><span>Solde MYCO</span></div>
+    <div class="wlabel"><img src="static-files/logo mico.png" alt=""><span id="balance-myco-lbl" data-i18n="balance_myco">Solde MYCO</span></div>
     <div class="wamount"><span id="wallet-myco">0</span> MYCO</div>
     <div style="margin-top:10px">
       <div class="wlabel"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg" alt=""><span>Solde TON</span></div>
@@ -749,7 +749,7 @@
   <div class="withdraw-card">
     <div class="withdraw-title">📤 Retrait (Withdraw)</div>
     <div class="withdraw-field">
-      <label>Adresse Wallet destinataire</label>
+      <label data-i18n="wallet_dest">Adresse Wallet destinataire</label>
       <input id="wd-address" type="text" placeholder="UQA7...mush" autocomplete="off">
     </div>
     <div style="font-size:0.7rem;color:var(--muted);margin-bottom:10px">Choisir la crypto :</div>
@@ -791,7 +791,7 @@
     <button onclick="toggleTxHistory()" style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--card2);border:1px solid #ffffff0e;border-radius:16px;padding:13px 16px;cursor:pointer;color:var(--muted);font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:700;transition:all 0.2s;" id="tx-toggle-btn">
       <div style="display:flex;align-items:center;gap:8px">
         <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4ca.svg" style="width:18px;height:18px">
-        <span data-i18n="tx_history">Historique des transactions</span>
+        <span id="tx-history-title" data-i18n="tx_history">Historique des transactions</span>
         <span id="tx-count-badge" style="background:#ffffff15;border-radius:8px;padding:1px 8px;font-size:0.7rem;color:var(--muted)">0</span>
       </div>
       <span id="tx-toggle-icon" style="font-size:0.9rem;transition:transform 0.25s">▼</span>
@@ -820,7 +820,7 @@
   <div class="community-section">
     <div class="com-title">
       <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f30d.svg" alt="">
-      <span data-i18n="community">Rejoins la Communauté</span>
+      <span id="community-title" data-i18n="community">Rejoins la Communauté</span>
     </div>
     <div class="social-row">
       <a href="https://t.me/mushroomfarmgame" class="social-btn" target="_blank" style="color:#29b6f6">
@@ -858,7 +858,7 @@
   </div>
   <div class="fortune-header">
     <img class="spin-icon" src="static-files/logo mico.png" alt="">
-    <div class="fortune-title">🎰 Roue de Fortune</div>
+    <div class="fortune-title">🎰 <span id="fortune-title-txt" data-i18n="wheel_title">Roue de Fortune</span></div>
     <div class="fortune-sub">Cartes · Champignons · Mystery Boxes !</div>
   </div>
 
@@ -886,7 +886,7 @@
   <!-- PRIZES TABLE -->
   <div class="section-title" style="cursor:pointer" onclick="togglePrizesTable()">
     <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3c6.svg" alt="">
-    <span data-i18n="wheel_rewards">Récompenses de la Roue</span>
+    <span id="wheel-rewards-title" data-i18n="wheel_rewards">Récompenses de la Roue</span>
     <span id="prizes-toggle-icon" style="margin-left:auto;font-size:1rem">▼</span>
   </div>
   <div id="wheel-prizes-table" style="margin-bottom:18px;display:none;grid-template-columns:1fr 1fr;gap:8px;"></div>
@@ -923,7 +923,7 @@
   <!-- PRIZES TABLE SLOT -->
   <div class="section-title" style="cursor:pointer" onclick="toggleSlotPrizesTable()">
     <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3c6.svg" alt="">
-    <span data-i18n="slot_gains">Gains de la Machine</span>
+    <span id="slot-gains-title" data-i18n="slot_gains">Gains de la Machine</span>
     <span id="slot-prizes-toggle-icon" style="margin-left:auto;font-size:1rem">▼</span>
   </div>
   <div id="slot-prizes-table" style="margin-bottom:18px;display:none;grid-template-columns:1fr 1fr;gap:8px;"></div>
@@ -1030,7 +1030,7 @@
   </div>
   <div class="merchant-hero">
     <span class="merchant-icon">🧙</span>
-    <div class="mh-title">Le Marchand</div>
+    <div class="mh-title" id="merchant-title-txt" data-i18n="merchant_title">Le Marchand</div>
     <div class="mh-sub">Vendez vos champignons chaque soir à minuit</div>
   </div>
 
@@ -1068,7 +1068,7 @@
       <span style="font-size:0.68rem">Vendez vos champignons dans la journée — ils seront payés à minuit !</span>
     </div>
     <button class="sell-btn" id="sell-btn" onclick="sellBasket()">
-      🤝 Vendre les champignons au Marchand
+      <span id="merchant-sell-btn-txt" data-i18n="merchant_sell">🤝 Vendre les champignons au Marchand</span>
     </button>
   </div>
 
@@ -2924,21 +2924,34 @@ const TRANSLATIONS = {
     harvest_btn: '🍄 Récolter',
     back_menu: '← Menu',
     farm_title: '🌾 Ferme',
-    slots_used: 'Slots utilisés',
-    next_harvest: 'Prochain cycle',
-    total_harvested: 'Total récolté',
+    slots_used: 'Slots utilisés', next_harvest: 'Prochain cycle', total_harvested: 'Total récolté',
     shop_title: '🛒 Shop des Cartes',
     community: 'Rejoins la Communauté',
     tx_history: 'Historique des transactions',
-    wheel_title: '🎰 Roue de Fortune',
-    wheel_rewards: 'Récompenses de la Roue',
-    slot_title: '🎰 Slot Machine Mystère',
-    slot_gains: 'Gains de la Machine',
-    merchant_title: 'Le Marchand',
-    merchant_sell: '🤝 Vendre les champignons au Marchand',
+    wheel_title: '🎰 Roue de Fortune', wheel_rewards: 'Récompenses de la Roue',
+    slot_title: '🎰 Slot Machine Mystère', slot_gains: 'Gains de la Machine',
+    merchant_title: 'Le Marchand', merchant_sell: '<span id="merchant-sell-btn-txt" data-i18n="merchant_sell">🤝 Vendre les champignons au Marchand</span>',
     sales_history: 'Historique des ventes',
     wallet_dest: 'Adresse Wallet destinataire',
+    balance_myco: 'Solde MYCO', balance_ton: 'Solde TON',
+    buy_btn: 'Acheter', sell_btn: 'Vendre', deploy_btn: 'Déployer',
+    withdraw_btn: 'Retirer', sell_card_btn: 'Vendre la carte', retire_card_btn: 'Retirer la carte',
+    no_cards: 'Pas de cartes ! Visite le Shop.',
+    farm_slots: 'Ferme', unlocked_slots: 'slots',
+    free_spin: 'Spin gratuit',
+    sell_all_cards: 'Vendre toutes les cartes ?',
+    wallet_address: 'Adresse Wallet destinataire',
     confirm_new_account: '⚠️ Créer un nouveau compte effacera ta progression actuelle. Continuer ?',
+    confirm_sell_card: 'Vendre cette carte ?',
+    confirm_deploy: 'Déployer cette carte ?',
+    cards_owned: 'Cartes possédées',
+    merchant_desc: 'Vente au Marchand',
+    fortune_desc: 'Fortune',
+    about_desc: 'À propos du jeu',
+    produces: 'Produit',
+    per4h: '/ 4h',
+    next_cycle: 'Prochain cycle',
+    ready: 'Prêts',
   },
   en: {
     choose_lang: 'Choose your language',
@@ -2955,21 +2968,34 @@ const TRANSLATIONS = {
     harvest_btn: '🍄 Harvest',
     back_menu: '← Menu',
     farm_title: '🌾 Farm',
-    slots_used: 'Slots used',
-    next_harvest: 'Next cycle',
-    total_harvested: 'Total harvested',
+    slots_used: 'Slots used', next_harvest: 'Next cycle', total_harvested: 'Total harvested',
     shop_title: '🛒 Card Shop',
     community: 'Join the Community',
     tx_history: 'Transaction history',
-    wheel_title: '🎰 Fortune Wheel',
-    wheel_rewards: 'Wheel Rewards',
-    slot_title: '🎰 Mystery Slot Machine',
-    slot_gains: 'Machine Prizes',
-    merchant_title: 'The Merchant',
-    merchant_sell: '🤝 Sell mushrooms to the Merchant',
+    wheel_title: '🎰 Fortune Wheel', wheel_rewards: 'Wheel Rewards',
+    slot_title: '🎰 Mystery Slot Machine', slot_gains: 'Machine Prizes',
+    merchant_title: 'The Merchant', merchant_sell: '🤝 Sell mushrooms to the Merchant',
     sales_history: 'Sales history',
     wallet_dest: 'Recipient Wallet Address',
+    balance_myco: 'MYCO Balance', balance_ton: 'TON Balance',
+    buy_btn: 'Buy', sell_btn: 'Sell', deploy_btn: 'Deploy',
+    withdraw_btn: 'Withdraw', sell_card_btn: 'Sell card', retire_card_btn: 'Remove card',
+    no_cards: 'No cards! Visit the Shop.',
+    farm_slots: 'Farm', unlocked_slots: 'slots',
+    free_spin: 'Free spin',
+    sell_all_cards: 'Sell all cards?',
+    wallet_address: 'Recipient Wallet Address',
     confirm_new_account: '⚠️ Creating a new account will erase your current progress. Continue?',
+    confirm_sell_card: 'Sell this card?',
+    confirm_deploy: 'Deploy this card?',
+    cards_owned: 'Cards owned',
+    merchant_desc: 'Sell to Merchant',
+    fortune_desc: 'Fortune',
+    about_desc: 'About the game',
+    produces: 'Produces',
+    per4h: '/ 4h',
+    next_cycle: 'Next cycle',
+    ready: 'Ready',
   },
   ru: {
     choose_lang: 'Выбери язык',
@@ -2986,21 +3012,34 @@ const TRANSLATIONS = {
     harvest_btn: '🍄 Собрать',
     back_menu: '← Меню',
     farm_title: '🌾 Ферма',
-    slots_used: 'Слоты использованы',
-    next_harvest: 'Следующий цикл',
-    total_harvested: 'Всего собрано',
+    slots_used: 'Занято слотов', next_harvest: 'Следующий цикл', total_harvested: 'Всего собрано',
     shop_title: '🛒 Магазин карт',
     community: 'Присоединяйся к сообществу',
     tx_history: 'История транзакций',
-    wheel_title: '🎰 Колесо Фортуны',
-    wheel_rewards: 'Награды колеса',
-    slot_title: '🎰 Таинственный слот',
-    slot_gains: 'Призы автомата',
-    merchant_title: 'Торговец',
-    merchant_sell: '🤝 Продать грибы Торговцу',
+    wheel_title: '🎰 Колесо Фортуны', wheel_rewards: 'Награды колеса',
+    slot_title: '🎰 Таинственный слот', slot_gains: 'Призы автомата',
+    merchant_title: 'Торговец', merchant_sell: '🤝 Продать грибы Торговцу',
     sales_history: 'История продаж',
     wallet_dest: 'Адрес кошелька получателя',
+    balance_myco: 'Баланс MYCO', balance_ton: 'Баланс TON',
+    buy_btn: 'Купить', sell_btn: 'Продать', deploy_btn: 'Развернуть',
+    withdraw_btn: 'Вывести', sell_card_btn: 'Продать карту', retire_card_btn: 'Убрать карту',
+    no_cards: 'Нет карт! Зайди в Магазин.',
+    farm_slots: 'Ферма', unlocked_slots: 'слотов',
+    free_spin: 'Бесплатный спин',
+    sell_all_cards: 'Продать все карты?',
+    wallet_address: 'Адрес кошелька получателя',
     confirm_new_account: '⚠️ Создание нового аккаунта сотрёт текущий прогресс. Продолжить?',
+    confirm_sell_card: 'Продать эту карту?',
+    confirm_deploy: 'Развернуть эту карту?',
+    cards_owned: 'Карты в наличии',
+    merchant_desc: 'Продажа торговцу',
+    fortune_desc: 'Удача',
+    about_desc: 'Об игре',
+    produces: 'Производит',
+    per4h: '/ 4ч',
+    next_cycle: 'Следующий цикл',
+    ready: 'Готово',
   },
   it: {
     choose_lang: 'Scegli la lingua',
@@ -3017,21 +3056,34 @@ const TRANSLATIONS = {
     harvest_btn: '🍄 Raccogli',
     back_menu: '← Menu',
     farm_title: '🌾 Fattoria',
-    slots_used: 'Slot utilizzati',
-    next_harvest: 'Prossimo ciclo',
-    total_harvested: 'Totale raccolto',
+    slots_used: 'Slot usati', next_harvest: 'Prossimo ciclo', total_harvested: 'Totale raccolto',
     shop_title: '🛒 Negozio Carte',
     community: 'Unisciti alla Community',
     tx_history: 'Storico transazioni',
-    wheel_title: '🎰 Ruota della Fortuna',
-    wheel_rewards: 'Premi della Ruota',
-    slot_title: '🎰 Slot Machine Misteriosa',
-    slot_gains: 'Premi della Macchina',
-    merchant_title: 'Il Mercante',
-    merchant_sell: '🤝 Vendi funghi al Mercante',
+    wheel_title: '🎰 Ruota della Fortuna', wheel_rewards: 'Premi della Ruota',
+    slot_title: '🎰 Slot Machine Misteriosa', slot_gains: 'Premi della Macchina',
+    merchant_title: 'Il Mercante', merchant_sell: '🤝 Vendi funghi al Mercante',
     sales_history: 'Storico vendite',
     wallet_dest: 'Indirizzo Wallet destinatario',
+    balance_myco: 'Saldo MYCO', balance_ton: 'Saldo TON',
+    buy_btn: 'Acquista', sell_btn: 'Vendi', deploy_btn: 'Schiera',
+    withdraw_btn: 'Preleva', sell_card_btn: 'Vendi carta', retire_card_btn: 'Ritira carta',
+    no_cards: 'Nessuna carta! Visita il Negozio.',
+    farm_slots: 'Fattoria', unlocked_slots: 'slot',
+    free_spin: 'Giro gratuito',
+    sell_all_cards: 'Vendere tutte le carte?',
+    wallet_address: 'Indirizzo Wallet destinatario',
     confirm_new_account: '⚠️ Creare un nuovo account cancellerà i progressi attuali. Continuare?',
+    confirm_sell_card: 'Vendere questa carta?',
+    confirm_deploy: 'Schierare questa carta?',
+    cards_owned: 'Carte possedute',
+    merchant_desc: 'Vendi al Mercante',
+    fortune_desc: 'Fortuna',
+    about_desc: 'Informazioni sul gioco',
+    produces: 'Produce',
+    per4h: '/ 4h',
+    next_cycle: 'Prossimo ciclo',
+    ready: 'Pronti',
   },
   es: {
     choose_lang: 'Elige tu idioma',
@@ -3048,21 +3100,34 @@ const TRANSLATIONS = {
     harvest_btn: '🍄 Cosechar',
     back_menu: '← Menú',
     farm_title: '🌾 Granja',
-    slots_used: 'Slots usados',
-    next_harvest: 'Próximo ciclo',
-    total_harvested: 'Total cosechado',
+    slots_used: 'Slots usados', next_harvest: 'Próximo ciclo', total_harvested: 'Total cosechado',
     shop_title: '🛒 Tienda de Cartas',
     community: 'Únete a la Comunidad',
     tx_history: 'Historial de transacciones',
-    wheel_title: '🎰 Rueda de la Fortuna',
-    wheel_rewards: 'Premios de la Rueda',
-    slot_title: '🎰 Máquina Tragaperras',
-    slot_gains: 'Premios de la Máquina',
-    merchant_title: 'El Mercader',
-    merchant_sell: '🤝 Vender setas al Mercader',
+    wheel_title: '🎰 Rueda de la Fortuna', wheel_rewards: 'Premios de la Rueda',
+    slot_title: '🎰 Máquina Tragaperras', slot_gains: 'Premios de la Máquina',
+    merchant_title: 'El Mercader', merchant_sell: '🤝 Vender setas al Mercader',
     sales_history: 'Historial de ventas',
     wallet_dest: 'Dirección Wallet destinatario',
+    balance_myco: 'Saldo MYCO', balance_ton: 'Saldo TON',
+    buy_btn: 'Comprar', sell_btn: 'Vender', deploy_btn: 'Desplegar',
+    withdraw_btn: 'Retirar', sell_card_btn: 'Vender carta', retire_card_btn: 'Retirar carta',
+    no_cards: '¡Sin cartas! Visita la Tienda.',
+    farm_slots: 'Granja', unlocked_slots: 'slots',
+    free_spin: 'Giro gratis',
+    sell_all_cards: '¿Vender todas las cartas?',
+    wallet_address: 'Dirección Wallet destinatario',
     confirm_new_account: '⚠️ Crear una nueva cuenta borrará tu progreso actual. ¿Continuar?',
+    confirm_sell_card: '¿Vender esta carta?',
+    confirm_deploy: '¿Desplegar esta carta?',
+    cards_owned: 'Cartas poseídas',
+    merchant_desc: 'Vender al Mercader',
+    fortune_desc: 'Fortuna',
+    about_desc: 'Acerca del juego',
+    produces: 'Produce',
+    per4h: '/ 4h',
+    next_cycle: 'Próximo ciclo',
+    ready: 'Listos',
   }
 };
 
@@ -3079,17 +3144,20 @@ function selectLang(lang, btn){
 
 function applyLang(lang){
   const T = TRANSLATIONS[lang] || TRANSLATIONS['fr'];
-  // Text elements
+
+  // Tous les éléments data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if(T[key] !== undefined) el.textContent = T[key];
   });
-  // Placeholder elements
+
+  // Placeholders
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const key = el.getAttribute('data-i18n-placeholder');
     if(T[key] !== undefined) el.placeholder = T[key];
   });
-  // Nav buttons labels (they don't have data-i18n since they're dynamic)
+
+  // Nav boutons
   const navMap = {
     'nav-farm': 'nav_farm', 'nav-wallet': 'nav_wallet',
     'nav-shop': 'nav_shop', 'nav-merchant': 'nav_merchant',
@@ -3099,27 +3167,55 @@ function applyLang(lang){
     const el = document.getElementById(id);
     if(el){ const span = el.querySelector('span'); if(span && T[key]) span.textContent = T[key]; }
   });
-  // Harvest button
+
+  // Bouton récolter
   const hbtn = document.getElementById('harvest-btn-label');
   if(hbtn && T['harvest_btn']) hbtn.textContent = T['harvest_btn'];
-  // Back buttons
+
+  // Boutons back
   document.querySelectorAll('[data-i18n-back]').forEach(el => {
     if(T['back_menu']) el.textContent = T['back_menu'];
   });
-  // Boutons splash dynamiques
+
+  // Splash
   const contBtn = document.querySelector('#continue-btn-wrap span');
   if(contBtn && T['continue_btn']) contBtn.textContent = T['continue_btn'];
   const newAccBtn = document.querySelector('#new-account-btn span');
   if(newAccBtn && T['new_account_btn']) newAccBtn.textContent = T['new_account_btn'];
-  // Farm title topbar
-  const farmTitle = document.querySelector('.farm-section-title, [data-page="farm"] .section-title span');
-  if(farmTitle && T['farm_title']) farmTitle.textContent = T['farm_title'];
-  // Stat labels
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if(T[key] !== undefined) el.textContent = T[key];
+
+  // Titres dynamiques
+  const ids = {
+    'merchant-title-txt': 'merchant_title',
+    'fortune-title-txt': 'wheel_title',
+    'shop-title-txt': 'shop_title',
+    'farm-title-txt': 'farm_title',
+    'wallet-balance-myco-lbl': 'balance_myco',
+    'wallet-balance-ton-lbl': 'balance_ton',
+    'tx-history-title': 'tx_history',
+    'sales-history-title': 'sales_history',
+    'community-title': 'community',
+    'wheel-rewards-title': 'wheel_rewards',
+    'slot-gains-title': 'slot_gains',
+    'merchant-sell-btn-txt': 'merchant_sell',
+  };
+  Object.entries(ids).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if(el && T[key]) el.textContent = T[key];
   });
-  // Store lang in state if game started
+
+  // Labels stat ferme
+  const slotLbl = document.getElementById('slots-used-lbl');
+  if(slotLbl && T['slots_used']) slotLbl.textContent = T['slots_used'];
+  const readyLbl = document.getElementById('ready-lbl');
+  if(readyLbl && T['ready']) readyLbl.textContent = T['ready'];
+  const nextLbl = document.getElementById('next-cycle-lbl');
+  if(nextLbl && T['next_harvest']) nextLbl.textContent = T['next_harvest'];
+
+  // Solde MYCO label wallet
+  const mycoLbl = document.getElementById('balance-myco-lbl');
+  if(mycoLbl && T['balance_myco']) mycoLbl.textContent = T['balance_myco'];
+
+  // Store lang
   if(typeof state !== 'undefined') state.lang = lang;
 }
 
