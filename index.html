@@ -152,7 +152,7 @@
   .slot.farming{background:linear-gradient(135deg,#1e4a2a,#163824);}
   .slot.ready{background:linear-gradient(135deg,#4a3a00,#3a2a00);animation:pulse-ready 1.5s ease-in-out infinite;}
   @keyframes pulse-ready{0%,100%{box-shadow:0 0 8px #f5c84244}50%{box-shadow:0 0 20px #f5c84288}}
-  .slot .shroom-img{width:58%;height:58%;object-fit:contain;}
+  .slot .shroom-img{width:70%;height:70%;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));}
   .slot .slot-name{font-size:0.45rem;color:#ffffffaa;text-align:center;line-height:1;}
   .slot .slot-yield{font-size:0.5rem;color:var(--myco);font-weight:800;}
   .slot .slot-ready-badge{font-size:0.48rem;color:var(--myco);font-weight:800;background:#f5c84222;border-radius:4px;padding:1px 3px;}
@@ -185,8 +185,8 @@
   /* CARD ITEMS */
   .card-item{background:var(--card2);border-radius:16px;padding:13px;display:flex;align-items:center;gap:12px;margin-bottom:10px;border:1px solid #ffffff0d;cursor:pointer;transition:transform 0.15s;}
   .card-item:active{transform:scale(0.98);}
-  .card-img-wrap{width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-  .card-img-wrap img{width:46px;height:46px;object-fit:contain;}
+  .card-img-wrap{width:72px;height:72px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .card-img-wrap img{width:68px;height:68px;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.3));animation:cardFloat 3s ease-in-out infinite;}
   .card-info{flex:1;}
   .card-info .name{font-weight:700;font-size:0.92rem;}
   .card-info .type-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:0.68rem;font-weight:700;margin:3px 0;}
@@ -198,11 +198,20 @@
   .type-legendary{background:#ff8c0022;color:var(--legendary);}
 
   /* SHOP */
-  .shop-card{background:linear-gradient(135deg,var(--card-bg),var(--card2));border-radius:20px;padding:16px;margin-bottom:12px;border:1px solid #ffffff12;position:relative;overflow:hidden;}
-  .shop-card .row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-  .shop-mushroom{width:68px;height:68px;object-fit:contain;flex-shrink:0;}
-  .shop-card .card-name{font-family:'Fredoka One',cursive;font-size:1.1rem;}
-  .shop-card .card-desc{font-size:0.75rem;color:var(--muted);margin:4px 0 8px;line-height:1.4;}
+  .shop-card{background:linear-gradient(135deg,var(--card-bg),var(--card2));border-radius:20px;padding:16px;margin-bottom:16px;border:1px solid #ffffff18;position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;}
+  .shop-card:active{transform:scale(0.98);}
+  .shop-card .row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .shop-mushroom{width:110px;height:110px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));transition:transform 0.3s;animation:cardFloat 3s ease-in-out infinite;}
+  .shop-card:hover .shop-mushroom,.shop-card:active .shop-mushroom{transform:scale(1.08);}
+  @keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .shop-card .card-name{font-family:'Fredoka One',cursive;font-size:1.2rem;}
+  .shop-card .card-desc{font-size:0.78rem;color:var(--muted);margin:4px 0 8px;line-height:1.4;}
+  .shop-card.rarity-common{border-color:#8e9aaf44;box-shadow:0 4px 20px #8e9aaf11;}
+  .shop-card.rarity-uncommon{border-color:#3ecf6a44;box-shadow:0 4px 20px #3ecf6a22;}
+  .shop-card.rarity-rare{border-color:#4da6ff44;box-shadow:0 4px 20px #4da6ff22;}
+  .shop-card.rarity-epic{border-color:#b44fff44;box-shadow:0 4px 20px #b44fff22;}
+  .shop-card.rarity-legendary{border-color:#ff8c0066;box-shadow:0 4px 20px #ff8c0033;animation:legendaryGlow 2s ease-in-out infinite;}
+  @keyframes legendaryGlow{0%,100%{box-shadow:0 4px 20px #ff8c0033}50%{box-shadow:0 4px 40px #ff8c0066}}
   .buy-btn{background:linear-gradient(135deg,var(--myco),var(--myco-dark));border:none;border-radius:12px;padding:9px 16px;font-family:'Fredoka One',cursive;color:#1a0a2e;font-size:0.9rem;cursor:pointer;transition:transform 0.15s;white-space:nowrap;}
   .buy-btn:active{transform:scale(0.94);}
   .yield-info{font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:4px;}
@@ -226,11 +235,16 @@
 
   /* SLEEP */
   .sleep-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
-  .sleep-card-item{background:var(--card2);border-radius:16px;padding:13px 10px;text-align:center;cursor:pointer;transition:transform 0.15s;border:1px solid #ffffff0d;position:relative;}
-  .sleep-card-item:active{transform:scale(0.96);}
-  .sleep-card-item .shroom-img{width:54px;height:54px;object-fit:contain;}
-  .sleep-card-item .sname{font-size:0.77rem;font-weight:700;margin-top:4px;}
+  .sleep-card-item{background:var(--card2);border-radius:16px;padding:13px 10px;text-align:center;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;border:1px solid #ffffff18;position:relative;}
+  .sleep-card-item:active{transform:scale(0.94);}
+  .sleep-card-item .shroom-img{width:80px;height:80px;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.3));animation:cardFloat 3s ease-in-out infinite;}
+  .sleep-card-item .sname{font-size:0.78rem;font-weight:700;margin-top:6px;}
   .sleep-card-item .slvl{font-size:0.7rem;color:var(--myco);}
+  .sleep-card-item.r-common{border-color:#8e9aaf33;}
+  .sleep-card-item.r-uncommon{border-color:#3ecf6a44;}
+  .sleep-card-item.r-rare{border-color:#4da6ff44;}
+  .sleep-card-item.r-epic{border-color:#b44fff44;}
+  .sleep-card-item.r-legendary{border-color:#ff8c0066;box-shadow:0 0 14px #ff8c0033;}
   .lv-badge{position:absolute;top:6px;right:6px;background:var(--purple);border-radius:8px;padding:1px 6px;font-size:0.58rem;font-weight:700;color:white;}
   .upgrade-bar{background:#ffffff15;border-radius:4px;height:4px;margin-top:6px;overflow:hidden;}
   .upgrade-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--myco));}
@@ -1989,7 +2003,7 @@ function initShop(){
     const desc=CARD_DESC[type.rarity]||'';
     const priceStr=type.shop_currency==='ton'?`${type.shop_price} TON`:`${type.shop_price} MYCO`;
     const pIcon=type.shop_currency==='ton'?IC.ton:IC.myco;
-    const d=document.createElement('div');d.className='shop-card';
+    const d=document.createElement('div');d.className=`shop-card rarity-${type.rarity}`;
     d.innerHTML=`<div class="row"><div style="flex:1"><span class="type-badge type-${type.rarity}" style="font-size:0.85rem;padding:4px 12px">${type.rarity.toUpperCase()}</span><div class="card-name" style="margin-top:6px">${type.name}</div><div class="card-desc">${desc}</div><div class="yield-info"><img src="${IC.harvest}">Produit ${type.base_mushrooms} 🍄 / 4h</div></div><img class="shop-mushroom" src="${CARD_IMG[type.rarity]}" alt=""></div><div class="row" style="margin-top:12px"><div style="display:flex;align-items:center;gap:5px;color:var(--myco);font-weight:700;font-size:0.9rem"><img src="${pIcon}" style="width:16px;height:16px">${priceStr}</div><button class="buy-btn" onclick="buyCard('${type.rarity}')">Acheter</button></div>`;
     cont.appendChild(d);
   });
