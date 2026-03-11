@@ -1021,12 +1021,12 @@
   <div style="text-align:center;padding:10px 0">
     <div id="big-basket-wrap" style="position:relative;width:280px;margin:0 auto 6px;text-align:center">
       <!-- Bulle compteur -->
-      <div class="basket-count-bubble" id="basket-count-bubble" style="display:none;position:absolute;top:8px;right:4px;z-index:10">0 🍄</div>
-      <!-- Panier image PNG -->
-      <img src="static-files/panier.png" alt="panier"
-           style="width:280px;display:block;margin:0 auto;animation:basket-float 4s ease-in-out infinite;filter:drop-shadow(0 12px 36px rgba(200,130,20,0.65));position:relative;z-index:1"/>
+      <div class="basket-count-bubble" id="basket-count-bubble" style="display:none;position:absolute;top:14px;right:4px;z-index:6">0 🍄</div>
+      <!-- Image panier dynamique -->
+      <img id="basket-img" src="static-files/panier_vide.png" alt="panier"
+           style="width:280px;display:block;margin:0 auto;animation:basket-float 4s ease-in-out infinite;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.7));transition:opacity 0.35s ease;"/>
     </div>
-    <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--muted)" id="basket-state-label">Panier vide — Allez récolter des champignons !</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--muted);margin-top:4px" id="basket-state-label">Panier vide — Allez récolter des champignons !</div>
   </div>
 
   <!-- SELL BUTTON -->
@@ -2287,9 +2287,27 @@ function renderMerchantPage(){
 
   document.getElementById('basket-myco-value').textContent=totalMyco.toLocaleString();
 
-  // Big basket visual
+  // Big basket visual — 3 niveaux : vide / moitie / plein
+  const basketImg=document.getElementById('basket-img');
   const bubble=document.getElementById('basket-count-bubble');
   const stateLabel=document.getElementById('basket-state-label');
+
+  // Seuil : 0 = vide, 1-9 = moitié, 10+ = plein
+  let basketLevel='vide';
+  if(totalCount===0)          basketLevel='vide';
+  else if(totalCount<10)      basketLevel='moitie';
+  else                        basketLevel='plein';
+
+  if(basketImg){
+    const newSrc=`static-files/panier_${basketLevel}.png`;
+    if(!basketImg.src.endsWith(newSrc)){
+      basketImg.style.opacity='0';
+      setTimeout(()=>{
+        basketImg.src=newSrc;
+        basketImg.style.opacity='1';
+      },220);
+    }
+  }
 
   if(totalCount===0){
     if(bubble)bubble.style.display='none';
