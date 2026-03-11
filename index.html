@@ -363,7 +363,8 @@
   .sell-section .sell-title{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--merchant);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
   .sell-preview{display:flex;align-items:center;justify-content:space-between;background:#ffffff08;border-radius:12px;padding:10px 14px;margin-bottom:12px;}
   .sell-preview .sp-label{font-size:0.78rem;color:var(--muted);}
-  .sell-preview .sp-val{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--myco);}
+  .sell-preview .sp-val{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--myco);}
+  .sell-section{background:linear-gradient(135deg,#100500,#1e0a00);border-radius:20px;padding:16px;border:1px solid #e67e2222;margin:10px 0;}
   .sell-btn{width:100%;padding:14px;border-radius:16px;border:none;background:linear-gradient(135deg,var(--merchant),var(--merchant-dark));color:white;font-family:'Fredoka One',cursive;font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 20px #e67e2233;transition:transform 0.15s;}
   .sell-btn:active{transform:scale(0.97);}
   .sell-btn.disabled{opacity:0.4;cursor:not-allowed;}
@@ -678,12 +679,13 @@
     <span class="label">⏱ Prochain cycle :</span>
     <span class="countdown" id="next-harvest-countdown">4:00:00</span>
   </div>
-  <button class="harvest-btn" onclick="harvestAll()">
-    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f344.svg" alt="">
-    <span id="harvest-btn-label" data-i18n="harvest_btn">🍄 Récolter</span>
+  <button class="harvest-btn" onclick="harvestAll()" style="background:linear-gradient(135deg,#2ecc71,#1a9e50);box-shadow:0 6px 28px #2ecc7155;font-size:1.2rem;padding:16px;border-radius:20px;position:relative;overflow:hidden">
+    <span style="font-size:1.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));animation:cardFloat 2s ease-in-out infinite">🍄</span>
+    <span id="harvest-btn-label" data-i18n="harvest_btn" style="letter-spacing:0.5px">Récolter</span>
+    <span style="font-size:1.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));animation:cardFloat 2s ease-in-out infinite 0.5s">🍄</span>
   </button>
   <div class="section-title">
-    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f331.svg" alt="">
+    <img src="static-files/logo mico.png" alt="" style="border-radius:50%;width:20px;height:20px">
     <span>Ferme (<span id="unlocked-slots-count">5</span>/50 slots)</span>
   </div>
   <div class="farm-grid" id="farm-grid"></div>
@@ -813,31 +815,8 @@
   </div>
   <div class="section-title"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f6d2.svg" alt=""><span>Shop des Cartes</span></div>
   <div id="shop-cards"></div>
-  <div class="community-section">
-    <div class="com-title">
-      <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f30d.svg" alt="">
-      <span data-i18n="community">Rejoins la Communauté</span>
-    </div>
-    <div class="social-row">
-      <a href="https://t.me/mushroomfarmgame" class="social-btn" target="_blank" style="color:#29b6f6">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
-        <span>Telegram</span>
-      </a>
-      <a href="https://discord.gg/mushroomfarm" class="social-btn" target="_blank" style="color:#7289da">
-        <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord">
-        <span>Discord</span>
-      </a>
-      <a href="https://twitter.com/mushroomfarm" class="social-btn" target="_blank" style="color:#fff">
-        <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1d34e.svg" alt="X" style="background:#000;padding:2px">
-        <span>Twitter/X</span>
-      </a>
-      <a href="https://instagram.com/mushroomfarm" class="social-btn" target="_blank" style="color:#e1306c">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/240px-Instagram_icon.png" alt="Instagram">
-        <span>Instagram</span>
-      </a>
-    </div>
-  </div>
 </div>
+
 
 <!-- PAGE FORTUNE -->
 <div id="page-fortune" class="page" style="display:none">
@@ -1024,10 +1003,11 @@
       </div>
     </div>
   </div>
-  <div class="merchant-hero">
-    <span class="merchant-icon">🧙</span>
-    <div class="mh-title">Le Marchand</div>
-    <div class="mh-sub">Vendez vos champignons chaque soir à minuit</div>
+  <div class="merchant-hero" style="background:linear-gradient(135deg,#1a0a00,#2d1400);border-radius:20px;padding:20px;margin-bottom:12px;border:1px solid #e67e2233;text-align:center;position:relative;overflow:hidden">
+    <div style="font-size:4rem;filter:drop-shadow(0 4px 16px #e67e2288);animation:basket-float 3s ease-in-out infinite">🧙</div>
+    <div class="mh-title" style="font-size:1.6rem">Le Marchand</div>
+    <div class="mh-sub" style="font-size:0.82rem;opacity:0.8;margin-top:4px">Vendez vos champignons chaque soir à minuit</div>
+    <div style="position:absolute;top:10px;right:12px;font-size:1.5rem;opacity:0.15">🍄🍄🍄</div>
   </div>
 
   <div class="reward-timer">
@@ -1053,7 +1033,7 @@
     <div class="sell-title">💰 Récompense estimée</div>
     <div class="sell-preview">
       <div class="sp-label">Valeur du panier actuel</div>
-      <div class="sp-val"><span id="basket-myco-value">0</span> MYCO</div>
+      <div class="sp-val" style="display:flex;align-items:center;justify-content:center;gap:8px"><img src="static-files/logo mico.png" style="width:24px;height:24px;border-radius:50%"><span id="basket-myco-value">0</span> MYCO</div>
     </div>
     <div class="sell-preview" id="pending-preview" style="display:none;margin-top:6px">
       <div class="sp-label" style="color:#e67e22">⏳ En attente de versement</div>
@@ -1063,8 +1043,8 @@
       🕛 Les MYCO sont versés automatiquement à <strong style="color:var(--myco)">0h00</strong><br>
       <span style="font-size:0.68rem">Vendez vos champignons dans la journée — ils seront payés à minuit !</span>
     </div>
-    <button class="sell-btn" id="sell-btn" onclick="sellBasket()">
-      🤝 Vendre les champignons au Marchand
+    <button class="sell-btn" id="sell-btn" onclick="sellBasket()" style="font-size:1.2rem;padding:16px;border-radius:20px;background:linear-gradient(135deg,#e67e22,#c0392b);box-shadow:0 6px 28px #e67e2255">
+      <span style="font-size:1.4rem">🤝</span> Vendre au Marchand
     </button>
   </div>
 
@@ -1397,7 +1377,7 @@
 <!-- NAV -->
 <nav id="nav" style="display:none">
   <button class="nav-btn active" id="nav-farm" onclick="goPage('farm',this)">
-    <img class="nav-icon" src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f331.svg" alt="">
+    <img class="nav-icon" src="static-files/logo mico.png" alt="" style="border-radius:50%">
     <span>Ferme</span>
   </button>
   <button class="nav-btn" id="nav-wallet" onclick="goPage('wallet',this)">
@@ -1459,9 +1439,9 @@ const BOX_IMG={
   legend:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f31f.svg',
 };
 const IC={
-  myco:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f33f.svg',
+  myco:'static-files/logo mico.png',
   ton:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg',
-  harvest:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f344.svg',
+  harvest:'static-files/common.png',
   gift:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f381.svg',
   shop:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f6d2.svg',
   wheel:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3b0.svg',
@@ -2004,7 +1984,7 @@ function initShop(){
     const priceStr=type.shop_currency==='ton'?`${type.shop_price} TON`:`${type.shop_price} MYCO`;
     const pIcon=type.shop_currency==='ton'?IC.ton:IC.myco;
     const d=document.createElement('div');d.className=`shop-card rarity-${type.rarity}`;
-    d.innerHTML=`<div class="row"><div style="flex:1"><span class="type-badge type-${type.rarity}" style="font-size:0.85rem;padding:4px 12px">${type.rarity.toUpperCase()}</span><div class="card-name" style="margin-top:6px">${type.name}</div><div class="card-desc">${desc}</div><div class="yield-info"><img src="${IC.harvest}">Produit ${type.base_mushrooms} 🍄 / 4h</div></div><img class="shop-mushroom" src="${CARD_IMG[type.rarity]}" alt=""></div><div class="row" style="margin-top:12px"><div style="display:flex;align-items:center;gap:5px;color:var(--myco);font-weight:700;font-size:0.9rem"><img src="${pIcon}" style="width:16px;height:16px">${priceStr}</div><button class="buy-btn" onclick="buyCard('${type.rarity}')">Acheter</button></div>`;
+    d.innerHTML=`<div class="row"><div style="flex:1"><span class="type-badge type-${type.rarity}" style="font-size:0.85rem;padding:4px 12px">${type.rarity.toUpperCase()}</span><div class="card-name" style="margin-top:6px">${type.name}</div><div class="card-desc">${desc}</div><div class="yield-info" style="background:rgba(255,255,255,0.05);border-radius:8px;padding:4px 8px;margin-top:4px;font-size:0.78rem"><img src="static-files/common.png" style="width:18px;height:18px;object-fit:contain">Produit <strong style="color:var(--myco)">${type.base_mushrooms}</strong> / 4h</div></div><img class="shop-mushroom" src="${CARD_IMG[type.rarity]}" alt=""></div><div class="row" style="margin-top:12px"><div style="display:flex;align-items:center;gap:5px;color:var(--myco);font-weight:700;font-size:0.9rem"><img src="${pIcon}" style="width:16px;height:16px">${priceStr}</div><button class="buy-btn" onclick="buyCard('${type.rarity}')">Acheter</button></div>`;
     cont.appendChild(d);
   });
 }
@@ -2051,7 +2031,8 @@ function renderWallet(){
   const txList=document.getElementById('tx-list');txList.innerHTML='';
   [...state.transactions].reverse().slice(0,15).forEach(tx=>{
     const pos=tx.amount>0;const d=document.createElement('div');d.className='tx-item';
-    d.innerHTML=`<div style="display:flex;align-items:center"><img class="tx-icon" src="${tx.icon}" alt=""><div><div style="font-weight:700;font-size:0.85rem">${tx.label}</div><div class="tx-type">${tx.currency.toUpperCase()} · ${tx.time}</div></div></div><div class="tx-val ${pos?'tx-pos':'tx-neg'}">${pos?'+':''}${Math.floor(tx.amount)}</div>`;
+    const txIconSrc = tx.currency==='myco' ? 'static-files/logo mico.png' : tx.icon;
+d.innerHTML=`<div style="display:flex;align-items:center"><img class="tx-icon" src="${txIconSrc}" alt="" style="border-radius:${tx.currency==='myco'?'50%':'0'}"><div><div style="font-weight:700;font-size:0.85rem">${tx.label}</div><div class="tx-type">${tx.currency.toUpperCase()} · ${tx.time}</div></div></div><div class="tx-val ${pos?'tx-pos':'tx-neg'}">${pos?'+':''}${Math.floor(tx.amount)} ${tx.currency==='myco'?'<img src="static-files/logo mico.png" style="width:13px;height:13px;border-radius:50%;vertical-align:middle">':''}</div>`;
     txList.appendChild(d);
   });
   if(!state.transactions.length)txList.innerHTML=`<div style="text-align:center;color:var(--muted);padding:20px">Aucune transaction</div>`;
