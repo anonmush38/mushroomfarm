@@ -144,20 +144,20 @@
   .stat-box{flex:1;text-align:center;}
   .stat-box .val{font-size:1.35rem;font-family:'Fredoka One',cursive;color:var(--myco);}
   .stat-box .lbl{font-size:0.68rem;color:var(--muted);margin-top:2px;}
-  .farm-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0;}
-  .slot{aspect-ratio:1;border-radius:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;transition:transform 0.15s;position:relative;overflow:hidden;border:1px solid #ffffff15;}
-  .slot:active{transform:scale(0.91);}
-  .slot.empty{background:var(--card2);border:1px dashed #ffffff1e;}
-  .slot.empty .plus-icon{width:18px;height:18px;opacity:0.3;}
-  .slot.farming{background:linear-gradient(135deg,#1e4a2a,#163824);}
-  .slot.ready{background:linear-gradient(135deg,#4a3a00,#3a2a00);animation:pulse-ready 1.5s ease-in-out infinite;}
+  .farm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0;}
+  .slot{aspect-ratio:0.82;border-radius:16px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:transform 0.18s,box-shadow 0.18s;position:relative;overflow:hidden;border:2px solid #ffffff18;}
+  .slot:active{transform:scale(0.90);}
+  .slot.empty{background:var(--card2);border:2px dashed #ffffff22;}
+  .slot.empty .plus-icon{width:24px;height:24px;opacity:0.35;}
+  .slot.farming{background:linear-gradient(160deg,#0d2e18,#1a4d28);box-shadow:inset 0 0 20px rgba(62,207,106,0.08);}
+  .slot.ready{background:linear-gradient(160deg,#3a2800,#5a4200);animation:pulse-ready 1.5s ease-in-out infinite;box-shadow:0 0 18px #f5c84244;}
   @keyframes pulse-ready{0%,100%{box-shadow:0 0 8px #f5c84244}50%{box-shadow:0 0 20px #f5c84288}}
-  .slot .shroom-img{width:70%;height:70%;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4));}
-  .slot .slot-name{font-size:0.45rem;color:#ffffffaa;text-align:center;line-height:1;}
-  .slot .slot-yield{font-size:0.5rem;color:var(--myco);font-weight:800;}
-  .slot .slot-ready-badge{font-size:0.48rem;color:var(--myco);font-weight:800;background:#f5c84222;border-radius:4px;padding:1px 3px;}
-  .slot .progress-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:#ffffff12;}
-  .slot .progress-bar .fill{height:100%;background:var(--green);transition:width 1s linear;}
+  .slot .shroom-img{width:78%;height:78%;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));animation:cardFloat 3s ease-in-out infinite;}
+  .slot .slot-name{font-size:0.6rem;color:#ffffffcc;text-align:center;line-height:1;font-weight:700;}
+  .slot .slot-yield{font-size:0.62rem;color:var(--myco);font-weight:800;background:#f5c84218;border-radius:6px;padding:1px 5px;}
+  .slot .slot-ready-badge{font-size:0.6rem;color:#fff;font-weight:800;background:linear-gradient(135deg,#f5c842,#e67e22);border-radius:6px;padding:2px 5px;animation:pulse-ready 1s ease-in-out infinite;}
+  .slot .progress-bar{position:absolute;bottom:0;left:0;right:0;height:4px;background:#ffffff10;border-radius:0 0 14px 14px;}
+  .slot .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--green),#7fff5a);transition:width 1s linear;border-radius:0 0 14px 14px;}
   .slot.common{border-color:#8e9aaf44;}
   .slot.uncommon{border-color:#3ecf6a44;box-shadow:0 0 8px #3ecf6a18;}
   .slot.rare{border-color:#4da6ff44;box-shadow:0 0 8px #4da6ff18;}
@@ -245,7 +245,7 @@
   .sleep-card-item.r-rare{border-color:#4da6ff44;}
   .sleep-card-item.r-epic{border-color:#b44fff44;}
   .sleep-card-item.r-legendary{border-color:#ff8c0066;box-shadow:0 0 14px #ff8c0033;}
-  .lv-badge{position:absolute;top:6px;right:6px;background:var(--purple);border-radius:8px;padding:1px 6px;font-size:0.58rem;font-weight:700;color:white;}
+  .lv-badge{position:absolute;top:5px;right:5px;background:linear-gradient(135deg,var(--purple),#9b00ff);border-radius:8px;padding:2px 7px;font-size:0.65rem;font-weight:700;color:white;box-shadow:0 2px 8px rgba(155,0,255,0.4);}
   .upgrade-bar{background:#ffffff15;border-radius:4px;height:4px;margin-top:6px;overflow:hidden;}
   .upgrade-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--myco));}
   .deploy-btn{width:100%;padding:7px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--green),var(--green-dark));color:white;font-family:'Fredoka One',cursive;font-size:0.8rem;cursor:pointer;margin-top:8px;}
@@ -439,11 +439,14 @@
   .withdraw-btn{width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:white;font-family:'Fredoka One',cursive;font-size:1.05rem;cursor:pointer;transition:transform 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
   .withdraw-btn:active{transform:scale(0.97);}
   /* MERCHANT BIG BASKET */
-  .big-basket-visual{position:relative;width:200px;height:180px;margin:0 auto 20px;cursor:pointer;transition:transform 0.2s;}
-  .big-basket-visual:hover{transform:scale(1.03);}
-  .big-basket-emoji{font-size:7rem;display:block;text-align:center;filter:drop-shadow(0 8px 24px #e67e2244);animation:basket-float 3s ease-in-out infinite;}
+  .big-basket-visual{position:relative;width:220px;height:210px;margin:0 auto 16px;cursor:pointer;transition:transform 0.2s;}
+  .big-basket-visual:hover{transform:scale(1.04);}
+  .big-basket-emoji{font-size:7.5rem;display:block;text-align:center;filter:drop-shadow(0 8px 28px #e67e2266);animation:basket-float 3s ease-in-out infinite;}
   @keyframes basket-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
-  .basket-mushroom-pile{position:absolute;top:30px;left:50%;transform:translateX(-50%);display:flex;flex-wrap:wrap;justify-content:center;gap:2px;width:120px;}
+  .basket-mushroom-pile{position:absolute;top:20px;left:50%;transform:translateX(-50%);display:flex;flex-wrap:wrap;justify-content:center;gap:4px;width:150px;}
+  .pile-shroom{width:36px;height:36px;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.5));animation:cardFloat 3s ease-in-out infinite;border-radius:6px;}
+  .pile-shroom:nth-child(odd){animation-delay:0.3s;}
+  .pile-shroom:nth-child(3n){animation-delay:0.6s;}
   .pile-shroom{font-size:1.4rem;animation:shroom-wobble 2s ease-in-out infinite;}
   .pile-shroom:nth-child(2n){animation-delay:0.3s;}
   .pile-shroom:nth-child(3n){animation-delay:0.6s;}
@@ -679,10 +682,8 @@
     <span class="label">⏱ Prochain cycle :</span>
     <span class="countdown" id="next-harvest-countdown">4:00:00</span>
   </div>
-  <button class="harvest-btn" onclick="harvestAll()" style="background:linear-gradient(135deg,#2ecc71,#1a9e50);box-shadow:0 6px 28px #2ecc7155;font-size:1.2rem;padding:16px;border-radius:20px;position:relative;overflow:hidden">
-    <span style="font-size:1.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));animation:cardFloat 2s ease-in-out infinite">🍄</span>
-    <span id="harvest-btn-label" data-i18n="harvest_btn" style="letter-spacing:0.5px">Récolter</span>
-    <span style="font-size:1.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));animation:cardFloat 2s ease-in-out infinite 0.5s">🍄</span>
+  <button class="harvest-btn" onclick="harvestAll()" style="background:linear-gradient(135deg,#2ecc71,#1a9e50);box-shadow:0 6px 28px #2ecc7155;font-size:1.2rem;padding:16px;border-radius:20px;letter-spacing:0.5px">
+    <span id="harvest-btn-label" data-i18n="harvest_btn">🌾 Récolter</span>
   </button>
   <div class="section-title">
     <img src="static-files/logo mico.png" alt="" style="border-radius:50%;width:20px;height:20px">
@@ -2300,22 +2301,24 @@ function renderMerchantPage(){
   } else {
     if(icon)icon.textContent='🧺';
     // Fill with mushrooms based on count
-    const mushroomEmojis=['🍄','🍄','🌿','⚡','🔮','💎'];
-    const displayCount=Math.min(totalCount,12);
+    // Construire la liste des raretés dans le panier
+    const rarityOrder=['legendary','epic','rare','uncommon','common'];
+    const basketItems=[];
+    rarityOrder.forEach(r=>{
+      const count=state.basket[r]||0;
+      for(let i=0;i<count;i++) basketItems.push(r);
+    });
+    const displayItems=basketItems.slice(0,12);
     if(pile){
       pile.innerHTML='';
-      for(let i=0;i<displayCount;i++){
-        const span=document.createElement('span');
-        span.className='pile-shroom';
-        // Pick emoji based on rarity in basket
-        let emoji='🍄';
-        if(state.basket.legendary>0&&i<2)emoji='💎';
-        else if(state.basket.epic>0&&i<4)emoji='🔮';
-        else if(state.basket.rare>0&&i<6)emoji='⚡';
-        else if(state.basket.uncommon>0&&i<9)emoji='🌿';
-        span.textContent=emoji;
-        pile.appendChild(span);
-      }
+      displayItems.forEach((rarity,i)=>{
+        const img=document.createElement('img');
+        img.className='pile-shroom';
+        img.src=CARD_IMG[rarity]||'static-files/common.png';
+        img.alt=rarity;
+        img.style.animationDelay=(i*0.15)+'s';
+        pile.appendChild(img);
+      });
     }
     if(bubble){bubble.style.display='block';bubble.textContent=totalCount+' 🍄';}
     if(stateLabel){
