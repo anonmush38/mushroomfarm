@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>  
-<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+<script src="https://unpkg.com/@tonconnect/ui@2.0.7/dist/tonconnect-ui.min.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mushroom Farm</title>
@@ -1661,56 +1661,122 @@ const MANAGER_URL = 'https://mushroomfarm-majn.onrender.com';
 const tg = window.Telegram?.WebApp;
 
 // === TON CONNECT ===
-let tonConnectUI=null,tcConnected=false,tcWalletAddr=null;
+// === TON CONNECT ===
+// Une seule variable globale window.tonConnectUI utilisée partout
+let tcConnected = false;
+let tcWalletAddr = null;
+
 function initTonConnect() {
-  if (typeof TON_CONNECT_UI === 'undefined') return;
+  if (typeof TON_CONNECT_UI === 'undefined') {
+    console.warn('[TonConnect] SDK non chargé — retry dans 2s');
+    setTimeout(initTonConnect, 2000);
+    return;
+  }
+  if (window.tonConnectUI) return; // déjà initialisé
+
   const MANIFEST_URL = 'https://anonmush38.github.io/mushroomfarm/tonconnect-manifest.json';
   try {
     window.tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
       manifestUrl:  MANIFEST_URL,
       buttonRootId: null,
     });
+
     window.tonConnectUI.onStatusChange(wallet => {
+      console.log('[TonConnect] status change:', wallet ? 'connecté' : 'déconnecté');
       if (wallet) {
-        const realAddress = wallet.account.address;
-        state.address = realAddress;
-        tcConnected = true; tcWalletAddr = realAddress;
-        updateTonConnectUI(true, realAddress);
-        fetch(`${BASE_URL}/wallet/ton-address`, {
-          method: 'POST', headers: apiHeaders(),
-          body: JSON.stringify({ ton_wallet_address: realAddress }),
-        }).catch(e => console.warn('[TonConnect] Erreur persistance adresse:', e.message));
+        const addr = wallet.account.address;
+        tcConnected   = true;
+        tcWalletAddr  = addr;
+        state.address = addr;
+        updateTonConnectUI(true, addr);
+        if (typeof getToken === 'function' && getToken()) {
+          fetch(`${BASE_URL}/wallet/ton-address`, {
+            method: 'POST', headers: apiHeaders(),
+            body: JSON.stringify({ ton_wallet_address: addr }),
+          }).catch(() => {});
+        }
         showNotif('💎 Wallet TON connecté !', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');
         updateUI(); saveState();
       } else {
-        tcConnected = false; tcWalletAddr = null;
-        updateTonConnectUI(false, null); updateUI();
+        tcConnected  = false;
+        tcWalletAddr = null;
+        updateTonConnectUI(false, null);
+        updateUI();
       }
     });
-  } catch(e) { console.warn('[TonConnect] Erreur initialisation:', e.message); }
+
+    // Restaurer session existante
+    if (window.tonConnectUI.wallet) {
+      const addr = window.tonConnectUI.wallet.account.address;
+      tcConnected  = true;
+      tcWalletAddr = addr;
+      updateTonConnectUI(true, addr);
+    }
+
+    console.log('[TonConnect] initialisé ✓');
+  } catch(e) {
+    console.warn('[TonConnect] Erreur init:', e);
+    window.tonConnectUI = null;
+  }
 }
-function updateTonConnectUI(connected,addr){
-  const disc=document.getElementById('tc-disconnected'),conn=document.getElementById('tc-connected');
-  if(!disc||!conn)return;
-  if(connected&&addr){
-    disc.style.display='none';conn.style.display='block';
-    const el=document.getElementById('tc-addr-text');if(el)el.textContent=addr.slice(0,6)+'...'+addr.slice(-6);
-    const m=document.getElementById('wallet-myco-tc');if(m)m.textContent=Math.floor(state.myco).toLocaleString();
-    const t=document.getElementById('tc-ton-balance');if(t)t.textContent=state.ton.toFixed(2)+' TON';
-  }else{disc.style.display='block';conn.style.display='none';}
+
+function updateTonConnectUI(connected, addr) {
+  const disc = document.getElementById('tc-disconnected');
+  const conn = document.getElementById('tc-connected');
+  if (!disc || !conn) return;
+  if (connected && addr) {
+    disc.style.display = 'none';
+    conn.style.display = 'block';
+    const el = document.getElementById('tc-addr-text');
+    if (el) el.textContent = addr.slice(0,6) + '...' + addr.slice(-6);
+    const m = document.getElementById('wallet-myco-tc');
+    if (m) m.textContent = Math.floor(state.myco).toLocaleString();
+    const t = document.getElementById('tc-ton-balance');
+    if (t) t.textContent = state.ton.toFixed(2) + ' TON';
+  } else {
+    disc.style.display = 'block';
+    conn.style.display = 'none';
+  }
 }
-async function tonConnectConnect(){
-  if(!tonConnectUI){initTonConnect();await new Promise(r=>setTimeout(r,600));}
-  if(!tonConnectUI){showNotif('SDK non chargé, réessaie dans 1s','https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');return;}
-  try{await tonConnectUI.openModal();}catch(e){showNotif('Erreur connexion wallet','https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');console.error(e);}
+
+async function tonConnectConnect() {
+  // Bouton feedback visuel
+  const btn = document.getElementById('tc-connect-btn');
+  if (btn) { btn.textContent = '⏳ Connexion...'; btn.disabled = true; }
+
+  if (!window.tonConnectUI) {
+    initTonConnect();
+    await new Promise(r => setTimeout(r, 1200));
+  }
+
+  if (!window.tonConnectUI) {
+    showNotif('❌ SDK TON non chargé — vérifie ta connexion', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');
+    if (btn) { btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 7H7l5 10 5-10z" fill="white"/></svg> Connecter Wallet TON'; btn.disabled = false; }
+    return;
+  }
+
+  try {
+    await window.tonConnectUI.openModal();
+  } catch(e) {
+    showNotif('❌ Erreur ouverture wallet : ' + e.message, 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');
+    console.error('[TonConnect] openModal error:', e);
+  }
+
+  if (btn) { btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 7H7l5 10 5-10z" fill="white"/></svg> Connecter Wallet TON'; btn.disabled = false; }
 }
-async function tonConnectDisconnect(){
-  if(!tonConnectUI)return;
-  try{await tonConnectUI.disconnect();showNotif('Wallet déconnecté','https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');}catch(e){console.error(e);}
+
+async function tonConnectDisconnect() {
+  if (!window.tonConnectUI) return;
+  try {
+    await window.tonConnectUI.disconnect();
+    showNotif('Wallet déconnecté', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');
+  } catch(e) { console.error(e); }
 }
-function copyTonAddr(){
-  if(!tcWalletAddr)return;
-  navigator.clipboard.writeText(tcWalletAddr).then(()=>showNotif('✅ Adresse copiée !','https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg'));
+
+function copyTonAddr() {
+  if (!tcWalletAddr) return;
+  navigator.clipboard.writeText(tcWalletAddr)
+    .then(() => showNotif('✅ Adresse copiée !', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg'));
 }
 
 function saveState() {
