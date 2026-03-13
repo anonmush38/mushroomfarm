@@ -279,29 +279,35 @@
   .spin-cost{font-size:0.78rem;color:var(--muted);margin-top:5px;text-align:center;}
 
   /* SLOT MACHINE */
-  .slot-machine-wrap{background:linear-gradient(135deg,#1a0828,#2d0a4e);border-radius:24px;padding:18px 14px 20px;border:2px solid #b44fff44;box-shadow:0 0 30px #b44fff22,inset 0 0 40px rgba(0,0,0,0.4);margin:8px 0 16px;position:relative;overflow:hidden;}
-  .slot-machine-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,#b44fff15 0%,transparent 60%);pointer-events:none;}
-  .slot-machine-title{font-family:'Fredoka One',cursive;font-size:1.2rem;color:#b44fff;text-align:center;margin-bottom:12px;text-shadow:0 0 15px #b44fff55;display:flex;align-items:center;justify-content:center;gap:8px;}
-  .slot-reels{display:flex;gap:6px;justify-content:center;margin-bottom:14px;}
-  .reel-container{width:68px;height:80px;background:#0d0020;border-radius:14px;border:2px solid #b44fff55;overflow:hidden;position:relative;box-shadow:inset 0 0 15px rgba(0,0,0,0.8);}
-  .reel-container::before,.reel-container::after{content:'';position:absolute;left:0;right:0;height:20px;z-index:5;pointer-events:none;}
-  .reel-container::before{top:0;background:linear-gradient(to bottom,#0d0020,transparent);}
-  .reel-container::after{bottom:0;background:linear-gradient(to top,#0d0020,transparent);}
+  .slot-machine-wrap{background:linear-gradient(160deg,#0d0620,#1a0828,#0d0620);border-radius:28px;padding:16px 14px 20px;border:2px solid #b44fff55;box-shadow:0 0 40px #b44fff18,inset 0 0 50px rgba(0,0,0,0.5);margin:8px 0 16px;position:relative;overflow:hidden;}
+  .slot-machine-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,#b44fff10 0%,transparent 55%);pointer-events:none;}
+  .slot-machine-title{font-family:'Fredoka One',cursive;font-size:1.2rem;color:#b44fff;text-align:center;margin-bottom:10px;text-shadow:0 0 15px #b44fff55;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .slot-reels{display:flex;gap:8px;justify-content:center;margin-bottom:14px;}
+  .reel-container{width:84px;height:106px;background:#080014;border-radius:16px;border:2px solid #b44fff44;overflow:hidden;position:relative;box-shadow:inset 0 0 20px rgba(0,0,0,0.9),0 4px 16px rgba(0,0,0,0.6);}
+  .reel-container::before,.reel-container::after{content:'';position:absolute;left:0;right:0;height:26px;z-index:5;pointer-events:none;}
+  .reel-container::before{top:0;background:linear-gradient(to bottom,#080014dd,transparent);}
+  .reel-container::after{bottom:0;background:linear-gradient(to top,#080014dd,transparent);}
   .reel-inner{display:flex;flex-direction:column;align-items:center;transition:transform 0.1s linear;}
-  .reel-symbol{width:68px;height:68px;display:flex;align-items:center;justify-content:center;font-size:2.1rem;flex-shrink:0;}
-  .reel-window{position:absolute;top:50%;left:0;right:0;height:68px;transform:translateY(-50%);border-top:2px solid #f5c84266;border-bottom:2px solid #f5c84266;pointer-events:none;z-index:6;background:rgba(245,200,66,0.04);}
-  .slot-lights{display:flex;justify-content:space-around;margin-bottom:10px;}
+  .reel-symbol{width:84px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
+  .reel-symbol canvas{border-radius:6px;}
+  .reel-symbol-label{font-size:0.58rem;font-family:'Fredoka One',cursive;color:rgba(255,255,255,0.7);margin-top:1px;text-align:center;line-height:1;}
+  .reel-window{position:absolute;top:50%;left:0;right:0;height:80px;transform:translateY(-50%);border-top:2px solid #f5c842aa;border-bottom:2px solid #f5c842aa;pointer-events:none;z-index:6;background:rgba(245,200,66,0.03);}
+  .reel-window-corner{position:absolute;width:10px;height:10px;border:2px solid #f5c842;z-index:7;}
+  .slot-lights{display:flex;justify-content:space-around;margin-bottom:8px;padding:0 10px;}
   .slot-light{width:10px;height:10px;border-radius:50%;background:#b44fff;box-shadow:0 0 8px #b44fff;animation:blink-lights 0.8s step-end infinite;}
   .slot-light:nth-child(even){background:#f5c842;box-shadow:0 0 8px #f5c842;animation-delay:0.4s;}
-  @keyframes blink-lights{0%,100%{opacity:1}50%{opacity:0.2}}
+  .slot-light:nth-child(3n){background:#3ecf6a;box-shadow:0 0 8px #3ecf6a;animation-delay:0.2s;}
+  @keyframes blink-lights{0%,100%{opacity:1}50%{opacity:0.15}}
   .slot-pull-btn{width:100%;padding:13px;border-radius:16px;border:none;background:linear-gradient(135deg,#b44fff,#7a00cc);color:white;font-family:'Fredoka One',cursive;font-size:1.1rem;cursor:pointer;box-shadow:0 5px 20px #b44fff44;transition:transform 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
   .slot-pull-btn:active{transform:scale(0.97);}
   .slot-cost-label{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:6px;}
-  .slot-win-display{background:#0d0020;border-radius:12px;padding:7px 12px;text-align:center;font-family:'Fredoka One',cursive;font-size:1rem;color:var(--myco);margin-bottom:10px;border:1px solid #f5c84222;min-height:36px;display:flex;align-items:center;justify-content:center;}
+  .slot-win-display{background:#080014;border-radius:12px;padding:7px 12px;text-align:center;font-family:'Fredoka One',cursive;font-size:1rem;color:var(--myco);margin-bottom:10px;border:1px solid #f5c84233;min-height:36px;display:flex;align-items:center;justify-content:center;}
   .slot-hand{position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:1.8rem;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.7));animation:slot-hand-idle 1.5s ease-in-out infinite;}
   .slot-hand.pulling{animation:slot-hand-pull 0.3s ease-in-out infinite;}
   @keyframes slot-hand-idle{0%,100%{transform:translateY(-50%) rotate(10deg)}50%{transform:translateY(calc(-50% - 6px)) rotate(-5deg)}}
   @keyframes slot-hand-pull{0%,100%{transform:translateY(-50%) rotate(15deg)}50%{transform:translateY(calc(-50% + 10px)) rotate(-10deg)}}
+  .slot-odds-bar{display:flex;gap:4px;justify-content:center;margin-bottom:10px;flex-wrap:wrap;}
+  .slot-odd-chip{font-size:0.62rem;padding:2px 7px;border-radius:8px;font-weight:700;font-family:'Fredoka One',cursive;}
 
   /* FIREWORKS */
   .firework{position:fixed;pointer-events:none;z-index:900;font-size:1.5rem;animation:fw-burst 1.2s ease-out forwards;}
@@ -877,20 +883,21 @@
     <div class="slot-lights" id="slot-lights">
       <div class="slot-light"></div><div class="slot-light"></div><div class="slot-light"></div>
       <div class="slot-light"></div><div class="slot-light"></div><div class="slot-light"></div>
-      <div class="slot-light"></div>
+      <div class="slot-light"></div><div class="slot-light"></div><div class="slot-light"></div>
     </div>
     <div class="slot-machine-title">🎰 Slot Machine Mystère</div>
+    <!-- Barre de probabilités rapide -->
+    <div class="slot-odds-bar" id="slot-odds-bar"></div>
     <div class="slot-win-display" id="slot-win-display">Tente ta chance !</div>
     <div class="slot-reels" id="slot-reels">
-      <div class="reel-container"><div class="reel-inner" id="reel-0"></div><div class="reel-window"></div></div>
-      <div class="reel-container"><div class="reel-inner" id="reel-1"></div><div class="reel-window"></div></div>
-      <div class="reel-container"><div class="reel-inner" id="reel-2"></div><div class="reel-window"></div></div>
+      <div class="reel-container" id="reel-wrap-0"><div class="reel-inner" id="reel-0"></div><div class="reel-window"></div></div>
+      <div class="reel-container" id="reel-wrap-1"><div class="reel-inner" id="reel-1"></div><div class="reel-window"></div></div>
+      <div class="reel-container" id="reel-wrap-2"><div class="reel-inner" id="reel-2"></div><div class="reel-window"></div></div>
     </div>
     <button class="slot-pull-btn" id="slot-btn" onclick="pullSlot()">
       <span>🎰</span><span id="slot-btn-label">Jouer</span>
     </button>
     <div class="slot-cost-label" id="slot-cost-label">🎁 1 tour gratuit/jour • Suivants : 50 MYCO</div>
-    <!-- hand pointer on the side -->
     <div class="slot-hand" id="slot-hand">👈</div>
   </div>
 
@@ -1056,7 +1063,7 @@
       <span class="gift-box-emoji locked" id="gift-box-emoji">🎁</span>
     </div>
     <div class="gift-time-label" id="gift-time-label">Disponible à 0h00 chaque jour</div>
-    <div class="gift-reward-info">🍄 Contient <strong>50 champignons 🍄</strong> — Disponible toutes les 24h !</div>
+    <div class="gift-reward-info">🍄 Contient <strong>75% de vos MYCO en récompense</strong> — Ouvrez-le à minuit !</div>
   </div>
 
   <div class="section-title"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4c5.svg" alt="">Historique des ventes</div>
@@ -2659,25 +2666,35 @@ function fireworks(){
 }
 
 // === SLOT MACHINE ===
+// Symboles = vraies images de cartes + champignons
 const SLOT_SYMBOLS=[
-  {sym:'🍄',label:'Shroom',value:'shrooms',amount:30, rarity:'common',   prob:30,jackpot:false},
-  {sym:'🌿',label:'Herbe', value:'shrooms',amount:50, rarity:'common',   prob:25,jackpot:false},
-  {sym:'⚡',label:'Éclair',value:'shrooms',amount:100,rarity:'uncommon', prob:18,jackpot:false},
-  {sym:'🔮',label:'Cristal',value:'card',  rarity:'uncommon',            prob:10,jackpot:false},
-  {sym:'💎',label:'Diamant',value:'card',  rarity:'rare',                prob:7, jackpot:false},
-  {sym:'👑',label:'Couronne',value:'card', rarity:'legendary',           prob:3, jackpot:true},
-  {sym:'🎁',label:'Box',   value:'free_spin',                            prob:5, jackpot:false},
-  {sym:'🍀',label:'Trèfle',value:'shrooms',amount:200,rarity:'uncommon', prob:2, jackpot:false},
+  {id:'shroom_s', type:'img_shroom', label:'🍄 ×50',   value:'shrooms', amount:50,  rarity:'common',    prob:30, jackpot:false, color:'#8e9aaf'},
+  {id:'common',   type:'img_card',   label:'Common',    value:'card',    rarity:'common',                prob:28, jackpot:false, color:'#8e9aaf'},
+  {id:'shroom_m', type:'img_shroom', label:'🍄 ×150',  value:'shrooms', amount:150, rarity:'uncommon',  prob:20, jackpot:false, color:'#3ecf6a'},
+  {id:'uncommon', type:'img_card',   label:'Uncommon',  value:'card',    rarity:'uncommon',              prob:12, jackpot:false, color:'#3ecf6a'},
+  {id:'shroom_l', type:'img_shroom', label:'🍄 ×400',  value:'shrooms', amount:400, rarity:'rare',      prob:8,  jackpot:false, color:'#4da6ff'},
+  {id:'rare',     type:'img_card',   label:'Rare',      value:'card',    rarity:'rare',                  prob:8,  jackpot:false, color:'#4da6ff'},
+  {id:'epic',     type:'img_card',   label:'Épique',    value:'card',    rarity:'epic',                  prob:4,  jackpot:false, color:'#b44fff'},
+  {id:'legendary',type:'img_card',   label:'JACKPOT!',  value:'card',    rarity:'legendary',             prob:1,  jackpot:true,  color:'#f5c842'},
 ];
-// Weighted random symbol
+const SLOT_TOTAL=SLOT_SYMBOLS.reduce((s,x)=>s+x.prob,0);
 function randSlotSym(){
-  const total=SLOT_SYMBOLS.reduce((s,x)=>s+x.prob,0);
-  let r=Math.random()*total;
+  let r=Math.random()*SLOT_TOTAL;
   for(const s of SLOT_SYMBOLS){r-=s.prob;if(r<=0)return s;}
   return SLOT_SYMBOLS[0];
 }
+// Cache images slot
+const SLOT_IMG_CACHE={};
+function getSlotImg(sym){
+  if(sym.type==='img_card'){
+    const src=CARD_IMG[sym.rarity];
+    if(!SLOT_IMG_CACHE[src]){const i=new Image();i.src=src;SLOT_IMG_CACHE[src]=i;}
+    return SLOT_IMG_CACHE[src];
+  }
+  return null;
+}
 let slotSpinning=false;
-const SLOT_HEIGHT=68;
+const SLOT_HEIGHT=80;
 
 function hasFreeSlotAvailable(){
   if(!state.last_free_slot_spin) return true;
@@ -2703,18 +2720,57 @@ function updateSlotUI(){
   }
 }
 
+function makeSlotCell(sym){
+  const div=document.createElement('div');div.className='reel-symbol';
+  if(sym.type==='img_card'){
+    const img=getSlotImg(sym);
+    const el=document.createElement('img');
+    el.src=CARD_IMG[sym.rarity];
+    el.style.cssText='width:62px;height:74px;object-fit:cover;border-radius:8px;border:1px solid '+sym.color+'66+';
+    el.onerror=()=>{el.replaceWith(makeFallbackCell(sym));};
+    div.appendChild(el);
+  } else {
+    // Champignon : emoji large + quantité
+    div.style.flexDirection='column';
+    const em=document.createElement('div');em.style.cssText='font-size:2.4rem;line-height:1;';em.textContent='🍄';
+    const amt=document.createElement('div');amt.style.cssText='font-size:0.65rem;font-family:Fredoka One,cursive;color:'+sym.color+';margin-top:2px;';amt.textContent='×'+sym.amount;
+    div.appendChild(em);div.appendChild(amt);
+  }
+  return div;
+}
+function makeFallbackCell(sym){
+  const div=document.createElement('div');div.className='reel-symbol';
+  div.style.cssText='flex-direction:column;';
+  const em=document.createElement('div');em.style.cssText='font-size:2rem;';em.textContent=sym.type==='img_card'?'🃏':'🍄';
+  div.appendChild(em);return div;
+}
 function initSlotReels(){
+  // Pré-charger toutes les images de cartes
+  SLOT_SYMBOLS.forEach(s=>{if(s.type==='img_card')getSlotImg(s);});
   for(let r=0;r<3;r++){
     const reel=document.getElementById('reel-'+r);if(!reel)continue;reel.innerHTML='';
-    // Fill with 20 random symbols for scrolling
     for(let i=0;i<20;i++){
       const sym=SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)];
-      const div=document.createElement('div');div.className='reel-symbol';div.textContent=sym.sym;
-      reel.appendChild(div);
+      reel.appendChild(makeSlotCell(sym));
     }
-    // Center visually on middle symbol
     reel.style.transform=`translateY(-${SLOT_HEIGHT*8}px)`;
   }
+  // Remplir barre de probabilités
+  const bar=document.getElementById('slot-odds-bar');if(!bar)return;bar.innerHTML='';
+  const T=SLOT_TOTAL;
+  const rarInfo=[
+    {label:'Common',color:'#8e9aaf',prob:(28+30)/T},
+    {label:'Uncommon',color:'#3ecf6a',prob:(12+20)/T},
+    {label:'Rare',color:'#4da6ff',prob:(8+8)/T},
+    {label:'Épique',color:'#b44fff',prob:4/T},
+    {label:'Légendaire',color:'#f5c842',prob:1/T},
+  ];
+  rarInfo.forEach(r=>{
+    const chip=document.createElement('div');chip.className='slot-odd-chip';
+    chip.style.cssText=`background:${r.color}22;color:${r.color};border:1px solid ${r.color}55;`;
+    chip.textContent=r.label+' '+(r.prob*100).toFixed(0)+'%';
+    bar.appendChild(chip);
+  });
 }
 
 function pullSlot(){
@@ -2749,38 +2805,41 @@ function pullSlot(){
 
 function animReel(reelIdx,finalSym,duration,onDone){
   const reel=document.getElementById('reel-'+reelIdx);if(!reel)return;
-  // Clear and rebuild with final symbol at center
   reel.innerHTML='';
   const scrollCount=15+Math.floor(Math.random()*8);
   for(let i=0;i<scrollCount;i++){
     const s=SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)];
-    const div=document.createElement('div');div.className='reel-symbol';div.textContent=s.sym;reel.appendChild(div);
+    reel.appendChild(makeSlotCell(s));
   }
-  // Add final symbol
-  const fin=document.createElement('div');fin.className='reel-symbol';fin.textContent=finalSym.sym;reel.appendChild(fin);
-  // Padding after
-  for(let i=0;i<3;i++){const d=document.createElement('div');d.className='reel-symbol';d.textContent=SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)].sym;reel.appendChild(d);}
-  // Total height to scroll = scrollCount * SLOT_HEIGHT, final symbol at scrollCount position
+  // Symbole final
+  reel.appendChild(makeSlotCell(finalSym));
+  // Padding après
+  for(let i=0;i<3;i++) reel.appendChild(makeSlotCell(SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]));
   const totalH=scrollCount*SLOT_HEIGHT;
   reel.style.transition='none';reel.style.transform=`translateY(${SLOT_HEIGHT}px)`;
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
-      reel.style.transition=`transform ${duration}ms cubic-bezier(0.1,0,0.2,1)`;
-      // Stop so that finalSym is in center window (-scrollCount * SLOT_HEIGHT + offset to center)
-      const targetY=-(totalH-SLOT_HEIGHT/2-SLOT_HEIGHT/2);
+      reel.style.transition=`transform ${duration}ms cubic-bezier(0.08,0,0.15,1)`;
       reel.style.transform=`translateY(${-totalH+SLOT_HEIGHT}px)`;
-      setTimeout(()=>{onDone();},duration+50);
+      setTimeout(()=>{
+        // Flasher le contenant du reel selon la rareté
+        const wrap=document.getElementById('reel-wrap-'+reelIdx);
+        if(wrap){wrap.style.borderColor=finalSym.color+'99';wrap.style.boxShadow='0 0 18px '+finalSym.color+'44';}
+        onDone();
+      },duration+50);
     });
   });
 }
 
 function evalSlotResult(results){
-  const syms=results.map(r=>r.sym);
+  const syms=results.map(r=>r.id);
   const win_display=document.getElementById('slot-win-display');
   let title='',desc='',img=IC.harvest,isJackpot=false;
   // Check for matches
   const allSame=syms[0]===syms[1]&&syms[1]===syms[2];
   const twoSame=syms[0]===syms[1]||syms[1]===syms[2]||syms[0]===syms[2];
+  // Reset couleurs rouleaux
+  for(let ri=0;ri<3;ri++){const w=document.getElementById('reel-wrap-'+ri);if(w){w.style.borderColor='#b44fff44';w.style.boxShadow='';}}
   if(allSame){
     const prize=results[0];
     isJackpot=prize.jackpot||prize.rarity==='legendary';
@@ -2828,20 +2887,20 @@ function renderSlotPrizes(){
   const container=document.getElementById('slot-prizes-table');
   if(!container)return;container.innerHTML='';
   if(slotPrizesTableOpen) container.style.display='grid';
-  const entries=[
-    {sym:'🍄🍄🍄',label:'Triple Shroom',sub:'90 champignons Common',color:'#3ecf6a'},
-    {sym:'🌿🌿🌿',label:'Triple Herbe',sub:'150 champignons Common',color:'#3ecf6a'},
-    {sym:'⚡⚡⚡',label:'Triple Éclair',sub:'300 champignons Uncommon',color:'#f5c842'},
-    {sym:'🍀🍀🍀',label:'Triple Trèfle',sub:'600 champignons Uncommon!',color:'#3ecf6a'},
-    {sym:'🔮🔮🔮',label:'Triple Cristal',sub:'Carte Uncommon !',color:'#b44fff'},
-    {sym:'💎💎💎',label:'Triple Diamant',sub:'Carte Rare !',color:'#4da6ff'},
-    {sym:'🎁🎁🎁',label:'Triple Box',sub:'Spin Roue Gratuit !',color:'#ff8c00'},
-    {sym:'👑👑👑',label:'JACKPOT !',sub:'Carte LÉGENDAIRE 🎊',color:'#ff8c00'},
-    {sym:'X X',   label:'Paire quelconque',sub:'Champignons bonus',color:'#8e9aaf'},
-  ];
+  const T=SLOT_TOTAL;
+  const entries=SLOT_SYMBOLS.map(s=>{
+    const pct=((s.prob/T)*100).toFixed(1);
+    // Prob triple = (prob)^3 * quelques ajustements
+    const tripleP=((s.prob/T)**3*100).toFixed(3);
+    const icon=s.type==='img_card'?'🃏':'🍄';
+    const reward=s.type==='img_card'?`Carte ${s.rarity.charAt(0).toUpperCase()+s.rarity.slice(1)}`:`×${s.amount*3} champignons`;
+    return {icon,label:'Triple '+s.label,sub:reward+' • Triple: '+tripleP+'%',color:s.color,pct,tripleP};
+  });
+  entries.push({icon:'✌️',label:'Paire quelconque',sub:'Champignons bonus ×1.5',color:'#8e9aaf',pct:'~',tripleP:''});
   entries.forEach(g=>{
     const d=document.createElement('div');d.className='prize-row';d.style.borderColor=g.color+'44';
-    d.innerHTML=`<div class="p-icon" style="background:${g.color}18;border:1px solid ${g.color}33;font-size:0.9rem">${g.sym}</div><div class="p-info"><div class="p-name" style="color:${g.color}">${g.label}</div><div class="p-type">${g.sub}</div></div>`;
+    const barW=g.pct==='~'?20:Math.max(4,Math.round(parseFloat(g.pct)*1.2));
+    d.innerHTML=`<div class="p-icon" style="background:${g.color}18;border:1px solid ${g.color}33;font-size:1rem">${g.icon}</div><div class="p-info"><div class="p-name" style="color:${g.color}">${g.label}</div><div class="p-type" style="display:flex;align-items:center;gap:5px;margin-top:2px"><div style="height:3px;width:${barW}px;background:${g.color};border-radius:2px;opacity:0.7"></div>${g.sub}</div></div><div class="p-chance" style="background:${g.color}18;color:${g.color};font-size:0.65rem">${g.pct}%</div>`;
     container.appendChild(d);
   });
 }
@@ -3255,7 +3314,8 @@ function doWithdraw(){
 // === DAILY GIFT (Merchant) ===
 function isDailyGiftAvailable(){
   if(!state.last_daily_gift) return true;
-  return (Date.now() - state.last_daily_gift) >= 24 * 60 * 60 * 1000;
+  const lastMidnight=new Date();lastMidnight.setHours(0,0,0,0);
+  return new Date(state.last_daily_gift)<lastMidnight;
 }
 
 function updateDailyGiftUI(){
@@ -3271,26 +3331,25 @@ function updateDailyGiftUI(){
   } else {
     emoji.className='gift-box-emoji locked';
     emoji.textContent='🔒';
-    const ms=Math.max(0, 24*60*60*1000 - (Date.now() - state.last_daily_gift));
-    const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
-    if(label){label.style.color='';label.textContent=`Prochain cadeau dans ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
+    // Show time until midnight
+    const now=new Date(),nextMid=new Date();nextMid.setHours(24,0,0,0);
+    const ms=nextMid-now,h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
+    if(label){label.style.color='';label.textContent=`Disponible à minuit — dans ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
     if(wrap)wrap.style.filter='';
   }
 }
 
 function openDailyGift(){
-  if(!isDailyGiftAvailable()){
-    const ms=Math.max(0,24*60*60*1000-(Date.now()-state.last_daily_gift));
-    const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);
-    showNotif(`🔒 Revenez dans ${h}h${String(m).padStart(2,'0')} !`,IC.gift);
-    return;
-  }
+  if(!isDailyGiftAvailable()){showNotif('Cadeau déjà ouvert aujourd\'hui !',IC.gift);return;}
+  // 75% of basket MYCO value as reward
+  const basketValue=getBasketMycoValue();
+  const totalCount=getTotalBasketCount();
+  const reward=Math.max(50,Math.round(basketValue*0.75));
   state.last_daily_gift=Date.now();
-  state.basket['common']=(state.basket['common']||0)+50;
-  addTx('🎁 Cadeau Quotidien',50,'harvest',IC.harvest);
-  saveState();
-  updateUI();updateDailyGiftUI();renderMerchantPage();
-  showResult('🎁','+50 🍄 dans votre panier !','Cadeau quotidien : 50 champignons ajoutés à votre panier — revenez dans 24h !');
+  state.myco+=reward;
+  addTx('🎁 Cadeau Quotidien',reward,'myco',IC.gift);
+  updateUI();updateDailyGiftUI();
+  showResult(IC.gift,`🎁 +${reward.toLocaleString()} MYCO !`,`Cadeau quotidien : 75% de la valeur de votre récolte (${totalCount} 🍄 → ${reward} MYCO) !`);
   confetti();spawnCoins();
 }
 
@@ -3326,16 +3385,8 @@ function applyTheme(){
 // Preview live sur le splash pendant la sélection
 
 setTimeout(()=>{
-  // Bonus connexion 24h — clé localStorage indépendante du state
-  const KEY='mf_last_conn_bonus';
-  const last=parseInt(localStorage.getItem(KEY)||'0',10);
-  if(Date.now()-last >= 24*60*60*1000){
-    localStorage.setItem(KEY, String(Date.now()));
-    state.basket['common']=(state.basket['common']||0)+100;
-    addTx('🌅 Bonus Connexion',100,'harvest',IC.harvest);
-    saveState();
-    updateUI();
-    showNotif('+100 🍄 bonus de connexion !',IC.harvest);
+  if(document.getElementById('topbar').style.display!=='none'){
+    state.myco+=100;addTx('Daily Bonus',100,'myco',IC.gift);updateUI();showNotif('+100 MYCO bonus quotidien !',IC.gift);
   }
 },3500);
 
