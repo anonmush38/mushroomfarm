@@ -4,6 +4,9 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>  
 <script src="https://unpkg.com/@tonconnect/ui@2.0.7/dist/tonconnect-ui.min.js"></script>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mushroom Farm</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -1734,6 +1737,74 @@ const MANAGER_URL = 'https://mushroomfarm-majn.onrender.com';
 // === CLOUD STORAGE (Telegram) avec fallback localStorage ===
 const tg = window.Telegram?.WebApp;
 
+// === VERSION / AUTO-UPDATE ===
+// ⚠️ INCRÉMENTER CE NUMÉRO À CHAQUE MISE À JOUR
+const APP_VERSION = '1.0.0';
+const VERSION_CHECK_URL = 'https://anonmush38.github.io/mushroomfarm/version.json';
+const VERSION_CHECK_INTERVAL = 30000; // vérifier toutes les 30 secondes
+
+async function checkForUpdate() {
+  try {
+    const r = await fetch(VERSION_CHECK_URL + '?t=' + Date.now(), {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache' }
+    });
+    if (!r.ok) return;
+    const data = await r.json();
+    const latest = data.version;
+    if (latest && latest !== APP_VERSION) {
+      console.log('[Update] Nouvelle version:', latest, '(actuelle:', APP_VERSION + ')');
+      showUpdateBanner(latest);
+    }
+  } catch(e) {}
+}
+
+function showUpdateBanner(newVersion) {
+  // Éviter d'afficher plusieurs fois
+  if (document.getElementById('update-banner')) return;
+
+  const banner = document.createElement('div');
+  banner.id = 'update-banner';
+  banner.style.cssText = `
+    position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; background: linear-gradient(135deg,#f5c842,#e09000);
+    border-radius: 16px; padding: 12px 18px; display: flex;
+    align-items: center; gap: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    font-family: 'Fredoka One', cursive; max-width: 300px; width: 90%;
+    animation: slide-up 0.4s ease;
+  `;
+  banner.innerHTML = `
+    <span style="font-size:1.4rem">🍄</span>
+    <div style="flex:1">
+      <div style="font-size:0.85rem;color:#1a0a00">Mise à jour disponible !</div>
+      <div style="font-size:0.7rem;color:#3a2000">Version ${newVersion}</div>
+    </div>
+    <button onclick="forceReload()" style="background:#1a0a00;color:#f5c842;border:none;border-radius:10px;padding:6px 12px;font-family:'Fredoka One',cursive;font-size:0.8rem;cursor:pointer">
+      Recharger
+    </button>
+  `;
+  document.body.appendChild(banner);
+
+  // Auto-reload après 10 secondes si pas d'interaction
+  setTimeout(() => {
+    if (document.getElementById('update-banner')) forceReload();
+  }, 10000);
+}
+
+function forceReload() {
+  // Vider le cache et recharger
+  if ('caches' in window) {
+    caches.keys().then(names => names.forEach(n => caches.delete(n)));
+  }
+  window.location.href = window.location.href.split('?')[0] + '?v=' + Date.now();
+}
+
+function startVersionCheck() {
+  // Première vérification après 5s, puis toutes les 30s
+  setTimeout(checkForUpdate, 5000);
+  setInterval(checkForUpdate, VERSION_CHECK_INTERVAL);
+}
+
 // === MAINTENANCE ===
 // ⚙️ POUR ACTIVER LA MAINTENANCE : passer MAINTENANCE_MODE à true et push
 const MAINTENANCE_CONFIG = {
@@ -2123,13 +2194,57 @@ function copyTonAddr() {
     .then(() => showNotif('✅ Adresse copiée !', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg'));
 }
 
+// Sauvegarde locale (localStorage + CloudStorage) — toujours synchrone
 function saveState() {
   const data = JSON.stringify({ ...state, _saved_at: Date.now() });
-  // Toujours sauvegarder en localStorage (backup)
   try { localStorage.setItem(SAVE_KEY, data); } catch(e) {}
-  // Sauvegarder dans Telegram CloudStorage si disponible
-  if (tg?.CloudStorage) {
-    tg.CloudStorage.setItem(SAVE_KEY, data, () => {});
+  try {
+    const tg = window.Telegram?.WebApp;
+    if (tg?.CloudStorage) tg.CloudStorage.setItem(SAVE_KEY, data, () => {});
+  } catch(e) {}
+}
+
+// Sauvegarde critique : locale IMMÉDIATE + sync serveur IMMÉDIATE
+// À appeler après toute action qui modifie des données importantes
+async function saveCritical(label) {
+  console.log('[Save] Action critique:', label);
+  saveState(); // local immédiat
+
+  // Sync serveur immédiate (sans attendre le prochain intervalle)
+  if (typeof getToken === 'function' && getToken()) {
+    try {
+      await fetch(`${BASE_URL}/game/state`, {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: JSON.stringify({ ...state, _action: label, _saved_at: Date.now() }),
+      });
+      console.log('[Save] Sync serveur OK:', label);
+    } catch(e) {
+      console.warn('[Save] Sync serveur échec, données en local:', e.message);
+      // Mettre en file d'attente pour retry
+      pendingSaves.push({ state: { ...state }, label, timestamp: Date.now() });
+    }
+  }
+}
+
+// File d'attente pour les syncs échouées → retry automatique
+let pendingSaves = [];
+async function retryPendingSaves() {
+  if (!pendingSaves.length) return;
+  if (!getToken || !getToken()) return;
+  const toRetry = [...pendingSaves];
+  pendingSaves = [];
+  for (const item of toRetry) {
+    try {
+      await fetch(`${BASE_URL}/game/state`, {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: JSON.stringify(item.state),
+      });
+      console.log('[Save] Retry OK:', item.label);
+    } catch(e) {
+      pendingSaves.push(item); // remettre en file
+    }
   }
 }
 
@@ -2172,10 +2287,30 @@ async function syncToManager() {
 // Sync toutes les 60 secondes si le jeu est actif
 function startAutoSync() {
   syncToManager(); // sync immédiate au démarrage
-  setInterval(() => {
-    saveState();
-    syncToManager();
-  }, 10000);
+
+  // Sync légère toutes les 5 secondes (localStorage seulement)
+  setInterval(() => { saveState(); }, 5000);
+
+  // Sync serveur toutes les 20 secondes
+  setInterval(() => { syncToManager(); retryPendingSaves(); }, 20000);
+
+  // Sauvegarder quand le joueur quitte/ferme l'app
+  window.addEventListener('beforeunload', () => { saveState(); syncToManager(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      saveState();
+      syncToManager();
+    }
+  });
+  // Telegram : sauvegarder quand l'app se ferme
+  const tg = window.Telegram?.WebApp;
+  if (tg) {
+    tg.onEvent('web_app_close_requested', () => {
+      saveState();
+      syncToManager();
+      tg.close();
+    });
+  }
 }
 
 // === SPLASH ===
@@ -3630,6 +3765,7 @@ function openBox(i){
   const rarity=box.rarities[Math.floor(Math.random()*box.rarities.length)];
   const card=createCard(rarity);state.wallet_cards.push(card);updateUI();renderSleepGrid();
   showResult(card.img,card.name+' obtenue !',`${rarity.toUpperCase()} ajoutée au portefeuille !`);confetti();
+  saveCritical('open_box_' + rarity); // ← sauvegarde immédiate
 }
 
 // === UI HELPERS ===
@@ -4618,6 +4754,7 @@ function launchGame() {
   setTimeout(initTonConnect, 1000);
   startAutoSync();
   readReferral();
+  startVersionCheck();
 }
 
 // ── IIFE principale ───────────────────────────────────────────────────────────
