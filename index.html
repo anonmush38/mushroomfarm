@@ -1024,7 +1024,7 @@
       <div class="basket-count-bubble" id="basket-count-bubble" style="display:none;position:absolute;top:14px;right:4px;z-index:6">0 🍄</div>
       <!-- Image panier dynamique -->
       <img id="basket-img" src="static-files/panier_vide.png" alt="panier"
-           style="width:280px;display:block;margin:0 auto;animation:basket-float 4s ease-in-out infinite;mix-blend-mode:lighten;transition:opacity 0.35s ease;"/>
+           style="width:280px;display:block;margin:0 auto;animation:basket-float 4s ease-in-out infinite;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.7));transition:opacity 0.35s ease;"/>
     </div>
     <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--muted);margin-top:4px" id="basket-state-label">Panier vide — Allez récolter des champignons !</div>
   </div>
@@ -1056,7 +1056,7 @@
       <span class="gift-box-emoji locked" id="gift-box-emoji">🎁</span>
     </div>
     <div class="gift-time-label" id="gift-time-label">Disponible à 0h00 chaque jour</div>
-    <div class="gift-reward-info">🍄 Contient <strong>75% de vos MYCO en récompense</strong> — Ouvrez-le à minuit !</div>
+    <div class="gift-reward-info">🍄 Contient <strong>100 champignons</strong> à ajouter à votre panier — Disponible toutes les 24h !</div>
   </div>
 
   <div class="section-title"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4c5.svg" alt="">Historique des ventes</div>
@@ -3255,8 +3255,7 @@ function doWithdraw(){
 // === DAILY GIFT (Merchant) ===
 function isDailyGiftAvailable(){
   if(!state.last_daily_gift) return true;
-  const lastMidnight=new Date();lastMidnight.setHours(0,0,0,0);
-  return new Date(state.last_daily_gift)<lastMidnight;
+  return (Date.now()-state.last_daily_gift) >= 24*60*60*1000;
 }
 
 function updateDailyGiftUI(){
@@ -3272,25 +3271,23 @@ function updateDailyGiftUI(){
   } else {
     emoji.className='gift-box-emoji locked';
     emoji.textContent='🔒';
-    // Show time until midnight
-    const now=new Date(),nextMid=new Date();nextMid.setHours(24,0,0,0);
-    const ms=nextMid-now,h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
-    if(label){label.style.color='';label.textContent=`Disponible à minuit — dans ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
+    // Temps restant depuis la dernière ouverture
+    const ms=Math.max(0, 24*60*60*1000-(Date.now()-state.last_daily_gift));
+    const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
+    if(label){label.style.color='';label.textContent=`Prochain cadeau dans ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
     if(wrap)wrap.style.filter='';
   }
 }
 
 function openDailyGift(){
-  if(!isDailyGiftAvailable()){showNotif('Cadeau déjà ouvert aujourd\'hui !',IC.gift);return;}
-  // 75% of basket MYCO value as reward
-  const basketValue=getBasketMycoValue();
-  const totalCount=getTotalBasketCount();
-  const reward=Math.max(50,Math.round(basketValue*0.75));
+  if(!isDailyGiftAvailable()){showNotif('Cadeau dans '+Math.ceil((24*60*60*1000-(Date.now()-state.last_daily_gift))/3600000)+'h !',IC.gift);return;}
+  // Récompense : 100 champignons common dans le panier
+  const reward=100;
   state.last_daily_gift=Date.now();
-  state.myco+=reward;
-  addTx('🎁 Cadeau Quotidien',reward,'myco',IC.gift);
-  updateUI();updateDailyGiftUI();
-  showResult(IC.gift,`🎁 +${reward.toLocaleString()} MYCO !`,`Cadeau quotidien : 75% de la valeur de votre récolte (${totalCount} 🍄 → ${reward} MYCO) !`);
+  state.basket['common']=(state.basket['common']||0)+reward;
+  addTx('🎁 Cadeau Quotidien',reward,'harvest',IC.gift);
+  updateUI();updateDailyGiftUI();renderMerchantPage();
+  showResult('🎁',`+${reward} 🍄 dans votre panier !`,`Cadeau quotidien : ${reward} champignons ajoutés à votre panier — revenez dans 24h !`);
   confetti();spawnCoins();
 }
 
@@ -3325,11 +3322,7 @@ function applyTheme(){
 // Appliquer le thème sombre par défaut (pas de classe = sombre)
 // Preview live sur le splash pendant la sélection
 
-setTimeout(()=>{
-  if(document.getElementById('topbar').style.display!=='none'){
-    state.myco+=100;addTx('Daily Bonus',100,'myco',IC.gift);updateUI();showNotif('+100 MYCO bonus quotidien !',IC.gift);
-  }
-},3500);
+
 
 // ════════════════════════════════════════════════
 // QUIZ CHAMPIGNON — 100 questions (25 par difficulté)
