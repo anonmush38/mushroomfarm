@@ -1056,7 +1056,7 @@
       <span class="gift-box-emoji locked" id="gift-box-emoji">🎁</span>
     </div>
     <div class="gift-time-label" id="gift-time-label">Disponible à 0h00 chaque jour</div>
-    <div class="gift-reward-info">🍄 Contient <strong>100 champignons 🍄</strong> à ajouter à votre panier — Disponible toutes les 24h !</div>
+    <div class="gift-reward-info">🍄 Contient <strong>100 champignons 🍄</strong> — Disponible toutes les 24h !</div>
   </div>
 
   <div class="section-title"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4c5.svg" alt="">Historique des ventes</div>
@@ -1514,7 +1514,7 @@ let state={
   last_midnight_reward:null,
   last_free_spin:null,
   last_free_slot_spin:null,
-  last_daily_gift:null,
+  last_daily_gift:null, last_connection_bonus:null,
   exchange_direction:'ton_to_myco',
   pending_myco:0,
   pending_count:0,
@@ -1633,7 +1633,7 @@ function newAccount(){
     transactions:[], total_harvested:0, address:'',
     unlocked_slots:[], basket:{common:0,uncommon:0,rare:0,epic:0,legendary:0},
     reward_history:[], last_midnight_reward:null, last_free_spin:null,
-    last_free_slot_spin:null, last_daily_gift:null,
+    last_free_slot_spin:null, last_daily_gift:null, last_connection_bonus:null, last_connection_bonus:null,
     exchange_direction:'ton_to_myco', pending_myco:0, pending_count:0, lang:'fr',
   };
   // Masquer le bouton continuer
@@ -1673,6 +1673,7 @@ async function continueSave(){
     document.getElementById('nav').style.display='flex';
     showPage('farm');initFarmGrid();initShop();initBoxes();drawWheel();updateUI();startFarmTick();startMidnightTimer();
     startAutoSync();
+    setTimeout(checkConnectionBonus, 800);
   },500);
 }
 
@@ -1718,6 +1719,7 @@ async function startGame(){
     document.getElementById('nav').style.display='flex';
     showPage('farm');initFarmGrid();initShop();initBoxes();drawWheel();updateUI();startFarmTick();startMidnightTimer();
     startAutoSync();
+    setTimeout(checkConnectionBonus, 800);
   },500);
 }
 
@@ -3252,10 +3254,25 @@ function doWithdraw(){
   showNotif(`📤 Retrait de ${amount} ${withdrawCrypto.toUpperCase()} envoyé !`,IC.out);
 }
 
+// === BONUS CONNEXION 24h ===
+function checkConnectionBonus(){
+  // Recharge le state depuis la sauvegarde pour avoir last_connection_bonus à jour
+  const last = state.last_connection_bonus || 0;
+  const elapsed = Date.now() - last;
+  if(elapsed >= 24*60*60*1000){
+    state.last_connection_bonus = Date.now();
+    state.basket['common'] = (state.basket['common']||0) + 100;
+    addTx('🎁 Bonus Connexion',100,'harvest',IC.harvest);
+    saveState(); // sauvegarder IMMÉDIATEMENT le nouveau timestamp
+    updateUI();
+    setTimeout(()=>showNotif('+100 🍄 bonus de connexion !',IC.harvest),1000);
+  }
+}
+
 // === DAILY GIFT (Merchant) ===
 function isDailyGiftAvailable(){
   if(!state.last_daily_gift) return true;
-  return (Date.now()-state.last_daily_gift) >= 24*60*60*1000;
+  return (Date.now()-state.last_daily_gift)>=24*60*60*1000;
 }
 
 function updateDailyGiftUI(){
@@ -3323,17 +3340,7 @@ function applyTheme(){
 // Appliquer le thème sombre par défaut (pas de classe = sombre)
 // Preview live sur le splash pendant la sélection
 
-setTimeout(()=>{
-  if(document.getElementById('topbar').style.display!=='none'){
-    if(isDailyGiftAvailable()){
-      state.basket['common']=(state.basket['common']||0)+100;
-      state.last_daily_gift=Date.now();
-      addTx('🎁 Bonus Connexion',100,'harvest',IC.harvest);
-      updateUI();updateDailyGiftUI();
-      showNotif('+100 🍄 bonus de connexion !',IC.harvest);
-    }
-  }
-},3500);
+
 
 // ════════════════════════════════════════════════
 // QUIZ CHAMPIGNON — 100 questions (25 par difficulté)
