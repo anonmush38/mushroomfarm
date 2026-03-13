@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>  
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mushroom Farm</title>
@@ -433,6 +434,10 @@
   .prize-row .p-name{font-size:0.82rem;font-weight:700;}
   .prize-row .p-type{font-size:0.65rem;color:var(--muted);margin-top:1px;}
   .prize-row .p-chance{font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:8px;background:#f5c84218;color:var(--myco);white-space:nowrap;}
+  /* TON CONNECT */
+  #tc-connect-btn:hover{filter:brightness(1.1);}
+  .tc-wallet-name{font-size:0.72rem;color:#0098ea;font-weight:700;}
+
   /* EXCHANGE */
   .exchange-card{background:linear-gradient(135deg,#0a1a2e,#0f2640);border-radius:20px;padding:18px 16px;margin:12px 0;border:1px solid #00a8ff33;}
   .exchange-title{font-family:'Fredoka One',cursive;font-size:1rem;color:#29b6f6;display:flex;align-items:center;gap:8px;margin-bottom:14px;}
@@ -733,11 +738,51 @@
       </div>
     </div>
   </div>
-  <div class="wallet-card">
-    <div class="wlabel"><img src="static-files/logo mico.png" alt=""><span>Solde MYCO</span></div>
+  <!-- TON CONNECT WALLET -->
+  <div class="wallet-card" id="ton-connect-section">
+    <!-- État : non connecté -->
+    <div id="tc-disconnected">
+      <div style="text-align:center;padding:8px 0 14px">
+        <div style="font-size:2.5rem;margin-bottom:8px">💎</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--text);margin-bottom:4px">Connecter votre Wallet TON</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-bottom:16px">Tonkeeper · MyTonWallet · Telegram Wallet</div>
+        <button id="tc-connect-btn" onclick="tonConnectConnect()" style="width:100%;padding:13px;border-radius:16px;border:none;background:linear-gradient(135deg,#0098ea,#005fcc);color:white;font-family:'Fredoka One',cursive;font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 20px #0098ea44;transition:transform 0.15s" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''">
+          <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg" style="width:22px;height:22px">
+          Connecter Wallet TON
+        </button>
+      </div>
+    </div>
+    <!-- État : connecté -->
+    <div id="tc-connected" style="display:none">
+      <div class="wlabel" style="margin-bottom:6px">
+        <div style="width:10px;height:10px;border-radius:50%;background:#3ecf6a;box-shadow:0 0 8px #3ecf6a;flex-shrink:0"></div>
+        <span style="color:#3ecf6a;font-size:0.8rem">Wallet connecté</span>
+        <button onclick="tonConnectDisconnect()" style="margin-left:auto;background:none;border:1px solid #ffffff22;color:var(--muted);font-size:0.68rem;border-radius:8px;padding:2px 8px;cursor:pointer">Déconnecter</button>
+      </div>
+      <div class="wlabel"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg" alt="" style="width:18px;height:18px"><span style="font-size:0.78rem;color:var(--muted)">Adresse TON</span></div>
+      <div class="wallet-addr" style="margin-bottom:12px">
+        <span id="tc-addr-text" style="font-size:0.78rem">—</span>
+        <span class="copy-btn" onclick="copyTonAddr()"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg" alt="" style="width:14px;height:14px"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+        <div style="background:#0098ea15;border:1px solid #0098ea33;border-radius:12px;padding:10px;text-align:center">
+          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:2px">Solde TON</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#0098ea" id="tc-ton-balance">—</div>
+        </div>
+        <div style="background:#3ecf6a15;border:1px solid #3ecf6a33;border-radius:12px;padding:10px;text-align:center">
+          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:2px">Solde MYCO</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#3ecf6a"><span id="wallet-myco-tc">0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Soldes in-game -->
+  <div class="wallet-card" style="margin-top:10px">
+    <div class="wlabel"><img src="static-files/logo mico.png" alt=""><span>MYCO In-Game</span></div>
     <div class="wamount"><span id="wallet-myco">0</span> MYCO</div>
     <div style="margin-top:10px">
-      <div class="wlabel"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg" alt=""><span>Solde TON</span></div>
+      <div class="wlabel"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg" alt=""><span>TON In-Game</span></div>
       <div class="wamount-ton"><span id="wallet-ton">5.0</span> TON</div>
     </div>
     <div class="wallet-addr">
@@ -1700,7 +1745,7 @@ async function continueSave(){
     document.getElementById('splash').style.display='none';
     document.getElementById('topbar').style.display='flex';
     document.getElementById('nav').style.display='flex';
-    showPage('farm');initFarmGrid();initShop();initBoxes();drawWheel();updateUI();startFarmTick();startMidnightTimer();
+    showPage('farm');initFarmGrid();initShop();initBoxes();drawWheel();updateUI();startFarmTick();startMidnightTimer();setTimeout(initTonConnect,1000);
     startAutoSync();
   },500);
 }
@@ -1745,7 +1790,7 @@ async function startGame(){
     document.getElementById('splash').style.display='none';
     document.getElementById('topbar').style.display='flex';
     document.getElementById('nav').style.display='flex';
-    showPage('farm');initFarmGrid();initShop();initBoxes();drawWheel();updateUI();startFarmTick();startMidnightTimer();
+    showPage('farm');initFarmGrid();initShop();initBoxes();drawWheel();updateUI();startFarmTick();startMidnightTimer();setTimeout(initTonConnect,1000);
     startAutoSync();
   },500);
 }
