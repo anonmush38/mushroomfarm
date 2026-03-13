@@ -1056,7 +1056,7 @@
       <span class="gift-box-emoji locked" id="gift-box-emoji">🎁</span>
     </div>
     <div class="gift-time-label" id="gift-time-label">Disponible à 0h00 chaque jour</div>
-    <div class="gift-reward-info">🍄 Contient <strong>100 champignons 🍄</strong> — Disponible toutes les 24h !</div>
+    <div class="gift-reward-info">🍄 Contient <strong>50 champignons 🍄</strong> — Disponible toutes les 24h !</div>
   </div>
 
   <div class="section-title"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4c5.svg" alt="">Historique des ventes</div>
@@ -3255,7 +3255,7 @@ function doWithdraw(){
 // === DAILY GIFT (Merchant) ===
 function isDailyGiftAvailable(){
   if(!state.last_daily_gift) return true;
-  return (Date.now()-state.last_daily_gift) >= 24*60*60*1000;
+  return (Date.now() - state.last_daily_gift) >= 24 * 60 * 60 * 1000;
 }
 
 function updateDailyGiftUI(){
@@ -3271,7 +3271,7 @@ function updateDailyGiftUI(){
   } else {
     emoji.className='gift-box-emoji locked';
     emoji.textContent='🔒';
-    const ms=Math.max(0,24*60*60*1000-(Date.now()-state.last_daily_gift));
+    const ms=Math.max(0, 24*60*60*1000 - (Date.now() - state.last_daily_gift));
     const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
     if(label){label.style.color='';label.textContent=`Prochain cadeau dans ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
     if(wrap)wrap.style.filter='';
@@ -3279,16 +3279,18 @@ function updateDailyGiftUI(){
 }
 
 function openDailyGift(){
-  if(!isDailyGiftAvailable()){showNotif('Cadeau déjà ouvert aujourd\'hui !',IC.gift);return;}
-  // 75% of basket MYCO value as reward
-  const basketValue=getBasketMycoValue();
-  const totalCount=getTotalBasketCount();
-  const reward=Math.max(50,Math.round(basketValue*0.75));
+  if(!isDailyGiftAvailable()){
+    const ms=Math.max(0,24*60*60*1000-(Date.now()-state.last_daily_gift));
+    const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);
+    showNotif(`🔒 Revenez dans ${h}h${String(m).padStart(2,'0')} !`,IC.gift);
+    return;
+  }
   state.last_daily_gift=Date.now();
-  state.myco+=reward;
-  addTx('🎁 Cadeau Quotidien',reward,'myco',IC.gift);
-  updateUI();updateDailyGiftUI();
-  showResult(IC.gift,`🎁 +${reward.toLocaleString()} MYCO !`,`Cadeau quotidien : 75% de la valeur de votre récolte (${totalCount} 🍄 → ${reward} MYCO) !`);
+  state.basket['common']=(state.basket['common']||0)+50;
+  addTx('🎁 Cadeau Quotidien',50,'harvest',IC.harvest);
+  saveState();
+  updateUI();updateDailyGiftUI();renderMerchantPage();
+  showResult('🎁','+50 🍄 dans votre panier !','Cadeau quotidien : 50 champignons ajoutés à votre panier — revenez dans 24h !');
   confetti();spawnCoins();
 }
 
@@ -3324,19 +3326,18 @@ function applyTheme(){
 // Preview live sur le splash pendant la sélection
 
 setTimeout(()=>{
-  // Bonus connexion : 100 champignons, 1 seule fois toutes les 24h strictes
-  const BONUS_KEY = 'mushroomfarm_last_bonus';
-  const lastBonus = parseInt(localStorage.getItem(BONUS_KEY) || '0');
-  const elapsed = Date.now() - lastBonus;
-  if(elapsed >= 24 * 60 * 60 * 1000){
-    localStorage.setItem(BONUS_KEY, String(Date.now()));
-    state.basket['common'] = (state.basket['common'] || 0) + 100;
-    addTx('🎁 Bonus Connexion', 100, 'harvest', IC.harvest);
+  // Bonus connexion 24h — clé localStorage indépendante du state
+  const KEY='mf_last_conn_bonus';
+  const last=parseInt(localStorage.getItem(KEY)||'0',10);
+  if(Date.now()-last >= 24*60*60*1000){
+    localStorage.setItem(KEY, String(Date.now()));
+    state.basket['common']=(state.basket['common']||0)+100;
+    addTx('🌅 Bonus Connexion',100,'harvest',IC.harvest);
     saveState();
     updateUI();
-    showNotif('+100 🍄 bonus de connexion !', IC.harvest);
+    showNotif('+100 🍄 bonus de connexion !',IC.harvest);
   }
-}, 3500);
+},3500);
 
 // ════════════════════════════════════════════════
 // QUIZ CHAMPIGNON — 100 questions (25 par difficulté)
