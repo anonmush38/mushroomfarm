@@ -1056,7 +1056,7 @@
       <span class="gift-box-emoji locked" id="gift-box-emoji">🎁</span>
     </div>
     <div class="gift-time-label" id="gift-time-label">Disponible à 0h00 chaque jour</div>
-    <div class="gift-reward-info">🍄 Contient <strong>100 champignons</strong> à ajouter à votre panier — Disponible toutes les 24h !</div>
+    <div class="gift-reward-info">🍄 Contient <strong>100 champignons 🍄</strong> à ajouter à votre panier — Disponible toutes les 24h !</div>
   </div>
 
   <div class="section-title"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4c5.svg" alt="">Historique des ventes</div>
@@ -3271,8 +3271,7 @@ function updateDailyGiftUI(){
   } else {
     emoji.className='gift-box-emoji locked';
     emoji.textContent='🔒';
-    // Temps restant depuis la dernière ouverture
-    const ms=Math.max(0, 24*60*60*1000-(Date.now()-state.last_daily_gift));
+    const ms=Math.max(0,24*60*60*1000-(Date.now()-state.last_daily_gift));
     const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
     if(label){label.style.color='';label.textContent=`Prochain cadeau dans ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
     if(wrap)wrap.style.filter='';
@@ -3280,14 +3279,16 @@ function updateDailyGiftUI(){
 }
 
 function openDailyGift(){
-  if(!isDailyGiftAvailable()){showNotif('Cadeau dans '+Math.ceil((24*60*60*1000-(Date.now()-state.last_daily_gift))/3600000)+'h !',IC.gift);return;}
-  // Récompense : 100 champignons common dans le panier
-  const reward=100;
+  if(!isDailyGiftAvailable()){showNotif('Cadeau déjà ouvert aujourd\'hui !',IC.gift);return;}
+  // 75% of basket MYCO value as reward
+  const basketValue=getBasketMycoValue();
+  const totalCount=getTotalBasketCount();
+  const reward=Math.max(50,Math.round(basketValue*0.75));
   state.last_daily_gift=Date.now();
-  state.basket['common']=(state.basket['common']||0)+reward;
-  addTx('🎁 Cadeau Quotidien',reward,'harvest',IC.gift);
-  updateUI();updateDailyGiftUI();renderMerchantPage();
-  showResult('🎁',`+${reward} 🍄 dans votre panier !`,`Cadeau quotidien : ${reward} champignons ajoutés à votre panier — revenez dans 24h !`);
+  state.myco+=reward;
+  addTx('🎁 Cadeau Quotidien',reward,'myco',IC.gift);
+  updateUI();updateDailyGiftUI();
+  showResult(IC.gift,`🎁 +${reward.toLocaleString()} MYCO !`,`Cadeau quotidien : 75% de la valeur de votre récolte (${totalCount} 🍄 → ${reward} MYCO) !`);
   confetti();spawnCoins();
 }
 
@@ -3322,7 +3323,17 @@ function applyTheme(){
 // Appliquer le thème sombre par défaut (pas de classe = sombre)
 // Preview live sur le splash pendant la sélection
 
-
+setTimeout(()=>{
+  if(document.getElementById('topbar').style.display!=='none'){
+    if(isDailyGiftAvailable()){
+      state.basket['common']=(state.basket['common']||0)+100;
+      state.last_daily_gift=Date.now();
+      addTx('🎁 Bonus Connexion',100,'harvest',IC.harvest);
+      updateUI();updateDailyGiftUI();
+      showNotif('+100 🍄 bonus de connexion !',IC.harvest);
+    }
+  }
+},3500);
 
 // ════════════════════════════════════════════════
 // QUIZ CHAMPIGNON — 100 questions (25 par difficulté)
