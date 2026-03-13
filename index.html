@@ -309,17 +309,31 @@
   @keyframes fw-burst{0%{opacity:1;transform:scale(0.5) translateY(0)}60%{opacity:1;transform:scale(1.4) translateY(-60px)}100%{opacity:0;transform:scale(0.8) translateY(-100px)}}
 
   /* BOXES */
-  .boxes-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0;}
-  .mystery-box{background:linear-gradient(135deg,var(--card-bg),var(--card2));border-radius:22px;padding:14px 10px 16px;text-align:center;cursor:pointer;transition:transform 0.18s,box-shadow 0.18s;border:1px solid #ffffff12;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-  .mystery-box:active{transform:scale(0.94);}
-  .mystery-box:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.4);}
-  .mystery-box .box-img{width:150px;height:120px;object-fit:contain;display:block;margin:0 auto 4px;animation:wobble 3s ease-in-out infinite;mix-blend-mode:lighten;}
-  @keyframes wobble{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
-  .mystery-box .box-name{font-family:'Fredoka One',cursive;font-size:0.95rem;margin-top:8px;}
-  .mystery-box .box-price{font-size:0.77rem;color:var(--myco);font-weight:700;margin-top:4px;background:#f5c84218;border-radius:8px;padding:3px 8px;display:inline-block;}
-  .mystery-box .box-odds{font-size:0.66rem;color:var(--muted);margin-top:4px;}
-  .mystery-box.gold{border-color:#ff8c0055;box-shadow:0 0 20px #ff8c0020;}
-  .mystery-box.purple-box{border-color:#b44fff44;box-shadow:0 0 15px #b44fff18;}
+  /* MYSTERY BOXES */
+  .boxes-grid{display:flex;flex-direction:column;gap:14px;margin:10px 0;}
+  .mystery-box{border-radius:24px;padding:0;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;position:relative;overflow:hidden;display:flex;flex-direction:row;align-items:center;border:1px solid transparent;}
+  .mystery-box:active{transform:scale(0.97);}
+  .mystery-box:hover{transform:translateY(-2px);}
+  .mystery-box .box-img-wrap{width:140px;min-width:140px;height:120px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
+  .mystery-box .box-img{width:134px;height:114px;object-fit:contain;mix-blend-mode:lighten;animation:box-float 3s ease-in-out infinite;}
+  @keyframes box-float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-6px) scale(1.04)}}
+  .mystery-box .box-info{flex:1;padding:14px 14px 14px 4px;}
+  .mystery-box .box-badge{font-size:0.55rem;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:6px;}
+  .mystery-box .box-name{font-family:'Fredoka One',cursive;font-size:1.1rem;line-height:1.1;margin-bottom:4px;}
+  .mystery-box .box-odds-wrap{font-size:0.7rem;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:4px;}
+  .mystery-box .box-price-wrap{display:flex;align-items:center;gap:6px;}
+  .mystery-box .box-price{font-family:'Fredoka One',cursive;font-size:1rem;padding:4px 12px;border-radius:10px;display:inline-block;}
+  .mystery-box .box-shine{position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,0.07),transparent);animation:box-shine 4s ease-in-out infinite;}
+  @keyframes box-shine{0%,100%{left:-60%}60%,100%{left:120%}}
+  /* par rareté */
+  .mystery-box.box-basic{background:linear-gradient(135deg,#1a1f2e,#242a3a);border-color:#8e9aaf33;box-shadow:0 4px 20px rgba(142,154,175,0.08);}
+  .mystery-box.box-basic:hover{box-shadow:0 8px 30px rgba(142,154,175,0.18);}
+  .mystery-box.box-gold{background:linear-gradient(135deg,#1f1800,#2a2200);border-color:#f5c84255;box-shadow:0 4px 20px rgba(245,200,66,0.1);}
+  .mystery-box.box-gold:hover{box-shadow:0 8px 30px rgba(245,200,66,0.22);}
+  .mystery-box.box-mystery{background:linear-gradient(135deg,#160820,#1e0a2e);border-color:#b44fff55;box-shadow:0 4px 20px rgba(180,79,255,0.12);}
+  .mystery-box.box-mystery:hover{box-shadow:0 8px 30px rgba(180,79,255,0.25);}
+  .mystery-box.box-legend{background:linear-gradient(135deg,#1a0c00,#2a1400);border-color:#ff8c0055;box-shadow:0 4px 20px rgba(255,140,0,0.12);}
+  .mystery-box.box-legend:hover{box-shadow:0 8px 30px rgba(255,140,0,0.25);}
 
   /* COMMUNITY */
   .community-section{background:linear-gradient(135deg,#200a40,#2a0f55);border-radius:20px;padding:18px 16px;margin:16px 0;border:1px solid #ffffff0f;}
@@ -1590,10 +1604,10 @@ function wheelWeightedRandom(){
   return WHEEL_PRIZES.length-1;
 }
 const MYSTERY_BOXES=[
-  {name:'Box Basique', imgKey:'basic',  price:100, currency:'myco',cls:'',          odds:'Common · Uncommon', rarities:['common','common','common','uncommon']},
-  {name:'Box Dorée',   imgKey:'gold',   price:500, currency:'myco',cls:'',          odds:'Uncommon · Rare',   rarities:['uncommon','uncommon','rare','rare']},
-  {name:'Box Mystère', imgKey:'mystery',price:1500,currency:'myco',cls:'purple-box',odds:'Rare · Épique',      rarities:['rare','rare','epic']},
-  {name:'Box Legend',  imgKey:'legend', price:5000,currency:'myco',cls:'gold',      odds:'Épique · Légendaire',rarities:['epic','epic','legendary']},
+  {name:'Box Basique', imgKey:'basic',  price:100, currency:'myco',cls:'box-basic',   odds:'Common · Uncommon',   rarities:['common','common','common','uncommon'],  col:'#8e9aaf', glow:'#8e9aaf', label:'DÉBUTANT'},
+  {name:'Box Dorée',   imgKey:'gold',   price:500, currency:'myco',cls:'box-gold',    odds:'Uncommon · Rare',     rarities:['uncommon','uncommon','rare','rare'],     col:'#f5c842', glow:'#f5c842', label:'POPULAIRE'},
+  {name:'Box Mystère', imgKey:'mystery',price:1500,currency:'myco',cls:'box-mystery', odds:'Rare · Épique',       rarities:['rare','rare','epic'],                   col:'#b44fff', glow:'#b44fff', label:'MYSTÈRE'},
+  {name:'Box Legend',  imgKey:'legend', price:5000,currency:'myco',cls:'box-legend',  odds:'Épique · Légendaire', rarities:['epic','epic','legendary'],               col:'#ff8c00', glow:'#ff8c00', label:'LÉGENDAIRE'},
 ];
 
 // === STATE ===
@@ -3113,9 +3127,32 @@ function renderSlotPrizes(){
 function initBoxes(){
   const g=document.getElementById('boxes-grid');g.innerHTML='';
   MYSTERY_BOXES.forEach((box,i)=>{
-    const ps=box.currency==='ton'?`${box.price} TON`:`${box.price} MYCO`;
+    const ps=box.currency==='ton'?`${box.price.toLocaleString()} TON`:`${box.price.toLocaleString()} MYCO`;
     const d=document.createElement('div');d.className=`mystery-box ${box.cls}`;
-    d.innerHTML=`<img class="box-img" src="${BOX_IMG[box.imgKey]}" alt=""><div class="box-name">${box.name}</div><div class="box-price">${ps}</div><div class="box-odds">${box.odds}</div>`;
+    // Rarités affichées comme petits badges
+    const raritySet=[...new Set(box.rarities)];
+    const rarityColors={common:'#8e9aaf',uncommon:'#3ecf6a',rare:'#4da6ff',epic:'#b44fff',legendary:'#ff8c00'};
+    const rarityBadges=raritySet.map(r=>`<span style="font-size:0.6rem;padding:1px 6px;border-radius:5px;background:${rarityColors[r]}22;color:${rarityColors[r]};border:1px solid ${rarityColors[r]}44;font-weight:700">${r.charAt(0).toUpperCase()+r.slice(1)}</span>`).join('');
+    d.innerHTML=`
+      <div class="box-shine"></div>
+      <div class="box-img-wrap">
+        <img class="box-img" src="${BOX_IMG[box.imgKey]}" alt="${box.name}">
+      </div>
+      <div class="box-info">
+        <div class="box-badge" style="background:${box.col}18;color:${box.col};border:1px solid ${box.col}44">${box.label}</div>
+        <div class="box-name" style="color:${box.col}">${box.name}</div>
+        <div class="box-odds-wrap">
+          <span>🃏</span>
+          <span>${box.odds}</span>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">${rarityBadges}</div>
+        <div class="box-price-wrap">
+          <div class="box-price" style="background:${box.col}18;color:${box.col};border:1px solid ${box.col}44">
+            <img src="static-files/logo mico.png" style="width:13px;height:13px;vertical-align:middle;margin-right:3px">${ps}
+          </div>
+          <div style="font-size:0.65rem;color:var(--muted)">Appuie pour ouvrir</div>
+        </div>
+      </div>`;
     d.onclick=()=>openBox(i);g.appendChild(d);
   });
 }
