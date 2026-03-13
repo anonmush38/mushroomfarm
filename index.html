@@ -283,13 +283,13 @@
   .slot-machine-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,#b44fff15 0%,transparent 60%);pointer-events:none;}
   .slot-machine-title{font-family:'Fredoka One',cursive;font-size:1.2rem;color:#b44fff;text-align:center;margin-bottom:12px;text-shadow:0 0 15px #b44fff55;display:flex;align-items:center;justify-content:center;gap:8px;}
   .slot-reels{display:flex;gap:6px;justify-content:center;margin-bottom:14px;}
-  .reel-container{width:68px;height:80px;background:#0d0020;border-radius:14px;border:2px solid #b44fff55;overflow:hidden;position:relative;box-shadow:inset 0 0 15px rgba(0,0,0,0.8);}
-  .reel-container::before,.reel-container::after{content:'';position:absolute;left:0;right:0;height:20px;z-index:5;pointer-events:none;}
-  .reel-container::before{top:0;background:linear-gradient(to bottom,#0d0020,transparent);}
-  .reel-container::after{bottom:0;background:linear-gradient(to top,#0d0020,transparent);}
+  .reel-container{width:88px;height:100px;background:#080014;border-radius:16px;border:2px solid #b44fff55;overflow:hidden;position:relative;box-shadow:inset 0 0 20px rgba(0,0,0,0.9);transition:border-color 0.3s,box-shadow 0.3s;}
+  .reel-container::before,.reel-container::after{content:'';position:absolute;left:0;right:0;height:16px;z-index:5;pointer-events:none;}
+  .reel-container::before{top:0;background:linear-gradient(to bottom,#080014ee,transparent);}
+  .reel-container::after{bottom:0;background:linear-gradient(to top,#080014ee,transparent);}
   .reel-inner{display:flex;flex-direction:column;align-items:center;transition:transform 0.1s linear;}
-  .reel-symbol{width:68px;height:68px;display:flex;align-items:center;justify-content:center;font-size:2.1rem;flex-shrink:0;}
-  .reel-window{position:absolute;top:50%;left:0;right:0;height:68px;transform:translateY(-50%);border-top:2px solid #f5c84266;border-bottom:2px solid #f5c84266;pointer-events:none;z-index:6;background:rgba(245,200,66,0.04);}
+  .reel-symbol{width:88px;height:80px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .reel-window{position:absolute;top:50%;left:0;right:0;height:80px;transform:translateY(-50%);border-top:2px solid #f5c842aa;border-bottom:2px solid #f5c842aa;pointer-events:none;z-index:6;background:rgba(245,200,66,0.02);}
   .slot-lights{display:flex;justify-content:space-around;margin-bottom:10px;}
   .slot-light{width:10px;height:10px;border-radius:50%;background:#b44fff;box-shadow:0 0 8px #b44fff;animation:blink-lights 0.8s step-end infinite;}
   .slot-light:nth-child(even){background:#f5c842;box-shadow:0 0 8px #f5c842;animation-delay:0.4s;}
@@ -882,11 +882,12 @@
     </div>
     <div class="slot-machine-title">🎰 Slot Machine Mystère</div>
     <div class="slot-win-display" id="slot-win-display">Tente ta chance !</div>
-    <div class="slot-reels" id="slot-reels">
-      <div class="reel-container"><div class="reel-inner" id="reel-0"></div><div class="reel-window"></div></div>
-      <div class="reel-container"><div class="reel-inner" id="reel-1"></div><div class="reel-window"></div></div>
-      <div class="reel-container"><div class="reel-inner" id="reel-2"></div><div class="reel-window"></div></div>
+    <div class="slot-reels" id="slot-reels" style="gap:10px;">
+      <div class="reel-container" id="reel-wrap-0"><div class="reel-inner" id="reel-0"></div><div class="reel-window"></div></div>
+      <div class="reel-container" id="reel-wrap-1"><div class="reel-inner" id="reel-1"></div><div class="reel-window"></div></div>
+      <div class="reel-container" id="reel-wrap-2"><div class="reel-inner" id="reel-2"></div><div class="reel-window"></div></div>
     </div>
+    <div id="slot-odds-bar" style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin:6px 0 2px;"></div>
     <button class="slot-pull-btn" id="slot-btn" onclick="pullSlot()">
       <span>🎰</span><span id="slot-btn-label">Jouer</span>
     </button>
@@ -2578,10 +2579,20 @@ function spinWheel(){
     showNotif('🎁 Spin gratuit utilisé !',IC.wheel);
   }
   updateUI();updateSpinUI();spinning=true;
-  const totalSpins=(5+Math.random()*5)*Math.PI*2,dur=4000,start=Date.now(),startAng=wheelAngle;
+  const dur=4500,start=Date.now(),startAng=wheelAngle;
   const pi=wheelWeightedRandom();
-  const sa=(Math.PI*2)/WHEEL_PRIZES.length,target=startAng+totalSpins+(-(pi*sa+sa/2)+Math.PI*1.5);
-  function anim(){const el=Date.now()-start,p=Math.min(el/dur,1),e=1-Math.pow(1-p,4);wheelAngle=startAng+(target-startAng)*e;drawWheel(wheelAngle);if(p<1)requestAnimationFrame(anim);else{spinning=false;
+  const sa=(Math.PI*2)/WHEEL_PRIZES.length;
+  // Flèche en haut = -π/2. On veut centre du segment pi sous la flèche.
+  // Centre segment pi (sans rotation) = pi*sa + sa/2
+  // On normalise l'angle courant pour calculer le delta minimal
+  const extraTurns=Math.PI*2*(6+Math.floor(Math.random()*4)); // 6-9 tours complets
+  const targetAngle=-Math.PI/2 - (pi*sa+sa/2);
+  // Ajuster pour tourner toujours dans le même sens (positif)
+  const startNorm=((startAng%( Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  const tNorm=((targetAngle%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+  const delta=tNorm-startNorm;
+  const target=startAng+extraTurns+(delta<0?delta+Math.PI*2:delta);
+  function anim(){const el=Date.now()-start,p=Math.min(el/dur,1);const e=p<0.7?p*p*p*3.5:1-Math.pow(1-(p-0.7)/0.3,3)*0.15;wheelAngle=startAng+(target-startAng)*Math.min(e,1);drawWheel(wheelAngle);if(p<1)requestAnimationFrame(anim);else{wheelAngle=target;drawWheel(wheelAngle);spinning=false;
     // Show win overlay
     const prize=WHEEL_PRIZES[pi];
     showWheelWin(prize);
@@ -2710,24 +2721,40 @@ function fireworks(){
 
 // === SLOT MACHINE ===
 const SLOT_SYMBOLS=[
-  {sym:'🍄',label:'Shroom',value:'shrooms',amount:30, rarity:'common',   prob:30,jackpot:false},
-  {sym:'🌿',label:'Herbe', value:'shrooms',amount:50, rarity:'common',   prob:25,jackpot:false},
-  {sym:'⚡',label:'Éclair',value:'shrooms',amount:100,rarity:'uncommon', prob:18,jackpot:false},
-  {sym:'🔮',label:'Cristal',value:'card',  rarity:'uncommon',            prob:10,jackpot:false},
-  {sym:'💎',label:'Diamant',value:'card',  rarity:'rare',                prob:7, jackpot:false},
-  {sym:'👑',label:'Couronne',value:'card', rarity:'legendary',           prob:3, jackpot:true},
-  {sym:'🎁',label:'Box',   value:'free_spin',                            prob:5, jackpot:false},
-  {sym:'🍀',label:'Trèfle',value:'shrooms',amount:200,rarity:'uncommon', prob:2, jackpot:false},
+  {id:'shroom50',  type:'shroom', label:'50 🍄',    value:'shrooms', amount:50,  rarity:'common',    prob:28, jackpot:false, color:'#8e9aaf'},
+  {id:'common',    type:'card',   label:'Common',   value:'card',    rarity:'common',                prob:25, jackpot:false, color:'#8e9aaf'},
+  {id:'shroom150', type:'shroom', label:'150 🍄',   value:'shrooms', amount:150, rarity:'uncommon',  prob:20, jackpot:false, color:'#3ecf6a'},
+  {id:'uncommon',  type:'card',   label:'Uncommon', value:'card',    rarity:'uncommon',              prob:12, jackpot:false, color:'#3ecf6a'},
+  {id:'shroom400', type:'shroom', label:'400 🍄',   value:'shrooms', amount:400, rarity:'rare',      prob:8,  jackpot:false, color:'#4da6ff'},
+  {id:'rare',      type:'card',   label:'Rare',     value:'card',    rarity:'rare',                  prob:7,  jackpot:false, color:'#4da6ff'},
+  {id:'epic',      type:'card',   label:'Épique',   value:'card',    rarity:'epic',                  prob:4,  jackpot:false, color:'#b44fff'},
+  {id:'legendary', type:'card',   label:'JACKPOT!', value:'card',    rarity:'legendary',             prob:1,  jackpot:true,  color:'#f5c842'},
 ];
-// Weighted random symbol
+const SLOT_TOTAL=SLOT_SYMBOLS.reduce((s,x)=>s+x.prob,0);
 function randSlotSym(){
-  const total=SLOT_SYMBOLS.reduce((s,x)=>s+x.prob,0);
-  let r=Math.random()*total;
+  let r=Math.random()*SLOT_TOTAL;
   for(const s of SLOT_SYMBOLS){r-=s.prob;if(r<=0)return s;}
   return SLOT_SYMBOLS[0];
 }
+// Crée une cellule visuelle pour les rouleaux
+function makeSlotCell(sym){
+  const div=document.createElement('div');
+  div.style.cssText='width:84px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;';
+  if(sym.type==='card'){
+    const img=document.createElement('img');
+    img.src=CARD_IMG[sym.rarity]||'';
+    img.style.cssText='width:54px;height:68px;object-fit:cover;border-radius:8px;border:2px solid '+sym.color+'88;box-shadow:0 2px 8px rgba(0,0,0,0.6);';
+    img.onerror=()=>{img.style.display='none';const fb=document.createElement('div');fb.style.cssText='font-size:2.2rem;';fb.textContent='🃏';div.appendChild(fb);};
+    div.appendChild(img);
+  } else {
+    const em=document.createElement('div');em.style.cssText='font-size:2.5rem;line-height:1;';em.textContent='🍄';
+    const lbl=document.createElement('div');lbl.style.cssText='font-size:0.62rem;font-family:Fredoka One,cursive;color:'+sym.color+';margin-top:2px;font-weight:700;';lbl.textContent='×'+sym.amount;
+    div.appendChild(em);div.appendChild(lbl);
+  }
+  return div;
+}
 let slotSpinning=false;
-const SLOT_HEIGHT=68;
+const SLOT_HEIGHT=80;
 
 function hasFreeSlotAvailable(){
   if(!state.last_free_slot_spin) return true;
@@ -2754,17 +2781,21 @@ function updateSlotUI(){
 }
 
 function initSlotReels(){
+  SLOT_SYMBOLS.forEach(s=>{if(s.type==='card')new Image().src=CARD_IMG[s.rarity];});
   for(let r=0;r<3;r++){
     const reel=document.getElementById('reel-'+r);if(!reel)continue;reel.innerHTML='';
-    // Fill with 20 random symbols for scrolling
-    for(let i=0;i<20;i++){
-      const sym=SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)];
-      const div=document.createElement('div');div.className='reel-symbol';div.textContent=sym.sym;
-      reel.appendChild(div);
-    }
-    // Center visually on middle symbol
+    for(let i=0;i<20;i++) reel.appendChild(makeSlotCell(SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]));
     reel.style.transform=`translateY(-${SLOT_HEIGHT*8}px)`;
   }
+  // Barre probabilités
+  const bar=document.getElementById('slot-odds-bar');if(!bar)return;bar.innerHTML='';
+  const T=SLOT_TOTAL;
+  [{l:'Common',c:'#8e9aaf',p:(28+25)/T},{l:'Uncommon',c:'#3ecf6a',p:(20+12)/T},{l:'Rare',c:'#4da6ff',p:(8+7)/T},{l:'Épique',c:'#b44fff',p:4/T},{l:'Légend.',c:'#f5c842',p:1/T}]
+  .forEach(r=>{
+    const chip=document.createElement('div');
+    chip.style.cssText=`font-size:0.6rem;padding:2px 7px;border-radius:8px;font-weight:700;font-family:Fredoka One,cursive;background:${r.c}22;color:${r.c};border:1px solid ${r.c}55;`;
+    chip.textContent=r.l+' '+(r.p*100).toFixed(0)+'%';bar.appendChild(chip);
+  });
 }
 
 function pullSlot(){
@@ -2777,7 +2808,7 @@ function pullSlot(){
     state.last_free_slot_spin=Date.now();
     showNotif('🎁 Tour gratuit machine utilisé !',IC.wheel);
   }
-  updateUI();updateSlotUI();slotSpinning=true;
+  for(let ri=0;ri<3;ri++){const w=document.getElementById('reel-wrap-'+ri);if(w){w.style.borderColor='#b44fff55';w.style.boxShadow='';}} updateUI();updateSlotUI();slotSpinning=true;
   document.getElementById('slot-win-display').textContent='🎰 En cours...';
   // Animate hand
   const hand=document.getElementById('slot-hand');if(hand)hand.classList.add('pulling');
@@ -2799,33 +2830,26 @@ function pullSlot(){
 
 function animReel(reelIdx,finalSym,duration,onDone){
   const reel=document.getElementById('reel-'+reelIdx);if(!reel)return;
-  // Clear and rebuild with final symbol at center
   reel.innerHTML='';
-  const scrollCount=15+Math.floor(Math.random()*8);
-  for(let i=0;i<scrollCount;i++){
-    const s=SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)];
-    const div=document.createElement('div');div.className='reel-symbol';div.textContent=s.sym;reel.appendChild(div);
-  }
-  // Add final symbol
-  const fin=document.createElement('div');fin.className='reel-symbol';fin.textContent=finalSym.sym;reel.appendChild(fin);
-  // Padding after
-  for(let i=0;i<3;i++){const d=document.createElement('div');d.className='reel-symbol';d.textContent=SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)].sym;reel.appendChild(d);}
-  // Total height to scroll = scrollCount * SLOT_HEIGHT, final symbol at scrollCount position
+  const scrollCount=16+Math.floor(Math.random()*6);
+  for(let i=0;i<scrollCount;i++) reel.appendChild(makeSlotCell(SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]));
+  reel.appendChild(makeSlotCell(finalSym));
+  for(let i=0;i<2;i++) reel.appendChild(makeSlotCell(SLOT_SYMBOLS[Math.floor(Math.random()*SLOT_SYMBOLS.length)]));
   const totalH=scrollCount*SLOT_HEIGHT;
   reel.style.transition='none';reel.style.transform=`translateY(${SLOT_HEIGHT}px)`;
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      reel.style.transition=`transform ${duration}ms cubic-bezier(0.1,0,0.2,1)`;
-      // Stop so that finalSym is in center window (-scrollCount * SLOT_HEIGHT + offset to center)
-      const targetY=-(totalH-SLOT_HEIGHT/2-SLOT_HEIGHT/2);
-      reel.style.transform=`translateY(${-totalH+SLOT_HEIGHT}px)`;
-      setTimeout(()=>{onDone();},duration+50);
-    });
-  });
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+    reel.style.transition=`transform ${duration}ms cubic-bezier(0.05,0,0.1,1)`;
+    reel.style.transform=`translateY(${-totalH+SLOT_HEIGHT}px)`;
+    setTimeout(()=>{
+      const wrap=document.getElementById('reel-wrap-'+reelIdx);
+      if(wrap){wrap.style.borderColor=finalSym.color+'cc';wrap.style.boxShadow='0 0 20px '+finalSym.color+'55';}
+      onDone();
+    },duration+50);
+  });});
 }
 
 function evalSlotResult(results){
-  const syms=results.map(r=>r.sym);
+  const syms=results.map(r=>r.id);
   const win_display=document.getElementById('slot-win-display');
   let title='',desc='',img=IC.harvest,isJackpot=false;
   // Check for matches
@@ -2878,20 +2902,21 @@ function renderSlotPrizes(){
   const container=document.getElementById('slot-prizes-table');
   if(!container)return;container.innerHTML='';
   if(slotPrizesTableOpen) container.style.display='grid';
-  const entries=[
-    {sym:'🍄🍄🍄',label:'Triple Shroom',sub:'90 champignons Common',color:'#3ecf6a'},
-    {sym:'🌿🌿🌿',label:'Triple Herbe',sub:'150 champignons Common',color:'#3ecf6a'},
-    {sym:'⚡⚡⚡',label:'Triple Éclair',sub:'300 champignons Uncommon',color:'#f5c842'},
-    {sym:'🍀🍀🍀',label:'Triple Trèfle',sub:'600 champignons Uncommon!',color:'#3ecf6a'},
-    {sym:'🔮🔮🔮',label:'Triple Cristal',sub:'Carte Uncommon !',color:'#b44fff'},
-    {sym:'💎💎💎',label:'Triple Diamant',sub:'Carte Rare !',color:'#4da6ff'},
-    {sym:'🎁🎁🎁',label:'Triple Box',sub:'Spin Roue Gratuit !',color:'#ff8c00'},
-    {sym:'👑👑👑',label:'JACKPOT !',sub:'Carte LÉGENDAIRE 🎊',color:'#ff8c00'},
-    {sym:'X X',   label:'Paire quelconque',sub:'Champignons bonus',color:'#8e9aaf'},
-  ];
+  const T=SLOT_TOTAL;
+  const ICON={common:'🃏',uncommon:'✨',rare:'💎',epic:'🔮',legendary:'👑',shroom:'🍄'};
+  const entries=SLOT_SYMBOLS.map(s=>({
+    icon:s.type==='card'?ICON[s.rarity]:'🍄',
+    label:'Triple '+s.label,
+    sub:s.type==='card'?'Carte '+s.rarity.charAt(0).toUpperCase()+s.rarity.slice(1)+' gagnée !':'×'+(s.amount*3)+' champignons !',
+    color:s.color,
+    pct:((s.prob/T)*100).toFixed(1),
+    tripleP:((s.prob/T)**3*100).toFixed(3)
+  }));
+  entries.push({icon:'✌️',label:'Paire quelconque',sub:'Champignons ×1.5 bonus',color:'#8e9aaf',pct:'fréquent',tripleP:''});
   entries.forEach(g=>{
     const d=document.createElement('div');d.className='prize-row';d.style.borderColor=g.color+'44';
-    d.innerHTML=`<div class="p-icon" style="background:${g.color}18;border:1px solid ${g.color}33;font-size:0.9rem">${g.sym}</div><div class="p-info"><div class="p-name" style="color:${g.color}">${g.label}</div><div class="p-type">${g.sub}</div></div>`;
+    const barW=isNaN(parseFloat(g.pct))?20:Math.max(4,Math.round(parseFloat(g.pct)*1.5));
+    d.innerHTML=`<div class="p-icon" style="background:${g.color}18;border:1px solid ${g.color}33;font-size:1rem">${g.icon}</div><div class="p-info"><div class="p-name" style="color:${g.color}">${g.label}</div><div class="p-type" style="display:flex;align-items:center;gap:5px;margin-top:2px"><div style="height:3px;width:${barW}px;background:${g.color};border-radius:2px;opacity:0.7"></div><span>${g.sub}</span></div></div><div class="p-chance" style="background:${g.color}18;color:${g.color};font-size:0.62rem;white-space:nowrap">${typeof g.pct==='string'&&isNaN(g.pct)?g.pct:g.pct+'%'}</div>`;
     container.appendChild(d);
   });
 }
