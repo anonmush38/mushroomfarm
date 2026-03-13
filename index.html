@@ -2987,8 +2987,7 @@ function renderSlotPrizes(){
     d.innerHTML=`${leftHtml}<div class="pc-info"><div class="pc-name">${s.label} × 3</div><div class="pc-sub">${reward}</div><div style="font-size:0.6rem;color:var(--muted);margin-top:3px">Apparition : ${pct}% • Triple : ${tripleStr}</div></div><div class="pc-badge"><div class="pc-pct" style="font-size:0.8rem">${tripleStr}</div><div class="pc-label">triple</div></div><div class="pc-bar-wrap"><div class="pc-bar" style="width:${Math.min(100,parseFloat(pct)*4)}%"></div></div>`;
     d.onclick=()=>{
       const imgSrc=s.type==='card'?CARD_IMG[s.rarity]:'static-files/common.png';
-      showResult(imgSrc,'Triple '+s.label,reward+'
-Probabilité triple : '+tripleStr);
+      showResult(imgSrc,'Triple '+s.label,reward+' • Probabilité triple : '+tripleStr);
     };
     container.appendChild(d);
   });
