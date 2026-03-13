@@ -1710,38 +1710,6 @@ function checkMaintenance() {
   return true;
 }
 
-// === TON CONNECT ===
-// === MAINTENANCE ===
-// ⚙️ POUR ACTIVER LA MAINTENANCE : passer MAINTENANCE_MODE à true et push
-const MAINTENANCE_CONFIG = {
-  enabled:  false,
-  version:  'v2.0',
-  message:  'Le jeu est temporairement indisponible pendant la mise à jour. Reviens dans quelques minutes !',
-  title:    'Maintenance en cours',
-  adminIds: [6846065758], // ton Telegram ID — toi tu vois quand même le jeu
-};
-
-function checkMaintenance() {
-  if (!MAINTENANCE_CONFIG.enabled) return false;
-
-  // L'admin peut toujours accéder
-  const tgId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
-  if (tgId && MAINTENANCE_CONFIG.adminIds.includes(tgId)) {
-    showNotif('🔧 Mode maintenance actif — accès admin', '🔧');
-    return false; // admin passe quand même
-  }
-
-  // Afficher l'écran maintenance
-  const screen = document.getElementById('maintenance-screen');
-  const title  = document.getElementById('maint-title');
-  const msg    = document.getElementById('maint-msg');
-  const ver    = document.getElementById('maint-version');
-  if (screen) screen.style.display = 'flex';
-  if (title)  title.textContent    = MAINTENANCE_CONFIG.title;
-  if (msg)    msg.textContent      = MAINTENANCE_CONFIG.message;
-  if (ver)    ver.textContent      = MAINTENANCE_CONFIG.version;
-  return true;
-}
 
 // === TON CONNECT ===
 // Une seule variable globale window.tonConnectUI utilisée partout
