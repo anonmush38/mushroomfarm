@@ -920,25 +920,73 @@
     <button class="exchange-btn" onclick="doExchange()">🔄 Convertir</button>
   </div>
 
-  <!-- WITHDRAW -->
-  <div class="withdraw-card">
-    <div class="withdraw-title">📤 Retrait (Withdraw)</div>
+  <!-- DÉPÔT -->
+  <div style="background:linear-gradient(135deg,#0d2010,#112815);border-radius:20px;padding:16px;border:1px solid #3ecf6a22;margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="width:38px;height:38px;border-radius:11px;background:#3ecf6a18;border:1px solid #3ecf6a33;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0">📥</div>
+      <div>
+        <div style="font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--text)">Déposer des TON</div>
+        <div style="font-size:0.65rem;color:#3ecf6a">Depuis ton wallet externe → wallet in-game</div>
+      </div>
+    </div>
+    <!-- Adresse de dépôt -->
+    <div id="deposit-loading" style="text-align:center;color:var(--muted);font-size:0.75rem;padding:10px">⏳ Chargement de l'adresse...</div>
+    <div id="deposit-info" style="display:none">
+      <div style="font-size:0.68rem;color:var(--muted);margin-bottom:6px">Envoie des TON à cette adresse :</div>
+      <div style="background:#ffffff08;border-radius:11px;padding:10px 12px;display:flex;align-items:center;gap:8px;margin-bottom:8px;border:1px solid #3ecf6a22">
+        <div style="flex:1;font-family:monospace;font-size:0.72rem;color:#3ecf6a;word-break:break-all" id="deposit-address-text">—</div>
+        <button onclick="copyDepositAddr()" style="background:none;border:none;cursor:pointer;flex-shrink:0;padding:2px">
+          <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg" style="width:14px;height:14px">
+        </button>
+      </div>
+      <!-- Memo obligatoire -->
+      <div style="background:#f5c84215;border:1px solid #f5c84233;border-radius:10px;padding:8px 12px;margin-bottom:10px">
+        <div style="font-size:0.65rem;color:#f5c842;font-weight:700;margin-bottom:3px">⚠️ COMMENTAIRE OBLIGATOIRE</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-family:monospace;font-size:0.8rem;color:var(--text);flex:1" id="deposit-memo-text">—</div>
+          <button onclick="copyDepositMemo()" style="background:none;border:none;cursor:pointer;padding:2px">
+            <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg" style="width:13px;height:13px">
+          </button>
+        </div>
+        <div style="font-size:0.6rem;color:var(--muted);margin-top:4px">Sans ce commentaire, le dépôt ne sera pas crédité automatiquement.</div>
+      </div>
+      <div style="font-size:0.65rem;color:var(--muted);display:flex;gap:12px;justify-content:center">
+        <span>⏱ Crédit en ~1-2 min</span>
+        <span>•</span>
+        <span>Min: 0.1 TON</span>
+        <span>•</span>
+        <span>Réseau: TON</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETRAIT -->
+  <div class="withdraw-card" style="background:linear-gradient(135deg,#1a0d00,#220f00);border:1px solid #ff8c0022">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="width:38px;height:38px;border-radius:11px;background:#ff8c0018;border:1px solid #ff8c0033;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0">📤</div>
+      <div>
+        <div style="font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--text)">Retirer vers wallet externe</div>
+        <div style="font-size:0.65rem;color:#ff8c00">Wallet in-game → ton vrai wallet TON</div>
+      </div>
+    </div>
     <div class="withdraw-field">
-      <label>Adresse Wallet destinataire</label>
-      <input id="wd-address" type="text" placeholder="UQA7...mush" autocomplete="off">
+      <label>Adresse TON destinataire</label>
+      <input id="wd-address" type="text" placeholder="UQA7..." autocomplete="off"
+             style="font-size:0.75rem;font-family:monospace">
     </div>
     <div style="font-size:0.7rem;color:var(--muted);margin-bottom:10px">Choisir la crypto :</div>
     <div class="withdraw-crypto-select">
       <div class="crypto-option selected-ton" id="wd-ton-btn" onclick="selectWithdrawCrypto('ton')">💎 TON</div>
       <div class="crypto-option" id="wd-myco-btn" onclick="selectWithdrawCrypto('myco')">🍄 MYCO</div>
     </div>
-    <div class="withdraw-balance" id="wd-balance-label">Disponible : <span id="wd-avail">5.0 TON</span></div>
+    <div class="withdraw-balance" id="wd-balance-label">Disponible : <span id="wd-avail">0 TON</span></div>
     <div class="withdraw-field">
       <label>Montant</label>
       <input id="wd-amount" type="number" min="0" placeholder="0" oninput="updateWithdrawPreview()">
     </div>
     <div style="font-size:0.72rem;color:var(--muted);margin-bottom:12px;text-align:center" id="wd-preview"></div>
-    <button class="withdraw-btn" onclick="doWithdraw()">📤 Envoyer le retrait</button>
+    <button class="withdraw-btn" onclick="doWithdraw()" style="background:linear-gradient(135deg,#ff8c00,#cc6600)">📤 Retirer vers mon wallet</button>
+    <div style="font-size:0.6rem;color:var(--muted);text-align:center;margin-top:8px">Min: 0.5 TON · Traitement sous 24h si manuel</div>
   </div>
 
   <div class="section-title"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4a4.svg" alt=""><span>Cartes en Sommeil</span></div>
@@ -3762,6 +3810,7 @@ function addTx(label,amount,currency,icon){
 function goPage(name,btn){
   if(name==='wallet'){
     setTimeout(()=>fetchMarketData(),300);
+    setTimeout(()=>loadDepositAddress(),500);
     if(tcConnected && tcWalletAddr) setTimeout(()=>updateTonConnectUI(true,tcWalletAddr),400);
   }
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -4104,6 +4153,45 @@ function updateWithdrawPreview(){
   const max=withdrawCrypto==='ton'?state.ton:state.myco;
   if(amount>max){preview.innerHTML=`<span style="color:var(--red)">❌ Solde insuffisant (max: ${withdrawCrypto==='ton'?max.toFixed(2)+' TON':Math.floor(max)+' MYCO'})</span>`;return;}
   preview.innerHTML=`Vous allez envoyer <strong style="color:${withdrawCrypto==='ton'?'#00a8ff':'var(--myco)'}"> ${amount} ${withdrawCrypto.toUpperCase()}</strong>`;
+}
+
+async function loadDepositAddress() {
+  if (!getToken || !getToken()) return;
+  try {
+    const r = await fetch(`${BASE_URL}/wallet/deposit-address`, { headers: apiHeaders() });
+    if (!r.ok) return;
+    const data = await r.json();
+    const loading = document.getElementById('deposit-loading');
+    const info    = document.getElementById('deposit-info');
+    const addrEl  = document.getElementById('deposit-address-text');
+    const memoEl  = document.getElementById('deposit-memo-text');
+    if (loading) loading.style.display = 'none';
+    if (info)    info.style.display    = 'block';
+    if (addrEl && data.address) addrEl.textContent = data.address;
+    if (memoEl && data.memo)    memoEl.textContent = data.memo;
+    // Stocker pour copy
+    window._depositAddr = data.address;
+    window._depositMemo = data.memo;
+  } catch(e) {
+    const loading = document.getElementById('deposit-loading');
+    if (loading) loading.textContent = 'Erreur chargement adresse. Reconnecte-toi.';
+  }
+}
+
+function copyDepositAddr() {
+  const addr = window._depositAddr;
+  if (!addr) return;
+  navigator.clipboard.writeText(addr).then(() =>
+    showNotif('✅ Adresse copiée !', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg')
+  );
+}
+
+function copyDepositMemo() {
+  const memo = window._depositMemo;
+  if (!memo) return;
+  navigator.clipboard.writeText(memo).then(() =>
+    showNotif('✅ Commentaire copié !', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg')
+  );
 }
 
 function doWithdraw(){
