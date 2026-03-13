@@ -404,6 +404,27 @@
   .u-btn:active{transform:scale(0.97);}
   .u-btn img{width:18px;height:18px;}
   .r-common{color:var(--common);}.r-uncommon{color:var(--uncommon);}.r-rare{color:var(--rare);}.r-epic{color:var(--epic);}.r-legendary{color:var(--legendary);}
+  /* === REWARD TABLE REDESIGN === */
+  .prizes-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
+  .prize-section-title{font-family:'Fredoka One',cursive;font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;padding:8px 4px 4px;opacity:0.6;}
+  .prize-card{display:flex;align-items:center;gap:10px;border-radius:16px;padding:10px 12px;border:1px solid transparent;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+  .prize-card::before{content:'';position:absolute;inset:0;opacity:0.06;background:var(--pc-col,#fff);pointer-events:none;}
+  .prize-card:hover{transform:translateX(4px);border-color:var(--pc-col,#fff)33;}
+  .prize-card:active{transform:scale(0.97);}
+  .prize-card .pc-img{width:44px;height:58px;object-fit:cover;border-radius:8px;flex-shrink:0;box-shadow:0 3px 10px rgba(0,0,0,0.5);}
+  .prize-card .pc-shroom{width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;flex-shrink:0;border:1px solid var(--pc-col,#fff)33;background:var(--pc-col,#fff)10;}
+  .prize-card .pc-box{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:1.8rem;flex-shrink:0;background:#ffffff08;border:1px solid #ffffff15;}
+  .prize-card .pc-info{flex:1;min-width:0;}
+  .prize-card .pc-name{font-family:'Fredoka One',cursive;font-size:0.9rem;color:var(--pc-col,#fff);line-height:1.2;}
+  .prize-card .pc-sub{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+  .prize-card .pc-badge{display:flex;flex-direction:column;align-items:center;gap:1px;flex-shrink:0;}
+  .prize-card .pc-pct{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--pc-col,#fff);line-height:1;}
+  .prize-card .pc-label{font-size:0.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .prize-card .pc-bar-wrap{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.06);}
+  .prize-card .pc-bar{height:100%;border-radius:2px;background:var(--pc-col,#fff);opacity:0.4;transition:width 0.8s ease;}
+  /* Slot paire row */
+  .prize-card.pair-row .pc-shroom{background:linear-gradient(135deg,#3ecf6a15,#4da6ff15);border-color:#ffffff22;}
+  /* old compat */
   .prize-row{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:14px;padding:10px 12px;border:1px solid #ffffff0d;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;}
   .prize-row:active{transform:scale(0.96);}
   .prize-row:hover{box-shadow:0 0 12px #f5c84222;border-color:#f5c84222;}
@@ -864,7 +885,7 @@
     <span data-i18n="wheel_rewards">Récompenses de la Roue</span>
     <span id="prizes-toggle-icon" style="margin-left:auto;font-size:1rem">▼</span>
   </div>
-  <div id="wheel-prizes-table" style="margin-bottom:18px;display:none;grid-template-columns:1fr 1fr;gap:8px;"></div>
+  <div id="wheel-prizes-table" class="prizes-grid" style="display:none;"></div>
 
   <!-- DIVIDER -->
   <div style="display:flex;align-items:center;gap:10px;margin:18px 0 14px">
@@ -902,7 +923,7 @@
     <span data-i18n="slot_gains">Gains de la Machine</span>
     <span id="slot-prizes-toggle-icon" style="margin-left:auto;font-size:1rem">▼</span>
   </div>
-  <div id="slot-prizes-table" style="margin-bottom:18px;display:none;grid-template-columns:1fr 1fr;gap:8px;"></div>
+  <div id="slot-prizes-table" class="prizes-grid" style="display:none;"></div>
 
   <!-- ═══ QUIZ CHAMPIGNON ═══ -->
   <div class="quiz-section-divider">
@@ -2683,8 +2704,9 @@ function toggleSlotPrizesTable(){
 function renderWheelPrizes(){
   const container=document.getElementById('wheel-prizes-table');
   if(!container)return;container.innerHTML='';
-  if(prizesTableOpen) container.style.display='grid';
+  if(prizesTableOpen) container.style.display='flex';
   const T=WHEEL_TOTAL_WEIGHT;
+  // Grouper les doublons (ex: 2x Common)
   const seen={};const grouped=[];
   WHEEL_PRIZES.forEach(p=>{
     const key=p.desc+(p.amount||'');
@@ -2692,16 +2714,48 @@ function renderWheelPrizes(){
     else{seen[key]={...p};grouped.push(seen[key]);}
   });
   grouped.sort((a,b)=>b.weight-a.weight);
-  const RICON={common:'🃏',uncommon:'✨',rare:'💎',epic:'🔮',legendary:'👑'};
-  grouped.forEach(p=>{
-    const pct=((p.weight/T)*100).toFixed(1);
-    const rarityCol=RARITY_COLORS[p.rarity]||p.color||'#f5c842';
-    const icon=p.type==='shrooms'?'🍄':p.type==='box'?'📦':RICON[p.rarity]||'🎁';
-    const barW=Math.max(4,Math.round((p.weight/T)*120));
-    const d=document.createElement('div');d.className='prize-row';d.style.borderColor=rarityCol+'44';
-    d.innerHTML=`<div class="p-icon" style="background:${rarityCol}22;border:1px solid ${rarityCol}44">${icon}</div><div class="p-info"><div class="p-name" style="color:${rarityCol}">${p.desc}</div><div class="p-type" style="display:flex;align-items:center;gap:6px;margin-top:3px"><div style="height:4px;width:${barW}px;background:${rarityCol};border-radius:2px;opacity:0.7"></div><span>${pct}% de chance</span></div></div><div class="p-chance" style="background:${rarityCol}22;color:${rarityCol}">${pct}%</div>`;
-    d.onclick=()=>{const imgSrc=p.type==='card'?CARD_IMG[p.rarity]:IC.harvest;showResult(imgSrc,icon+' '+p.desc,`Probabilité : ${pct}%`);};
-    container.appendChild(d);
+
+  // Sections par catégorie
+  const sections=[
+    {title:'🍄 Champignons',filter:p=>p.type==='shrooms'},
+    {title:'🃏 Cartes',filter:p=>p.type==='card'},
+    {title:'📦 Mystery Boxes',filter:p=>p.type==='box'},
+  ];
+
+  sections.forEach(sec=>{
+    const items=grouped.filter(sec.filter);
+    if(!items.length)return;
+    // Titre de section
+    const t=document.createElement('div');t.className='prize-section-title';t.textContent=sec.title;
+    container.appendChild(t);
+    items.forEach(p=>{
+      const pct=((p.weight/T)*100).toFixed(1);
+      const col=RARITY_COLORS[p.rarity]||p.color||'#f5c842';
+      const barPct=((p.weight/T)*100);
+      const d=document.createElement('div');
+      d.className='prize-card';
+      d.style.setProperty('--pc-col',col);
+      // Visuel gauche
+      let leftHtml='';
+      if(p.type==='card'){
+        leftHtml=`<img class="pc-img" src="${CARD_IMG[p.rarity]||''}" alt="${p.rarity}">`;
+      } else if(p.type==='shrooms'){
+        leftHtml=`<div class="pc-shroom" style="--pc-col:${col}"><div style="font-size:1.6rem">🍄</div><div style="font-size:0.62rem;font-family:'Fredoka One',cursive;color:${col}">×${p.amount}</div></div>`;
+      } else {
+        const boxIcons={0:'📦',1:'🎁',2:'💌',3:'🌟'};
+        leftHtml=`<div class="pc-box">${boxIcons[p.boxIdx]||'📦'}</div>`;
+      }
+      // Sous-titre
+      const sub=p.type==='card'?`Rareté ${p.rarity.charAt(0).toUpperCase()+p.rarity.slice(1)} • Ajoutée au wallet`
+        :p.type==='shrooms'?`Ajoutés au panier marchand`
+        :`Ouvre une box aléatoire`;
+      d.innerHTML=`${leftHtml}<div class="pc-info"><div class="pc-name">${p.desc}</div><div class="pc-sub">${sub}</div></div><div class="pc-badge"><div class="pc-pct">${pct}%</div><div class="pc-label">chance</div></div><div class="pc-bar-wrap"><div class="pc-bar" style="width:${Math.min(100,barPct*4)}%"></div></div>`;
+      d.onclick=()=>{
+        const imgSrc=p.type==='card'?CARD_IMG[p.rarity]:p.type==='shrooms'?'static-files/common.png':'static-files/common.png';
+        showResult(imgSrc,p.desc,`${pct}% de chance à chaque spin !`);
+      };
+      container.appendChild(d);
+    });
   });
 }
 
@@ -2901,24 +2955,52 @@ function evalSlotResult(results){
 function renderSlotPrizes(){
   const container=document.getElementById('slot-prizes-table');
   if(!container)return;container.innerHTML='';
-  if(slotPrizesTableOpen) container.style.display='grid';
+  if(slotPrizesTableOpen) container.style.display='flex';
   const T=SLOT_TOTAL;
-  const ICON={common:'🃏',uncommon:'✨',rare:'💎',epic:'🔮',legendary:'👑',shroom:'🍄'};
-  const entries=SLOT_SYMBOLS.map(s=>({
-    icon:s.type==='card'?ICON[s.rarity]:'🍄',
-    label:'Triple '+s.label,
-    sub:s.type==='card'?'Carte '+s.rarity.charAt(0).toUpperCase()+s.rarity.slice(1)+' gagnée !':'×'+(s.amount*3)+' champignons !',
-    color:s.color,
-    pct:((s.prob/T)*100).toFixed(1),
-    tripleP:((s.prob/T)**3*100).toFixed(3)
-  }));
-  entries.push({icon:'✌️',label:'Paire quelconque',sub:'Champignons ×1.5 bonus',color:'#8e9aaf',pct:'fréquent',tripleP:''});
-  entries.forEach(g=>{
-    const d=document.createElement('div');d.className='prize-row';d.style.borderColor=g.color+'44';
-    const barW=isNaN(parseFloat(g.pct))?20:Math.max(4,Math.round(parseFloat(g.pct)*1.5));
-    d.innerHTML=`<div class="p-icon" style="background:${g.color}18;border:1px solid ${g.color}33;font-size:1rem">${g.icon}</div><div class="p-info"><div class="p-name" style="color:${g.color}">${g.label}</div><div class="p-type" style="display:flex;align-items:center;gap:5px;margin-top:2px"><div style="height:3px;width:${barW}px;background:${g.color};border-radius:2px;opacity:0.7"></div><span>${g.sub}</span></div></div><div class="p-chance" style="background:${g.color}18;color:${g.color};font-size:0.62rem;white-space:nowrap">${typeof g.pct==='string'&&isNaN(g.pct)?g.pct:g.pct+'%'}</div>`;
+
+  // Titre section triple
+  const t1=document.createElement('div');t1.className='prize-section-title';t1.textContent='🎰 Combinaisons Triples (Jackpot)';
+  container.appendChild(t1);
+
+  SLOT_SYMBOLS.forEach(s=>{
+    const pct=((s.prob/T)*100).toFixed(1);
+    const tripleP=((s.prob/T)**3*100);
+    const tripleStr=tripleP<0.01?'<0.01%':tripleP.toFixed(2)+'%';
+    const col=s.color;
+    const reward=s.type==='card'
+      ?'Carte '+s.rarity.charAt(0).toUpperCase()+s.rarity.slice(1)+' gagnée !'
+      :'+'+(s.amount*3)+' 🍄 dans le panier !';
+    const d=document.createElement('div');
+    d.className='prize-card';
+    d.style.setProperty('--pc-col',col);
+    // Visuel — triple miniatures
+    let leftHtml='';
+    if(s.type==='card'){
+      leftHtml=`<div style="display:flex;gap:2px;align-items:center;flex-shrink:0">
+        <img src="${CARD_IMG[s.rarity]||''}" style="width:26px;height:34px;object-fit:cover;border-radius:4px;opacity:0.6;border:1px solid ${col}44">
+        <img src="${CARD_IMG[s.rarity]||''}" style="width:32px;height:42px;object-fit:cover;border-radius:5px;border:2px solid ${col}99;box-shadow:0 2px 8px ${col}55">
+        <img src="${CARD_IMG[s.rarity]||''}" style="width:26px;height:34px;object-fit:cover;border-radius:4px;opacity:0.6;border:1px solid ${col}44">
+      </div>`;
+    } else {
+      leftHtml=`<div class="pc-shroom" style="--pc-col:${col};width:52px;height:44px"><div style="font-size:1.4rem">🍄🍄🍄</div><div style="font-size:0.58rem;font-family:'Fredoka One',cursive;color:${col}">×${s.amount*3}</div></div>`;
+    }
+    d.innerHTML=`${leftHtml}<div class="pc-info"><div class="pc-name">${s.label} × 3</div><div class="pc-sub">${reward}</div><div style="font-size:0.6rem;color:var(--muted);margin-top:3px">Apparition : ${pct}% • Triple : ${tripleStr}</div></div><div class="pc-badge"><div class="pc-pct" style="font-size:0.8rem">${tripleStr}</div><div class="pc-label">triple</div></div><div class="pc-bar-wrap"><div class="pc-bar" style="width:${Math.min(100,parseFloat(pct)*4)}%"></div></div>`;
+    d.onclick=()=>{
+      const imgSrc=s.type==='card'?CARD_IMG[s.rarity]:'static-files/common.png';
+      showResult(imgSrc,'Triple '+s.label,reward+'
+Probabilité triple : '+tripleStr);
+    };
     container.appendChild(d);
   });
+
+  // Section paire
+  const t2=document.createElement('div');t2.className='prize-section-title';t2.textContent='✌️ Paire (Bonus)';
+  container.appendChild(t2);
+  const pair=document.createElement('div');
+  pair.className='prize-card pair-row';
+  pair.style.setProperty('--pc-col','#f5c842');
+  pair.innerHTML=`<div class="pc-shroom" style="--pc-col:#f5c842;width:52px;height:44px"><div style="font-size:1.6rem">✌️</div></div><div class="pc-info"><div class="pc-name" style="color:#f5c842">2 symboles identiques</div><div class="pc-sub">Champignons ×1.5 bonus — fréquent !</div><div style="font-size:0.6rem;color:var(--muted);margin-top:3px">Aucune carte gagnée, mais toujours un bonus</div></div><div class="pc-badge"><div class="pc-pct" style="font-size:0.8rem;color:#f5c842">~30%</div><div class="pc-label">chance</div></div><div class="pc-bar-wrap"><div class="pc-bar" style="width:80%;background:#f5c842"></div></div>`;
+  container.appendChild(pair);
 }
 
 // === BOXES ===
