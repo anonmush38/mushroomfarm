@@ -590,6 +590,24 @@
 </head>
 <body>
 
+<!-- MAINTENANCE -->
+<div id="maintenance-screen" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:linear-gradient(135deg,#0a0015,#100020);flex-direction:column;align-items:center;justify-content:center;padding:30px;box-sizing:border-box;">
+  <div style="text-align:center;max-width:320px;">
+    <div style="font-size:4rem;margin-bottom:16px;animation:maint-bounce 2s ease-in-out infinite">🍄</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:1.8rem;color:#f5c842;margin-bottom:8px" id="maint-title">Maintenance en cours</div>
+    <div style="font-size:0.85rem;color:#ffffff88;margin-bottom:24px;line-height:1.5" id="maint-msg">Le jeu est temporairement indisponible pendant la mise à jour. Reviens dans quelques minutes !</div>
+    <div style="background:#ffffff0a;border:1px solid #ffffff15;border-radius:16px;padding:14px 20px;margin-bottom:20px;">
+      <div style="font-size:0.7rem;color:#ffffff55;margin-bottom:6px;letter-spacing:1px">VERSION EN COURS</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#b44fff" id="maint-version">v2.0</div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+      <div style="width:8px;height:8px;border-radius:50%;background:#f5c842;animation:maint-pulse 1.5s ease-in-out infinite"></div>
+      <div style="width:8px;height:8px;border-radius:50%;background:#f5c842;animation:maint-pulse 1.5s ease-in-out 0.3s infinite"></div>
+      <div style="width:8px;height:8px;border-radius:50%;background:#f5c842;animation:maint-pulse 1.5s ease-in-out 0.6s infinite"></div>
+    </div>
+  </div>
+</div>
+
 <!-- SPLASH -->
 <div id="splash">
   <img class="splash-logo-img" src="static-files/logo acceuil.jpg" alt="mushroom">
@@ -1660,7 +1678,71 @@ const MANAGER_URL = 'https://mushroomfarm-majn.onrender.com';
 // === CLOUD STORAGE (Telegram) avec fallback localStorage ===
 const tg = window.Telegram?.WebApp;
 
+// === MAINTENANCE ===
+// ⚙️ POUR ACTIVER LA MAINTENANCE : passer MAINTENANCE_MODE à true et push
+const MAINTENANCE_CONFIG = {
+  enabled:  false,
+  version:  'v2.0',
+  message:  'Le jeu est temporairement indisponible pendant la mise à jour. Reviens dans quelques minutes !',
+  title:    'Maintenance en cours',
+  adminIds: [6846065758], // ton Telegram ID — toi tu vois quand même le jeu
+};
+
+function checkMaintenance() {
+  if (!MAINTENANCE_CONFIG.enabled) return false;
+
+  // L'admin peut toujours accéder
+  const tgId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+  if (tgId && MAINTENANCE_CONFIG.adminIds.includes(tgId)) {
+    showNotif('🔧 Mode maintenance actif — accès admin', '🔧');
+    return false; // admin passe quand même
+  }
+
+  // Afficher l'écran maintenance
+  const screen = document.getElementById('maintenance-screen');
+  const title  = document.getElementById('maint-title');
+  const msg    = document.getElementById('maint-msg');
+  const ver    = document.getElementById('maint-version');
+  if (screen) screen.style.display = 'flex';
+  if (title)  title.textContent    = MAINTENANCE_CONFIG.title;
+  if (msg)    msg.textContent      = MAINTENANCE_CONFIG.message;
+  if (ver)    ver.textContent      = MAINTENANCE_CONFIG.version;
+  return true;
+}
+
 // === TON CONNECT ===
+// === MAINTENANCE ===
+// ⚙️ POUR ACTIVER LA MAINTENANCE : passer MAINTENANCE_MODE à true et push
+const MAINTENANCE_CONFIG = {
+  enabled:  false,
+  version:  'v2.0',
+  message:  'Le jeu est temporairement indisponible pendant la mise à jour. Reviens dans quelques minutes !',
+  title:    'Maintenance en cours',
+  adminIds: [6846065758], // ton Telegram ID — toi tu vois quand même le jeu
+};
+
+function checkMaintenance() {
+  if (!MAINTENANCE_CONFIG.enabled) return false;
+
+  // L'admin peut toujours accéder
+  const tgId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+  if (tgId && MAINTENANCE_CONFIG.adminIds.includes(tgId)) {
+    showNotif('🔧 Mode maintenance actif — accès admin', '🔧');
+    return false; // admin passe quand même
+  }
+
+  // Afficher l'écran maintenance
+  const screen = document.getElementById('maintenance-screen');
+  const title  = document.getElementById('maint-title');
+  const msg    = document.getElementById('maint-msg');
+  const ver    = document.getElementById('maint-version');
+  if (screen) screen.style.display = 'flex';
+  if (title)  title.textContent    = MAINTENANCE_CONFIG.title;
+  if (msg)    msg.textContent      = MAINTENANCE_CONFIG.message;
+  if (ver)    ver.textContent      = MAINTENANCE_CONFIG.version;
+  return true;
+}
+
 // === TON CONNECT ===
 // Une seule variable globale window.tonConnectUI utilisée partout
 let tcConnected = false;
@@ -1720,19 +1802,80 @@ function initTonConnect() {
   }
 }
 
-function updateTonConnectUI(connected, addr) {
+// Récupère le vrai solde TON depuis la blockchain via tonapi.io (public, sans clé)
+async function fetchTonBalance(rawAddr) {
+  try {
+    // Convertir l'adresse raw en format friendly si nécessaire
+    const addr = rawAddr.replace(/[^a-zA-Z0-9_\-]/g, '');
+    const r = await fetch(`https://tonapi.io/v2/accounts/${addr}`, {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!r.ok) return null;
+    const data = await r.json();
+    // balance est en nanoTON (1 TON = 1 000 000 000 nanoTON)
+    if (data.balance !== undefined) {
+      return (parseInt(data.balance) / 1e9).toFixed(2);
+    }
+  } catch(e) {
+    console.warn('[TonBalance] Erreur fetch:', e.message);
+  }
+  return null;
+}
+
+// Récupère le solde MYCO on-chain (jetton) — utilise tonapi.io
+async function fetchMycoBalance(rawAddr) {
+  try {
+    const addr = rawAddr.replace(/[^a-zA-Z0-9_\-]/g, '');
+    // Adresse du contrat MYCO (à remplacer quand le token sera déployé)
+    const MYCO_CONTRACT = 'EQD_MYCO_CONTRACT_ADDRESS';
+    const r = await fetch(`https://tonapi.io/v2/accounts/${addr}/jettons`, {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!r.ok) return null;
+    const data = await r.json();
+    if (data.balances) {
+      const myco = data.balances.find(j =>
+        j.jetton?.address === MYCO_CONTRACT ||
+        j.jetton?.symbol === 'MYCO'
+      );
+      if (myco) return parseInt(myco.balance).toLocaleString();
+    }
+  } catch(e) {
+    console.warn('[MycoBalance] Erreur fetch:', e.message);
+  }
+  return null;
+}
+
+async function updateTonConnectUI(connected, addr) {
   const disc = document.getElementById('tc-disconnected');
   const conn = document.getElementById('tc-connected');
   if (!disc || !conn) return;
   if (connected && addr) {
     disc.style.display = 'none';
     conn.style.display = 'block';
+
+    // Adresse courte
     const el = document.getElementById('tc-addr-text');
     if (el) el.textContent = addr.slice(0,6) + '...' + addr.slice(-6);
+
+    // MYCO in-game (toujours dispo immédiatement)
     const m = document.getElementById('wallet-myco-tc');
-    if (m) m.textContent = Math.floor(state.myco).toLocaleString();
+    if (m) m.textContent = Math.floor(state.myco).toLocaleString() + ' MYCO';
+
+    // TON balance — afficher "chargement..." puis fetch réel
     const t = document.getElementById('tc-ton-balance');
-    if (t) t.textContent = state.ton.toFixed(2) + ' TON';
+    if (t) {
+      t.textContent = '⏳ ...';
+      const tonBal = await fetchTonBalance(addr);
+      t.textContent = tonBal !== null ? tonBal + ' TON' : state.ton.toFixed(2) + ' TON';
+    }
+
+    // MYCO on-chain (si token déployé)
+    const mycoOnChain = await fetchMycoBalance(addr);
+    if (mycoOnChain !== null && m) {
+      m.textContent = mycoOnChain + ' MYCO';
+    }
+
   } else {
     disc.style.display = 'block';
     conn.style.display = 'none';
@@ -4277,6 +4420,9 @@ function launchGame() {
   const tg     = window.Telegram?.WebApp;
   const tgUser = tg?.initDataUnsafe?.user || null;
   if (tg) { tg.ready(); tg.expand(); }
+
+  // Vérifier maintenance AVANT tout
+  if (checkMaintenance()) return;
 
   await new Promise(r => setTimeout(r, 400));
 
