@@ -740,39 +740,62 @@
     </div>
   </div>
   <!-- TON CONNECT WALLET -->
-  <div class="wallet-card" id="ton-connect-section">
+  <div id="ton-connect-section" style="background:linear-gradient(135deg,#0a1628,#0d1f3c);border-radius:22px;padding:16px;border:1px solid #0098ea33;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,152,234,0.1)">
     <!-- État : non connecté -->
     <div id="tc-disconnected">
-      <div style="text-align:center;padding:8px 0 14px">
-        <div style="font-size:2.5rem;margin-bottom:8px">💎</div>
-        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--text);margin-bottom:4px">Connecter votre Wallet TON</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-bottom:16px">Tonkeeper · MyTonWallet · Telegram Wallet</div>
-        <button id="tc-connect-btn" onclick="tonConnectConnect()" style="width:100%;padding:13px;border-radius:16px;border:none;background:linear-gradient(135deg,#0098ea,#005fcc);color:white;font-family:'Fredoka One',cursive;font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 20px #0098ea44;transition:transform 0.15s" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''">
-          <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg" style="width:22px;height:22px">
-          Connecter Wallet TON
-        </button>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:42px;height:42px;border-radius:12px;background:#0098ea22;border:1px solid #0098ea44;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">💎</div>
+        <div>
+          <div style="font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--text)">Wallet TON</div>
+          <div style="font-size:0.68rem;color:var(--muted)">Non connecté</div>
+        </div>
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:12px;text-align:center">Connecte ton wallet pour recevoir tes gains en TON</div>
+      <button id="tc-connect-btn" onclick="tonConnectConnect()" style="width:100%;padding:12px;border-radius:14px;border:none;background:linear-gradient(135deg,#0098ea,#006fcc);color:white;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 18px #0098ea44;transition:all 0.15s">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="white" opacity="0.3"/><path d="M17 7H7l5 10 5-10z" fill="white"/></svg>
+        Connecter Wallet TON
+      </button>
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:10px">
+        <div style="font-size:0.62rem;color:var(--muted);display:flex;align-items:center;gap:3px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#0098ea;display:inline-block"></span>Tonkeeper
+        </div>
+        <div style="font-size:0.62rem;color:var(--muted);display:flex;align-items:center;gap:3px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#0098ea;display:inline-block"></span>MyTonWallet
+        </div>
+        <div style="font-size:0.62rem;color:var(--muted);display:flex;align-items:center;gap:3px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#0098ea;display:inline-block"></span>Telegram Wallet
+        </div>
       </div>
     </div>
     <!-- État : connecté -->
     <div id="tc-connected" style="display:none">
-      <div class="wlabel" style="margin-bottom:6px">
-        <div style="width:10px;height:10px;border-radius:50%;background:#3ecf6a;box-shadow:0 0 8px #3ecf6a;flex-shrink:0"></div>
-        <span style="color:#3ecf6a;font-size:0.8rem">Wallet connecté</span>
-        <button onclick="tonConnectDisconnect()" style="margin-left:auto;background:none;border:1px solid #ffffff22;color:var(--muted);font-size:0.68rem;border-radius:8px;padding:2px 8px;cursor:pointer">Déconnecter</button>
-      </div>
-      <div class="wlabel"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg" alt="" style="width:18px;height:18px"><span style="font-size:0.78rem;color:var(--muted)">Adresse TON</span></div>
-      <div class="wallet-addr" style="margin-bottom:12px">
-        <span id="tc-addr-text" style="font-size:0.78rem">—</span>
-        <span class="copy-btn" onclick="copyTonAddr()"><img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg" alt="" style="width:14px;height:14px"></span>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
-        <div style="background:#0098ea15;border:1px solid #0098ea33;border-radius:12px;padding:10px;text-align:center">
-          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:2px">Solde TON</div>
-          <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#0098ea" id="tc-ton-balance">—</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:42px;height:42px;border-radius:12px;background:#0098ea22;border:1px solid #0098ea55;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">💎</div>
+        <div style="flex:1">
+          <div style="font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--text)">Wallet TON</div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:1px">
+            <div style="width:7px;height:7px;border-radius:50%;background:#3ecf6a;box-shadow:0 0 6px #3ecf6a"></div>
+            <span style="font-size:0.68rem;color:#3ecf6a">Connecté</span>
+          </div>
         </div>
-        <div style="background:#3ecf6a15;border:1px solid #3ecf6a33;border-radius:12px;padding:10px;text-align:center">
-          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:2px">Solde MYCO</div>
-          <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#3ecf6a"><span id="wallet-myco-tc">0</span></div>
+        <button onclick="tonConnectDisconnect()" style="background:none;border:1px solid #ffffff22;color:var(--muted);font-size:0.65rem;border-radius:8px;padding:4px 10px;cursor:pointer;font-family:'Fredoka One',cursive">Déconnecter</button>
+      </div>
+      <!-- Adresse -->
+      <div style="background:#ffffff08;border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin-bottom:10px;border:1px solid #ffffff10">
+        <div style="flex:1;font-size:0.72rem;color:var(--muted);font-family:monospace" id="tc-addr-text">—</div>
+        <button onclick="copyTonAddr()" style="background:none;border:none;cursor:pointer;padding:2px;opacity:0.7">
+          <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg" style="width:14px;height:14px">
+        </button>
+      </div>
+      <!-- Soldes -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:#0098ea12;border:1px solid #0098ea33;border-radius:12px;padding:10px 12px">
+          <div style="font-size:0.62rem;color:var(--muted);margin-bottom:3px">Solde TON</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:1.15rem;color:#0098ea" id="tc-ton-balance">— TON</div>
+        </div>
+        <div style="background:#3ecf6a12;border:1px solid #3ecf6a33;border-radius:12px;padding:10px 12px">
+          <div style="font-size:0.62rem;color:var(--muted);margin-bottom:3px">MYCO In-Game</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:1.15rem;color:#3ecf6a"><span id="wallet-myco-tc">0</span> MYCO</div>
         </div>
       </div>
     </div>
@@ -1622,6 +1645,44 @@ const MANAGER_URL = 'https://mushroomfarm-majn.onrender.com';
 
 // === CLOUD STORAGE (Telegram) avec fallback localStorage ===
 const tg = window.Telegram?.WebApp;
+
+// === TON CONNECT ===
+let tonConnectUI=null,tcConnected=false,tcWalletAddr=null;
+function initTonConnect(){
+  try{
+    if(typeof TON_CONNECT_UI==='undefined'){console.warn('TON Connect SDK non chargé');return;}
+    const manifestBlob=new Blob([JSON.stringify({url:'https://anonmush38.github.io/mushroomfarm',name:'MushroomFarm',iconUrl:'https://anonmush38.github.io/mushroomfarm/static-files/logo%20mico.png'})],{type:'application/json'});
+    tonConnectUI=new TON_CONNECT_UI.TonConnectUI({manifestUrl:URL.createObjectURL(manifestBlob),buttonRootId:null});
+    tonConnectUI.onStatusChange(wallet=>{
+      if(wallet){tcConnected=true;tcWalletAddr=wallet.account.address;updateTonConnectUI(true,tcWalletAddr);showNotif('💎 Wallet TON connecté !','https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');saveState();}
+      else{tcConnected=false;tcWalletAddr=null;updateTonConnectUI(false,null);}
+    });
+    if(tonConnectUI.wallet){tcConnected=true;tcWalletAddr=tonConnectUI.wallet.account.address;updateTonConnectUI(true,tcWalletAddr);}
+  }catch(e){console.warn('TON Connect init error:',e);}
+}
+function updateTonConnectUI(connected,addr){
+  const disc=document.getElementById('tc-disconnected'),conn=document.getElementById('tc-connected');
+  if(!disc||!conn)return;
+  if(connected&&addr){
+    disc.style.display='none';conn.style.display='block';
+    const el=document.getElementById('tc-addr-text');if(el)el.textContent=addr.slice(0,6)+'...'+addr.slice(-6);
+    const m=document.getElementById('wallet-myco-tc');if(m)m.textContent=Math.floor(state.myco).toLocaleString();
+    const t=document.getElementById('tc-ton-balance');if(t)t.textContent=state.ton.toFixed(2)+' TON';
+  }else{disc.style.display='block';conn.style.display='none';}
+}
+async function tonConnectConnect(){
+  if(!tonConnectUI){initTonConnect();await new Promise(r=>setTimeout(r,600));}
+  if(!tonConnectUI){showNotif('SDK non chargé, réessaie dans 1s','https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');return;}
+  try{await tonConnectUI.openModal();}catch(e){showNotif('Erreur connexion wallet','https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');console.error(e);}
+}
+async function tonConnectDisconnect(){
+  if(!tonConnectUI)return;
+  try{await tonConnectUI.disconnect();showNotif('Wallet déconnecté','https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');}catch(e){console.error(e);}
+}
+function copyTonAddr(){
+  if(!tcWalletAddr)return;
+  navigator.clipboard.writeText(tcWalletAddr).then(()=>showNotif('✅ Adresse copiée !','https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg'));
+}
 
 function saveState() {
   const data = JSON.stringify({ ...state, _saved_at: Date.now() });
