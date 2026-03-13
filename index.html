@@ -1849,7 +1849,7 @@ function newAccount(){
     unlocked_slots:[], basket:{common:0,uncommon:0,rare:0,epic:0,legendary:0},
     reward_history:[], last_midnight_reward:null, last_free_spin:null,
     last_free_slot_spin:null, last_daily_gift:null,
-    exchange_direction:'ton_to_myco', pending_myco:0, pending_count:0, lang:'fr',
+    exchange_direction:'ton_to_myco', pending_myco:0, pending_count:0, lang:'fr', referral_used:false,
   };
   // Masquer le bouton continuer
   document.getElementById('continue-btn-wrap').style.display = 'none';
@@ -2176,13 +2176,50 @@ function confirmBuySlot(i){
 }
 
 function inviteFriend(){
-  const inviteLink=`https://t.me/MushroomFarmBot?start=ref_${state.address.substring(3,10)}`;
-  const msg=encodeURIComponent(`🍄 Rejoins Mushroom Farm et commence à farmer des MYCO ! Clique ici : ${inviteLink}`);
-  const tgUrl=`https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${msg}`;
-  // Copy to clipboard and open Telegram
+  // ID unique du joueur : telegram ID si dispo, sinon hash du nom
+  const tg = window.Telegram?.WebApp;
+  const tgId = tg?.initDataUnsafe?.user?.id || null;
+  const refId = tgId ? String(tgId) : btoa(state.player).replace(/[^a-z0-9]/gi,'').slice(0,8);
+
+  // Lien Mini App avec startapp= (format correct pour /newapp)
+  const inviteLink = `https://t.me/mushroomfrming_bot/play?startapp=ref_${refId}`;
+  const msg = encodeURIComponent(`🍄 Rejoins MushroomFarm et gagne des cartes rares !\nClique ici : ${inviteLink}`);
+  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${msg}`;
+
+  // Copier le lien
   navigator.clipboard.writeText(inviteLink).catch(()=>{});
-  window.open(tgUrl,'_blank');
-  showNotif('Lien d\'invitation copié ! 🎁',IC.gift);
+
+  // Ouvrir le partage Telegram (fonctionne dans Mini App)
+  if (tg) {
+    tg.openTelegramLink(shareUrl);
+  } else {
+    window.open(shareUrl, '_blank');
+  }
+  showNotif('Lien copié + partage ouvert ! 🎁', IC.gift);
+}
+
+// Lire le parrain au démarrage (startapp=ref_XXXXX)
+function readReferral() {
+  const tg = window.Telegram?.WebApp;
+  const startParam = tg?.initDataUnsafe?.start_param || '';
+  if (startParam.startsWith('ref_')) {
+    const referrerId = startParam.replace('ref_', '');
+    console.log('[Referral] Parrainé par :', referrerId);
+    // Envoyer au backend si connecté
+    if (typeof getToken === 'function' && getToken()) {
+      fetch(`${BASE_URL}/referral`, {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: JSON.stringify({ referrer_id: referrerId }),
+      }).catch(() => {});
+    }
+    // Bonus local immédiat pour le nouveau joueur
+    if (!state.referral_used) {
+      state.referral_used = true;
+      state.myco = (state.myco || 0) + 500;
+      setTimeout(() => showNotif('🎁 +500 MYCO bonus de bienvenue !', IC.gift), 2000);
+    }
+  }
 }
 
 
@@ -4232,6 +4269,7 @@ function launchGame() {
   startFarmTick(); startMidnightTimer();
   setTimeout(initTonConnect, 1000);
   startAutoSync();
+  readReferral();
 }
 
 // ── IIFE principale ───────────────────────────────────────────────────────────
