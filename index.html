@@ -820,16 +820,25 @@
         </button>
       </div>
       <!-- Soldes -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div style="background:#0098ea12;border:1px solid #0098ea33;border-radius:12px;padding:10px 12px">
-          <div style="font-size:0.62rem;color:var(--muted);margin-bottom:3px">Solde TON</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div style="background:#0098ea12;border:1px solid #0098ea33;border-radius:12px;padding:10px 12px;position:relative">
+          <div style="font-size:0.6rem;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:4px">
+            <span>💎 Solde TON</span>
+            <span style="font-size:0.55rem;color:#0098ea88">• blockchain</span>
+          </div>
           <div style="font-family:'Fredoka One',cursive;font-size:1.15rem;color:#0098ea" id="tc-ton-balance">— TON</div>
         </div>
         <div style="background:#3ecf6a12;border:1px solid #3ecf6a33;border-radius:12px;padding:10px 12px">
-          <div style="font-size:0.62rem;color:var(--muted);margin-bottom:3px">MYCO In-Game</div>
+          <div style="font-size:0.6rem;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:4px">
+            <img src="static-files/logo mico.png" style="width:11px;height:11px">
+            <span>MYCO In-Game</span>
+          </div>
           <div style="font-family:'Fredoka One',cursive;font-size:1.15rem;color:#3ecf6a"><span id="wallet-myco-tc">0</span> MYCO</div>
         </div>
       </div>
+      <button onclick="refreshWalletBalances()" style="width:100%;padding:7px;border-radius:10px;border:1px solid #ffffff15;background:#ffffff08;color:var(--muted);font-size:0.72rem;cursor:pointer;font-family:'Fredoka One',cursive;display:flex;align-items:center;justify-content:center;gap:6px">
+        🔄 Actualiser les soldes
+      </button>
     </div>
   </div>
 
@@ -1770,47 +1779,70 @@ function initTonConnect() {
   }
 }
 
-// Récupère le vrai solde TON depuis la blockchain via tonapi.io (public, sans clé)
-async function fetchTonBalance(rawAddr) {
-  try {
-    // Convertir l'adresse raw en format friendly si nécessaire
-    const addr = rawAddr.replace(/[^a-zA-Z0-9_\-]/g, '');
-    const r = await fetch(`https://tonapi.io/v2/accounts/${addr}`, {
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!r.ok) return null;
-    const data = await r.json();
-    // balance est en nanoTON (1 TON = 1 000 000 000 nanoTON)
-    if (data.balance !== undefined) {
-      return (parseInt(data.balance) / 1e9).toFixed(2);
-    }
-  } catch(e) {
-    console.warn('[TonBalance] Erreur fetch:', e.message);
-  }
-  return null;
+// Convertit une adresse TON raw (0:abc...) en format URL-safe pour tonapi
+// Convertit n'importe quel format d'adresse TON en format utilisable par les APIs
+// TON Connect renvoie souvent le format raw : "0:abcdef1234..."
+// Les APIs toncenter/tonapi acceptent : UQ.../EQ... (base64url) OU 0:hex
+function tonAddrToApi(addr) {
+  if (!addr) return '';
+  // Déjà en format friendly base64url
+  if (addr.startsWith('UQ') || addr.startsWith('EQ')) return addr;
+  // Format raw "0:hexstring" → on le passe tel quel (toncenter l'accepte)
+  if (addr.includes(':')) return addr;
+  // Autre format inconnu — retourner tel quel
+  return addr;
 }
 
-// Récupère le solde MYCO on-chain (jetton) — utilise tonapi.io
-async function fetchMycoBalance(rawAddr) {
+async function fetchTonBalance(addr) {
+  if (!addr) return null;
+  const a = tonAddrToApi(addr);
+  console.log('[TonBalance] fetch pour adresse:', a);
+
+  // API 1 : toncenter.com
   try {
-    const addr = rawAddr.replace(/[^a-zA-Z0-9_\-]/g, '');
-    // Adresse du contrat MYCO (à remplacer quand le token sera déployé)
-    const MYCO_CONTRACT = 'EQD_MYCO_CONTRACT_ADDRESS';
-    const r = await fetch(`https://tonapi.io/v2/accounts/${addr}/jettons`, {
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!r.ok) return null;
-    const data = await r.json();
-    if (data.balances) {
-      const myco = data.balances.find(j =>
-        j.jetton?.address === MYCO_CONTRACT ||
-        j.jetton?.symbol === 'MYCO'
-      );
-      if (myco) return parseInt(myco.balance).toLocaleString();
+    const r = await fetch(
+      'https://toncenter.com/api/v2/getAddressBalance?address=' + encodeURIComponent(a),
+      { headers: { 'Accept': 'application/json' } }
+    );
+    if (r.ok) {
+      const d = await r.json();
+      console.log('[TonBalance] toncenter réponse:', d);
+      if (d.ok && d.result !== undefined) {
+        return (parseInt(d.result) / 1e9).toFixed(2);
+      }
     }
-  } catch(e) {
-    console.warn('[MycoBalance] Erreur fetch:', e.message);
-  }
+  } catch(e) { console.warn('[TonBalance] toncenter erreur:', e.message); }
+
+  // API 2 : tonapi.io
+  try {
+    const r = await fetch(
+      'https://tonapi.io/v2/accounts/' + encodeURIComponent(a),
+      { headers: { 'Accept': 'application/json' } }
+    );
+    if (r.ok) {
+      const d = await r.json();
+      console.log('[TonBalance] tonapi réponse:', d);
+      if (d.balance !== undefined) {
+        return (parseInt(d.balance) / 1e9).toFixed(2);
+      }
+    }
+  } catch(e) { console.warn('[TonBalance] tonapi erreur:', e.message); }
+
+  // API 3 : ton.org public API (dernier recours)
+  try {
+    const r = await fetch(
+      'https://toncenter.com/api/v3/account?address=' + encodeURIComponent(a),
+      { headers: { 'Accept': 'application/json' } }
+    );
+    if (r.ok) {
+      const d = await r.json();
+      console.log('[TonBalance] toncenter v3 réponse:', d);
+      if (d.balance !== undefined) {
+        return (parseInt(d.balance) / 1e9).toFixed(2);
+      }
+    }
+  } catch(e) { console.warn('[TonBalance] toncenter v3 erreur:', e.message); }
+
   return null;
 }
 
@@ -1818,36 +1850,51 @@ async function updateTonConnectUI(connected, addr) {
   const disc = document.getElementById('tc-disconnected');
   const conn = document.getElementById('tc-connected');
   if (!disc || !conn) return;
+
   if (connected && addr) {
     disc.style.display = 'none';
     conn.style.display = 'block';
 
-    // Adresse courte
+    // Adresse courte affichée
     const el = document.getElementById('tc-addr-text');
     if (el) el.textContent = addr.slice(0,6) + '...' + addr.slice(-6);
 
-    // MYCO in-game (toujours dispo immédiatement)
+    // MYCO in-game — immédiat depuis state
     const m = document.getElementById('wallet-myco-tc');
-    if (m) m.textContent = Math.floor(state.myco).toLocaleString() + ' MYCO';
+    if (m) m.textContent = Math.floor(state.myco).toLocaleString();
 
-    // TON balance — afficher "chargement..." puis fetch réel
+    // TON — fetch blockchain en parallèle (non bloquant)
     const t = document.getElementById('tc-ton-balance');
     if (t) {
-      t.textContent = '⏳ ...';
-      const tonBal = await fetchTonBalance(addr);
-      t.textContent = tonBal !== null ? tonBal + ' TON' : state.ton.toFixed(2) + ' TON';
-    }
-
-    // MYCO on-chain (si token déployé)
-    const mycoOnChain = await fetchMycoBalance(addr);
-    if (mycoOnChain !== null && m) {
-      m.textContent = mycoOnChain + ' MYCO';
+      t.innerHTML = '<span style="font-size:0.8rem;opacity:0.6">⏳ chargement...</span>';
+      fetchTonBalance(addr).then(bal => {
+        const el = document.getElementById('tc-ton-balance');
+        if (!el) return;
+        if (bal !== null && parseFloat(bal) >= 0) {
+          el.textContent = bal + ' TON';
+          console.log('[Wallet] Solde TON affiché:', bal);
+        } else {
+          // Fallback : afficher solde in-game avec indicateur
+          el.textContent = state.ton.toFixed(2) + ' TON';
+          el.title = 'Solde in-game (blockchain non accessible)';
+          console.warn('[Wallet] Fallback solde in-game');
+        }
+      });
     }
 
   } else {
     disc.style.display = 'block';
     conn.style.display = 'none';
   }
+}
+
+async function refreshWalletBalances() {
+  if (!tcWalletAddr) { showNotif('Connecte d\'abord ton wallet', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg'); return; }
+  const btn = document.querySelector('[onclick="refreshWalletBalances()"]');
+  if (btn) btn.textContent = '⏳ Actualisation...';
+  await updateTonConnectUI(true, tcWalletAddr);
+  if (btn) btn.innerHTML = '🔄 Actualiser les soldes';
+  showNotif('✅ Soldes actualisés !', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');
 }
 
 async function tonConnectConnect() {
@@ -3423,6 +3470,9 @@ function addTx(label,amount,currency,icon){
 }
 
 function goPage(name,btn){
+  if(name==='wallet' && tcConnected && tcWalletAddr){
+    setTimeout(()=>updateTonConnectUI(true,tcWalletAddr),400);
+  }
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');showPage(name);
 }
