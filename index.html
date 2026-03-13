@@ -857,6 +857,53 @@
   </div>
   <!-- EXCHANGE TON <-> MYCO -->
   <div class="exchange-card">
+    <!-- MARCHÉ MYCO / STON.fi -->
+    <div id="market-card" style="background:linear-gradient(135deg,#0d1a2a,#112240);border-radius:20px;padding:14px;border:1px solid #0098ea22;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:32px;height:32px;border-radius:10px;background:#0098ea22;display:flex;align-items:center;justify-content:center;font-size:1.1rem">📈</div>
+          <div>
+            <div style="font-family:'Fredoka One',cursive;font-size:0.9rem;color:var(--text)">Cours MYCO</div>
+            <div style="font-size:0.6rem;color:#0098ea;letter-spacing:1px">STON.fi · TON</div>
+          </div>
+        </div>
+        <button onclick="fetchMarketData()" id="market-refresh-btn" style="background:#0098ea18;border:1px solid #0098ea33;border-radius:8px;padding:4px 10px;color:#0098ea;font-size:0.68rem;cursor:pointer;font-family:'Fredoka One',cursive">🔄 Actualiser</button>
+      </div>
+      <!-- Prix + variation -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+        <div style="background:#ffffff08;border-radius:12px;padding:8px 10px;text-align:center">
+          <div style="font-size:0.58rem;color:var(--muted);margin-bottom:3px">Prix MYCO</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:0.9rem;color:#f5c842" id="mkt-price">—</div>
+          <div style="font-size:0.58rem" id="mkt-change">—</div>
+        </div>
+        <div style="background:#ffffff08;border-radius:12px;padding:8px 10px;text-align:center">
+          <div style="font-size:0.58rem;color:var(--muted);margin-bottom:3px">Vol. 24h</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:0.9rem;color:#0098ea" id="mkt-volume">—</div>
+        </div>
+        <div style="background:#ffffff08;border-radius:12px;padding:8px 10px;text-align:center">
+          <div style="font-size:0.58rem;color:var(--muted);margin-bottom:3px">Liquidité</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:0.9rem;color:#3ecf6a" id="mkt-liquidity">—</div>
+        </div>
+      </div>
+      <!-- Solde MYCO du wallet connecté -->
+      <div id="mkt-wallet-row" style="display:none;background:#3ecf6a10;border:1px solid #3ecf6a22;border-radius:12px;padding:8px 12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:0.6rem;color:var(--muted);margin-bottom:2px">Ton solde MYCO on-chain</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:#3ecf6a" id="mkt-myco-balance">—</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.6rem;color:var(--muted);margin-bottom:2px">Valeur en TON</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:0.9rem;color:#f5c842" id="mkt-myco-value">—</div>
+        </div>
+      </div>
+      <!-- Lien STON.fi -->
+      <a href="https://app.ston.fi/swap?inputCurrency=TON&outputCurrency=MYCO" target="_blank" onclick="window.Telegram?.WebApp?.openLink('https://app.ston.fi/swap?inputCurrency=TON&outputCurrency=MYCO')" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#0098ea,#005fcc);border-radius:12px;padding:9px;text-decoration:none;color:white;font-family:'Fredoka One',cursive;font-size:0.82rem">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        Acheter / Vendre sur STON.fi
+      </a>
+      <div style="font-size:0.58rem;color:var(--muted);text-align:center;margin-top:6px" id="mkt-updated">Données non chargées</div>
+    </div>
+
     <div class="exchange-title">🔄 Convertir TON ↔ MYCO</div>
     <div class="exchange-row">
       <div class="exchange-input-wrap">
@@ -1719,6 +1766,145 @@ function checkMaintenance() {
   return true;
 }
 
+
+// === MARCHÉ MYCO / STON.fi ===
+// Adresse du contrat MYCO sur TON (à remplacer par l'adresse réelle)
+const MYCO_CONTRACT_ADDR = 'EQD_MYCO_CONTRACT_PLACEHOLDER';
+
+// Cache des données marché
+let marketData = { price: null, change: null, volume: null, liquidity: null, updatedAt: null };
+
+async function fetchMarketData() {
+  const btn = document.getElementById('market-refresh-btn');
+  if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
+
+  try {
+    // ── API STON.fi — données de la pool MYCO/TON ──────────────────────────
+    // STON.fi API publique : https://api.ston.fi/v1/
+    const stonRes = await fetch(
+      'https://api.ston.fi/v1/pools?token0=TON&token1=' + MYCO_CONTRACT_ADDR,
+      { headers: { 'Accept': 'application/json' } }
+    );
+
+    if (stonRes.ok) {
+      const stonData = await stonRes.json();
+      const pool = stonData?.pool_list?.[0] || stonData?.pools?.[0] || null;
+
+      if (pool) {
+        // Prix MYCO en TON
+        const price = pool.token1_price || pool.lp_price_usd || null;
+        const vol   = pool.volume_24h   || pool.volume_usd   || null;
+        const liq   = pool.reserve_usd  || pool.tvl_usd      || null;
+
+        marketData = {
+          price:     price     ? parseFloat(price).toFixed(6)  : null,
+          volume:    vol       ? formatLargeNum(parseFloat(vol)) : null,
+          liquidity: liq       ? formatLargeNum(parseFloat(liq)) : null,
+          updatedAt: new Date().toLocaleTimeString(),
+        };
+        updateMarketUI();
+        console.log('[Market] Pool STON.fi:', pool);
+      } else {
+        // Pool pas encore créée — afficher placeholder
+        setMarketPlaceholder();
+      }
+    } else {
+      setMarketPlaceholder();
+    }
+  } catch(e) {
+    console.warn('[Market] Erreur STON.fi:', e.message);
+    setMarketPlaceholder();
+  }
+
+  // Récupérer aussi le solde MYCO on-chain si wallet connecté
+  if (tcConnected && tcWalletAddr) {
+    fetchOnChainMycoBalance(tcWalletAddr);
+  }
+
+  if (btn) { btn.textContent = '🔄 Actualiser'; btn.disabled = false; }
+}
+
+function formatLargeNum(n) {
+  if (!n || isNaN(n)) return '—';
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'k';
+  return n.toFixed(2);
+}
+
+function updateMarketUI() {
+  const price = document.getElementById('mkt-price');
+  const change = document.getElementById('mkt-change');
+  const volume = document.getElementById('mkt-volume');
+  const liq = document.getElementById('mkt-liquidity');
+  const updated = document.getElementById('mkt-updated');
+
+  if (price) price.textContent = marketData.price ? marketData.price + ' TON' : '—';
+  if (change) {
+    if (marketData.change !== null) {
+      const up = marketData.change >= 0;
+      change.textContent = (up ? '▲ +' : '▼ ') + marketData.change + '%';
+      change.style.color = up ? '#3ecf6a' : '#ff6b6b';
+    } else {
+      change.textContent = '';
+    }
+  }
+  if (volume) volume.textContent = marketData.volume || '—';
+  if (liq) liq.textContent = marketData.liquidity || '—';
+  if (updated) updated.textContent = 'Mis à jour : ' + (marketData.updatedAt || '—');
+}
+
+function setMarketPlaceholder() {
+  // Token pas encore listé — afficher état "bientôt"
+  const price = document.getElementById('mkt-price');
+  const volume = document.getElementById('mkt-volume');
+  const liq = document.getElementById('mkt-liquidity');
+  const updated = document.getElementById('mkt-updated');
+  if (price) price.textContent = 'Bientôt';
+  if (volume) volume.textContent = '—';
+  if (liq) liq.textContent = '—';
+  if (updated) updated.textContent = 'Token pas encore listé sur STON.fi';
+}
+
+async function fetchOnChainMycoBalance(addr) {
+  // Solde MYCO on-chain via tonapi.io jettons
+  try {
+    const clean = tonAddrToApi(addr);
+    const r = await fetch(
+      'https://tonapi.io/v2/accounts/' + encodeURIComponent(clean) + '/jettons',
+      { headers: { 'Accept': 'application/json' } }
+    );
+    if (!r.ok) return;
+    const data = await r.json();
+    const mycoJetton = data?.balances?.find(j =>
+      j.jetton?.address === MYCO_CONTRACT_ADDR ||
+      (j.jetton?.symbol || '').toUpperCase() === 'MYCO'
+    );
+
+    const balEl  = document.getElementById('mkt-myco-balance');
+    const valEl  = document.getElementById('mkt-myco-value');
+    const rowEl  = document.getElementById('mkt-wallet-row');
+
+    if (mycoJetton && balEl) {
+      const bal = parseInt(mycoJetton.balance) / 1e9;
+      balEl.textContent = bal.toLocaleString() + ' MYCO';
+      // Valeur en TON si on a le prix
+      if (marketData.price && valEl) {
+        const val = (bal * parseFloat(marketData.price)).toFixed(4);
+        valEl.textContent = val + ' TON';
+      }
+      if (rowEl) rowEl.style.display = 'flex';
+      // Mettre aussi à jour le solde affiché dans la carte connecté
+      const m = document.getElementById('wallet-myco-tc');
+      if (m) m.textContent = bal.toLocaleString();
+    } else {
+      // Pas de MYCO on-chain — afficher solde in-game
+      if (balEl) balEl.textContent = Math.floor(state.myco).toLocaleString() + ' MYCO (in-game)';
+      if (rowEl) rowEl.style.display = 'flex';
+    }
+  } catch(e) {
+    console.warn('[MycoBalance] Erreur:', e.message);
+  }
+}
 
 // === TON CONNECT ===
 // Une seule variable globale window.tonConnectUI utilisée partout
@@ -3470,8 +3656,9 @@ function addTx(label,amount,currency,icon){
 }
 
 function goPage(name,btn){
-  if(name==='wallet' && tcConnected && tcWalletAddr){
-    setTimeout(()=>updateTonConnectUI(true,tcWalletAddr),400);
+  if(name==='wallet'){
+    setTimeout(()=>fetchMarketData(),300);
+    if(tcConnected && tcWalletAddr) setTimeout(()=>updateTonConnectUI(true,tcWalletAddr),400);
   }
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');showPage(name);
