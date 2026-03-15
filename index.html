@@ -1866,11 +1866,11 @@ function checkMaintenance() {
 
 // === MARCHÉ MYCO / STON.fi ===
 // URL de la pool MYCO/TON — mettre à jour avec l'adresse réelle après déploiement
-const MYCO_POOL_URL = 'https://app.ston.fi/pools/' + 'EQD_MYCO_CONTRACT_PLACEHOLDER';
-const MYCO_SWAP_URL = 'https://app.ston.fi/swap?ft=TON&st=' + 'EQD_MYCO_CONTRACT_PLACEHOLDER';
+const MYCO_POOL_URL = 'https://app.ston.fi/pools/EQAxb-16OH8tMGDst_e1M1BFaVpyPSXr3dp0rGQfFZpgEw8a';
+const MYCO_SWAP_URL = 'https://app.ston.fi/swap?ft=TON&st=EQAxb-16OH8tMGDst_e1M1BFaVpyPSXr3dp0rGQfFZpgEw8a';
 
 function openStonPool() {
-  const url = MYCO_CONTRACT_ADDR !== 'EQD_MYCO_CONTRACT_PLACEHOLDER'
+  const url = MYCO_CONTRACT_ADDR !== 'EQAxb-16OH8tMGDst_e1M1BFaVpyPSXr3dp0rGQfFZpgEw8a'
     ? MYCO_POOL_URL
     : 'https://app.ston.fi/pools'; // page liste des pools si pas encore déployé
   const tg = window.Telegram?.WebApp;
@@ -1879,7 +1879,7 @@ function openStonPool() {
 }
 
 function openStonSwap() {
-  const url = MYCO_CONTRACT_ADDR !== 'EQD_MYCO_CONTRACT_PLACEHOLDER'
+  const url = MYCO_CONTRACT_ADDR !== 'EQAxb-16OH8tMGDst_e1M1BFaVpyPSXr3dp0rGQfFZpgEw8a'
     ? MYCO_SWAP_URL
     : 'https://app.ston.fi/swap'; // swap général si pas encore déployé
   const tg = window.Telegram?.WebApp;
@@ -1888,7 +1888,7 @@ function openStonSwap() {
 }
 
 // Adresse du contrat MYCO sur TON (à remplacer par l'adresse réelle)
-const MYCO_CONTRACT_ADDR = 'EQD_MYCO_CONTRACT_PLACEHOLDER';
+const MYCO_CONTRACT_ADDR = 'EQAxb-16OH8tMGDst_e1M1BFaVpyPSXr3dp0rGQfFZpgEw8a';
 
 // Cache des données marché
 let marketData = { price: null, change: null, volume: null, liquidity: null, updatedAt: null };
