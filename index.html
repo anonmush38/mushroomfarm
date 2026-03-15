@@ -1870,21 +1870,15 @@ const MYCO_POOL_URL = 'https://app.ston.fi/pools/EQAxb-16OH8tMGDst_e1M1BFaVpyPSX
 const MYCO_SWAP_URL = 'https://app.ston.fi/swap?ft=TON&st=EQAxb-16OH8tMGDst_e1M1BFaVpyPSXr3dp0rGQfFZpgEw8a';
 
 function openStonPool() {
-  const url = MYCO_CONTRACT_ADDR !== 'EQAxb-16OH8tMGDst_e1M1BFaVpyPSXr3dp0rGQfFZpgEw8a'
-    ? MYCO_POOL_URL
-    : 'https://app.ston.fi/pools'; // page liste des pools si pas encore déployé
   const tg = window.Telegram?.WebApp;
-  if (tg) tg.openLink(url);
-  else window.open(url, '_blank');
+  if (tg) tg.openLink(MYCO_POOL_URL);
+  else window.open(MYCO_POOL_URL, '_blank');
 }
 
 function openStonSwap() {
-  const url = MYCO_CONTRACT_ADDR !== 'EQAxb-16OH8tMGDst_e1M1BFaVpyPSXr3dp0rGQfFZpgEw8a'
-    ? MYCO_SWAP_URL
-    : 'https://app.ston.fi/swap'; // swap général si pas encore déployé
   const tg = window.Telegram?.WebApp;
-  if (tg) tg.openLink(url);
-  else window.open(url, '_blank');
+  if (tg) tg.openLink(MYCO_SWAP_URL);
+  else window.open(MYCO_SWAP_URL, '_blank');
 }
 
 // Adresse du contrat MYCO sur TON (à remplacer par l'adresse réelle)
