@@ -896,11 +896,17 @@
           <div style="font-family:'Fredoka One',cursive;font-size:0.9rem;color:#f5c842" id="mkt-myco-value">—</div>
         </div>
       </div>
-      <!-- Lien STON.fi -->
-      <a href="https://app.ston.fi/swap?inputCurrency=TON&outputCurrency=MYCO" target="_blank" onclick="window.Telegram?.WebApp?.openLink('https://app.ston.fi/swap?inputCurrency=TON&outputCurrency=MYCO')" style="display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#0098ea,#005fcc);border-radius:12px;padding:9px;text-decoration:none;color:white;font-family:'Fredoka One',cursive;font-size:0.82rem">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
-        Acheter / Vendre sur STON.fi
-      </a>
+      <!-- Liens STON.fi -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button onclick="openStonPool()" style="display:flex;align-items:center;justify-content:center;gap:5px;background:linear-gradient(135deg,#1D9E75,#0F6E56);border:none;border-radius:12px;padding:9px;color:white;font-family:'Fredoka One',cursive;font-size:0.78rem;cursor:pointer">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" opacity="0.5"/><path d="M12 6l-6 6h4v6h4v-6h4z"/></svg>
+          Ajouter liquidité
+        </button>
+        <button onclick="openStonSwap()" style="display:flex;align-items:center;justify-content:center;gap:5px;background:linear-gradient(135deg,#0098ea,#005fcc);border:none;border-radius:12px;padding:9px;color:white;font-family:'Fredoka One',cursive;font-size:0.78rem;cursor:pointer">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+          Acheter / Vendre
+        </button>
+      </div>
       <div style="font-size:0.58rem;color:var(--muted);text-align:center;margin-top:6px" id="mkt-updated">Données non chargées</div>
     </div>
 
@@ -1859,6 +1865,28 @@ function checkMaintenance() {
 
 
 // === MARCHÉ MYCO / STON.fi ===
+// URL de la pool MYCO/TON — mettre à jour avec l'adresse réelle après déploiement
+const MYCO_POOL_URL = 'https://app.ston.fi/pools/' + 'EQD_MYCO_CONTRACT_PLACEHOLDER';
+const MYCO_SWAP_URL = 'https://app.ston.fi/swap?ft=TON&st=' + 'EQD_MYCO_CONTRACT_PLACEHOLDER';
+
+function openStonPool() {
+  const url = MYCO_CONTRACT_ADDR !== 'EQD_MYCO_CONTRACT_PLACEHOLDER'
+    ? MYCO_POOL_URL
+    : 'https://app.ston.fi/pools'; // page liste des pools si pas encore déployé
+  const tg = window.Telegram?.WebApp;
+  if (tg) tg.openLink(url);
+  else window.open(url, '_blank');
+}
+
+function openStonSwap() {
+  const url = MYCO_CONTRACT_ADDR !== 'EQD_MYCO_CONTRACT_PLACEHOLDER'
+    ? MYCO_SWAP_URL
+    : 'https://app.ston.fi/swap'; // swap général si pas encore déployé
+  const tg = window.Telegram?.WebApp;
+  if (tg) tg.openLink(url);
+  else window.open(url, '_blank');
+}
+
 // Adresse du contrat MYCO sur TON (à remplacer par l'adresse réelle)
 const MYCO_CONTRACT_ADDR = 'EQD_MYCO_CONTRACT_PLACEHOLDER';
 
