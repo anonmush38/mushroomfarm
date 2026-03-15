@@ -8,9 +8,9 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
-    "@ton/core": "^0.56.3",
+    "@ton/core": "^0.62.0",
     "@ton/crypto": "^3.3.0",
-    "@ton/ton": "^15.1.0",
+    "@ton/ton": "^15.4.0",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^9.4.3",
     "cors": "^2.8.5",
