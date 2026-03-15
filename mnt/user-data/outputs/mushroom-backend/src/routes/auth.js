@@ -8,7 +8,7 @@ const { authMiddleware } = require('../middleware/auth');
 
 const router = express.Router();
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function genAddress() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -23,39 +23,38 @@ function makeToken(userId) {
   });
 }
 
-function initUserData(db, userId, address) {
-  // game_state
-  db.prepare(`
-    INSERT OR IGNORE INTO game_state (user_id) VALUES (?)
-  `).run(userId);
+// Nettoie un username Telegram (alphanum + underscore, max 16 chars)
+function sanitizeUsername(raw) {
+  return (raw || '').replace(/[^a-zA-Z0-9_]/g, '').slice(0, 16) || null;
+}
 
-  // wallet TON
+function initUserData(db, userId, address) {
+  db.prepare(`INSERT OR IGNORE INTO game_state (user_id) VALUES (?)`).run(userId);
+
   db.prepare(`
     INSERT OR IGNORE INTO wallets (id, user_id, address, currency, balance)
     VALUES (?, ?, ?, 'TON', 5.0)
   `).run(uuidv4(), userId, address);
 
-  // wallet MYCO
   db.prepare(`
     INSERT OR IGNORE INTO wallets (id, user_id, address, currency, balance)
     VALUES (?, ?, ?, 'MYCO', 250)
   `).run(uuidv4(), userId, address + '_myco');
 
-  // starter cards
   const starterCards = [
-    { rarity: 'common',   base: 2,  color: '#8e9aaf', name: 'Shroom Basique' },
-    { rarity: 'common',   base: 2,  color: '#8e9aaf', name: 'Shroom Basique' },
-    { rarity: 'uncommon', base: 5,  color: '#3ecf6a', name: 'Pleurote Pro' },
+    { rarity: 'common',   base: 2, color: '#8e9aaf', name: 'Shroom Basique' },
+    { rarity: 'common',   base: 2, color: '#8e9aaf', name: 'Shroom Basique' },
+    { rarity: 'uncommon', base: 5, color: '#3ecf6a', name: 'Pleurote Pro'   },
   ];
   const insertCard = db.prepare(`
-    INSERT INTO cards (id, user_id, rarity, name, level, xp, xp_needed, mushrooms_per_cycle, base_mushrooms, color)
+    INSERT INTO cards
+      (id, user_id, rarity, name, level, xp, xp_needed, mushrooms_per_cycle, base_mushrooms, color)
     VALUES (?, ?, ?, ?, 1, 0, 100, ?, ?, ?)
   `);
   for (const c of starterCards) {
-    insertCard.run(uuidv4(), userId, c.rarity, c.name, c.base * 1, c.base, c.color);
+    insertCard.run(uuidv4(), userId, c.rarity, c.name, c.base, c.base, c.color);
   }
 
-  // welcome bonus transaction
   db.prepare(`
     INSERT INTO transactions (user_id, label, amount, currency, icon)
     VALUES (?, 'Welcome Bonus', 250, 'myco', '🎁')
@@ -71,8 +70,7 @@ router.post('/register', (req, res) => {
   }
 
   const db = getDb();
-  const existing = db.prepare('SELECT id FROM users WHERE username = ?').get(username);
-  if (existing) {
+  if (db.prepare('SELECT id FROM users WHERE username = ?').get(username)) {
     return res.status(409).json({ error: 'Nom déjà pris' });
   }
 
@@ -80,7 +78,7 @@ router.post('/register', (req, res) => {
   const address = genAddress();
   const hash    = password ? bcrypt.hashSync(password, 10) : null;
 
-  const insertUser = db.transaction(() => {
+  db.transaction(() => {
     db.prepare(`
       INSERT INTO users (id, username, password_hash, lang, theme, address)
       VALUES (?, ?, ?, ?, ?, ?)
@@ -88,34 +86,18 @@ router.post('/register', (req, res) => {
 
     initUserData(db, id, address);
 
-    // Handle referral
     if (referral_code) {
       const referrer = db.prepare('SELECT id FROM users WHERE id = ?').get(referral_code);
       if (referrer) {
-        db.prepare(`
-          INSERT OR IGNORE INTO referrals (referrer_id, referred_id) VALUES (?, ?)
-        `).run(referrer.id, id);
-        // Give bonus to referrer
-        db.prepare(`
-          UPDATE wallets SET balance = balance + 500
-          WHERE user_id = ? AND currency = 'MYCO'
-        `).run(referrer.id);
-        db.prepare(`
-          UPDATE game_state SET myco = myco + 500 WHERE user_id = ?
-        `).run(referrer.id);
-        db.prepare(`
-          INSERT INTO transactions (user_id, label, amount, currency, icon)
-          VALUES (?, 'Bonus Parrainage', 500, 'myco', '🎁')
-        `).run(referrer.id);
-        // Mark referral bonus given
-        db.prepare(`
-          UPDATE referrals SET bonus_given = 1 WHERE referrer_id = ? AND referred_id = ?
-        `).run(referrer.id, id);
+        db.prepare(`INSERT OR IGNORE INTO referrals (referrer_id, referred_id) VALUES (?, ?)`).run(referrer.id, id);
+        db.prepare(`UPDATE wallets SET balance = balance + 500 WHERE user_id = ? AND currency = 'MYCO'`).run(referrer.id);
+        db.prepare(`UPDATE game_state SET myco = myco + 500 WHERE user_id = ?`).run(referrer.id);
+        db.prepare(`INSERT INTO transactions (user_id, label, amount, currency, icon) VALUES (?, 'Bonus Parrainage', 500, 'myco', '🎁')`).run(referrer.id);
+        db.prepare(`UPDATE referrals SET bonus_given = 1 WHERE referrer_id = ? AND referred_id = ?`).run(referrer.id, id);
       }
     }
-  });
+  })();
 
-  insertUser();
   const token = makeToken(id);
   res.status(201).json({ token, userId: id, username, address });
 });
@@ -125,17 +107,17 @@ router.post('/login', (req, res) => {
   const { username, password } = req.body;
   if (!username) return res.status(400).json({ error: 'Nom requis' });
 
-  const db = getDb();
+  const db   = getDb();
   const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
 
-  if (!user) return res.status(404).json({ error: 'Utilisateur introuvable' });
+  if (!user)           return res.status(404).json({ error: 'Utilisateur introuvable' });
   if (!user.is_active) return res.status(403).json({ error: 'Compte désactivé' });
 
-  // If password set, verify it
   if (user.password_hash) {
     if (!password) return res.status(401).json({ error: 'Mot de passe requis' });
-    const ok = bcrypt.compareSync(password, user.password_hash);
-    if (!ok) return res.status(401).json({ error: 'Mot de passe incorrect' });
+    if (!bcrypt.compareSync(password, user.password_hash)) {
+      return res.status(401).json({ error: 'Mot de passe incorrect' });
+    }
   }
 
   db.prepare('UPDATE users SET last_login = unixepoch() WHERE id = ?').run(user.id);
@@ -144,40 +126,67 @@ router.post('/login', (req, res) => {
 });
 
 // ── POST /auth/telegram ───────────────────────────────────────────────────────
-// Used when the game is embedded in a Telegram Mini App
+// Point d'entrée principal pour les Telegram Mini Apps.
+// Appelé AU DÉMARRAGE du jeu, avant tout accès aux routes /game ou /wallet.
+// - telegram_id connu  → renvoie un JWT (reconnexion automatique)
+// - telegram_id inconnu → auto-register + renvoie un JWT (nouveau joueur)
 router.post('/telegram', (req, res) => {
-  const { telegram_id, username, lang } = req.body;
+  const { telegram_id, username, lang, theme } = req.body;
   if (!telegram_id) return res.status(400).json({ error: 'telegram_id requis' });
 
-  const db = getDb();
-  let user = db.prepare('SELECT * FROM users WHERE telegram_id = ?').get(String(telegram_id));
+  const db  = getDb();
+  const tid = String(telegram_id);
+  let user  = db.prepare('SELECT * FROM users WHERE telegram_id = ?').get(tid);
 
   if (!user) {
-    // Auto-register
+    // Nouveau joueur : construction d'un username unique
     const id      = uuidv4();
-    const uname   = username || `Farmer_${telegram_id}`;
+    const base    = sanitizeUsername(username) || 'Farmer';
+    let uname     = base.slice(0, 16);
+    let attempt   = 0;
+    while (db.prepare('SELECT id FROM users WHERE username = ?').get(uname)) {
+      attempt++;
+      uname = `${base.slice(0, 12)}_${attempt}`;
+    }
     const address = genAddress();
-    const tx = db.transaction(() => {
+
+    db.transaction(() => {
       db.prepare(`
         INSERT INTO users (id, username, telegram_id, lang, theme, address)
-        VALUES (?, ?, ?, ?, 'dark', ?)
-      `).run(id, uname, String(telegram_id), lang || 'fr', address);
+        VALUES (?, ?, ?, ?, ?, ?)
+      `).run(id, uname, tid, lang || 'fr', theme || 'dark', address);
       initUserData(db, id, address);
-    });
-    tx();
+    })();
+
     user = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
+  } else {
+    // Joueur existant : mise à jour lang/theme si fournis
+    if (lang || theme) {
+      db.prepare(`
+        UPDATE users
+        SET lang  = COALESCE(?, lang),
+            theme = COALESCE(?, theme)
+        WHERE id = ?
+      `).run(lang || null, theme || null, user.id);
+    }
   }
 
   db.prepare('UPDATE users SET last_login = unixepoch() WHERE id = ?').run(user.id);
   const token = makeToken(user.id);
-  res.json({ token, userId: user.id, username: user.username, address: user.address });
+
+  res.json({
+    token,
+    userId:   user.id,
+    username: user.username,
+    address:  user.address,
+  });
 });
 
-// ── GET /auth/me ─────────────────────────────────────────────────────────────
+// ── GET /auth/me ──────────────────────────────────────────────────────────────
 router.get('/me', authMiddleware, (req, res) => {
-  const db = getDb();
+  const db   = getDb();
   const user = db.prepare(`
-    SELECT id, username, lang, theme, address, created_at, last_login
+    SELECT id, username, lang, theme, address, ton_wallet_address, created_at, last_login
     FROM users WHERE id = ?
   `).get(req.userId);
   res.json(user);
