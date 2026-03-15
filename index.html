@@ -977,8 +977,13 @@
     </div>
     <div class="withdraw-field">
       <label>Adresse TON destinataire</label>
-      <input id="wd-address" type="text" placeholder="UQA7..." autocomplete="off"
-             style="font-size:0.75rem;font-family:monospace">
+      <div style="position:relative">
+        <input id="wd-address" type="text" placeholder="UQA7..." autocomplete="off"
+               style="font-size:0.75rem;font-family:monospace;width:100%;box-sizing:border-box;padding-right:110px">
+        <button id="wd-use-wallet-btn" onclick="useConnectedWallet()" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:linear-gradient(135deg,#0098ea,#005fcc);border:none;border-radius:8px;padding:4px 8px;color:white;font-size:0.62rem;cursor:pointer;font-family:'Fredoka One',cursive;white-space:nowrap;display:none">
+          💎 Mon wallet
+        </button>
+      </div>
     </div>
     <div style="font-size:0.7rem;color:var(--muted);margin-bottom:10px">Choisir la crypto :</div>
     <div class="withdraw-crypto-select">
@@ -2153,6 +2158,11 @@ async function updateTonConnectUI(connected, addr) {
   if (connected && addr) {
     disc.style.display = 'none';
     conn.style.display = 'block';
+    // Afficher bouton "Mon wallet" dans le champ retrait + pré-remplir
+    const wdBtn = document.getElementById('wd-use-wallet-btn');
+    if (wdBtn) wdBtn.style.display = 'block';
+    const wdInput = document.getElementById('wd-address');
+    if (wdInput && !wdInput.value) wdInput.value = addr;
 
     // Adresse courte affichée
     const el = document.getElementById('tc-addr-text');
@@ -2184,6 +2194,8 @@ async function updateTonConnectUI(connected, addr) {
   } else {
     disc.style.display = 'block';
     conn.style.display = 'none';
+    const wdBtn = document.getElementById('wd-use-wallet-btn');
+    if (wdBtn) wdBtn.style.display = 'none';
   }
 }
 
@@ -4214,6 +4226,15 @@ function copyDepositMemo() {
   navigator.clipboard.writeText(memo).then(() =>
     showNotif('✅ Commentaire copié !', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f4cb.svg')
   );
+}
+
+function useConnectedWallet() {
+  if (!tcWalletAddr) return;
+  const input = document.getElementById('wd-address');
+  if (input) {
+    input.value = tcWalletAddr;
+    showNotif('✅ Adresse wallet copiée dans le champ', 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f48e.svg');
+  }
 }
 
 function doWithdraw(){
