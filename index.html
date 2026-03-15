@@ -2099,53 +2099,55 @@ function tonAddrToApi(addr) {
 
 async function fetchTonBalance(addr) {
   if (!addr) return null;
-  const a = tonAddrToApi(addr);
-  console.log('[TonBalance] fetch pour adresse:', a);
 
-  // API 1 : toncenter.com
+  // Méthode 1 : via le backend (qui utilise le SDK TON)
+  if (typeof getToken === 'function' && getToken()) {
+    try {
+      const r = await fetch(`${BASE_URL}/wallet/balances/${encodeURIComponent(addr)}`, {
+        headers: apiHeaders()
+      });
+      if (r.ok) {
+        const d = await r.json();
+        if (d.ton !== null && d.ton !== undefined) {
+          console.log('[TonBalance] backend OK:', d.ton);
+          // Mettre aussi à jour le solde MYCO on-chain
+          if (d.myco !== null && d.myco !== undefined) {
+            const m = document.getElementById('wallet-myco-tc');
+            if (m) m.textContent = Math.floor(d.myco).toLocaleString();
+            const mkt = document.getElementById('mkt-myco-balance');
+            if (mkt) mkt.textContent = Math.floor(d.myco).toLocaleString() + ' MYCO';
+            const row = document.getElementById('mkt-wallet-row');
+            if (row) row.style.display = 'flex';
+          }
+          return parseFloat(d.ton).toFixed(2);
+        }
+      }
+    } catch(e) { console.warn('[TonBalance] backend erreur:', e.message); }
+  }
+
+  // Méthode 2 : toncenter.com direct
   try {
     const r = await fetch(
-      'https://toncenter.com/api/v2/getAddressBalance?address=' + encodeURIComponent(a),
+      'https://toncenter.com/api/v2/getAddressBalance?address=' + encodeURIComponent(addr),
       { headers: { 'Accept': 'application/json' } }
     );
     if (r.ok) {
       const d = await r.json();
-      console.log('[TonBalance] toncenter réponse:', d);
-      if (d.ok && d.result !== undefined) {
-        return (parseInt(d.result) / 1e9).toFixed(2);
-      }
+      if (d.ok && d.result !== undefined) return (parseInt(d.result) / 1e9).toFixed(2);
     }
-  } catch(e) { console.warn('[TonBalance] toncenter erreur:', e.message); }
+  } catch(e) {}
 
-  // API 2 : tonapi.io
+  // Méthode 3 : tonapi.io
   try {
     const r = await fetch(
-      'https://tonapi.io/v2/accounts/' + encodeURIComponent(a),
+      'https://tonapi.io/v2/accounts/' + encodeURIComponent(addr),
       { headers: { 'Accept': 'application/json' } }
     );
     if (r.ok) {
       const d = await r.json();
-      console.log('[TonBalance] tonapi réponse:', d);
-      if (d.balance !== undefined) {
-        return (parseInt(d.balance) / 1e9).toFixed(2);
-      }
+      if (d.balance !== undefined) return (parseInt(d.balance) / 1e9).toFixed(2);
     }
-  } catch(e) { console.warn('[TonBalance] tonapi erreur:', e.message); }
-
-  // API 3 : ton.org public API (dernier recours)
-  try {
-    const r = await fetch(
-      'https://toncenter.com/api/v3/account?address=' + encodeURIComponent(a),
-      { headers: { 'Accept': 'application/json' } }
-    );
-    if (r.ok) {
-      const d = await r.json();
-      console.log('[TonBalance] toncenter v3 réponse:', d);
-      if (d.balance !== undefined) {
-        return (parseInt(d.balance) / 1e9).toFixed(2);
-      }
-    }
-  } catch(e) { console.warn('[TonBalance] toncenter v3 erreur:', e.message); }
+  } catch(e) {}
 
   return null;
 }
